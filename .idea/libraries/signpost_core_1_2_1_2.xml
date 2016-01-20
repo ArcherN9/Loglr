@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="signpost-core-1.2.1.2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/app/libs/signpost-core-1.2.1.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ideaLibSources/signpost-core-1.2.1.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
