@@ -30,8 +30,8 @@ public class TumblrLoginActivity extends AppCompatActivity {
     /**
      * Tumblr Consumer and Secret keys on which basis the user is logged in
      */
-    public static final String TUMBLR_CONSUMER_KEY = "rgZ9KfcotI4P0zcEYRgjNJG6F2UtSYbXxyofD1zcgXCk7BFFvN";
-    public static final String TUMBLR_SECRET_KEY = "7s5DNYgoJ3v9OkCufczkl0v4zOsSquOFs7Gns8t7ckgA5Bjoa4";
+    public static final String TUMBLR_CONSUMER_KEY = "ENTER CONSUMER KEY HERE";
+    public static final String TUMBLR_SECRET_KEY = "ENTER CONSUMER SECRET KEY HERE";
 
     /**
      * Tumblr API URLs
@@ -221,10 +221,14 @@ public class TumblrLoginActivity extends AppCompatActivity {
                 //It stores the OAuthToken & OAuthToken secret in the commonsHttpOAuthConsumer object.
                 commonsHttpOAuthProvider.retrieveAccessToken(commonsHttpOAuthConsumer, strOAuth_Verifier);
                 //Check if tokens were received. If Yes, save them to SharedPreferences for later use.
-                if(!TextUtils.isEmpty(commonsHttpOAuthConsumer.getToken()))
+                if(!TextUtils.isEmpty(commonsHttpOAuthConsumer.getToken())) {
                     PreferenceHandler.setTumblrKey(getBaseContext(), commonsHttpOAuthConsumer.getToken());
-                if(!TextUtils.isEmpty(commonsHttpOAuthConsumer.getTokenSecret()))
+                    Log.i(TAG, "OAuthToken : " + PreferenceHandler.getTumblrKey(getBaseContext()));
+                }
+                if(!TextUtils.isEmpty(commonsHttpOAuthConsumer.getTokenSecret())) {
                     PreferenceHandler.setTumblrSecret(getBaseContext(), commonsHttpOAuthConsumer.getTokenSecret());
+                    Log.i(TAG, "OAuthSecretToken : " + PreferenceHandler.getTumblrSecret(getBaseContext()));
+                }
                 return true;
             } catch (OAuthCommunicationException e) {
                 e.printStackTrace();
