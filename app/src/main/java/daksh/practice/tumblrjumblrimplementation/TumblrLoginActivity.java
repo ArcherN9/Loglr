@@ -133,13 +133,13 @@ public class TumblrLoginActivity extends AppCompatActivity {
                             //Iterate through Parameters retrieved on the URL
                             for (String strQuery : uri.getQueryParameterNames())
                                 switch (strQuery) {
-                                    case "oauth_token" :
+                                    case "oauth_token":
                                         //Save OAuth Token
                                         //Note : This is not the login token we require to set on JumblrToken
                                         strOAuthToken = uri.getQueryParameter(strQuery);
                                         break;
 
-                                    case "oauth_verifier" :
+                                    case "oauth_verifier":
                                         //Save OAuthVerifier
                                         strOAuthVerifier = uri.getQueryParameter(strQuery);
                                         break;
@@ -147,12 +147,14 @@ public class TumblrLoginActivity extends AppCompatActivity {
                             //Execute a new AsyncTask to retrieve access tokens
                             //Performing this is important since communication using OAuthProvider
                             //can only be done in a background thread.
-                            new TaskRetrieveAccessToken(
-                                    commonsHttpOAuthConsumer,   //Pass OAuthConsumer as an argument
-                                    commonsHttpOAuthProvider,   //Pass OAuthProvider as an argument
-                                    strOAuthToken,              //Pass OAuthToken as an argument
-                                    strOAuthVerifier            //Pass OAuthVerifier as an argument
-                            ).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                            TaskRetrieveAccessToken taskRetrieveAccessToken = new TaskRetrieveAccessToken();
+                            //Pass OAuthConsumer as an argument
+                            taskRetrieveAccessToken.setOAuthConsumer(commonsHttpOAuthConsumer);
+                            //Pass OAuthProvider as an argument
+                            taskRetrieveAccessToken.setOAuthProvider(commonsHttpOAuthProvider);
+                            //Pass OAuthVerifier as an argument
+                            taskRetrieveAccessToken.setOAuthVerifier(strOAuthVerifier);
+                            taskRetrieveAccessToken.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                             return true;
                         }
                         return super.shouldOverrideUrlLoading(view, strUrl);
@@ -186,26 +188,42 @@ public class TumblrLoginActivity extends AppCompatActivity {
         private CommonsHttpOAuthConsumer commonsHttpOAuthConsumer;
 
         /**
-         * Strings to hold token and verifier retrieved from Tumblr
+         * variables to hold verifier retrieved from Tumblr
          */
-        private String strOAuth_Token;
-        private String strOAuth_Verifier;
-
-        //Constructor
-        public TaskRetrieveAccessToken(CommonsHttpOAuthConsumer commonsHttpOAuthConsumer,
-                                       CommonsHttpOAuthProvider commonsHttpOAuthProvider,
-                                       String strOAuth_Token,
-                                       String strOAuth_Verifier) {
-            this.commonsHttpOAuthProvider = commonsHttpOAuthProvider;
-            this.commonsHttpOAuthConsumer = commonsHttpOAuthConsumer;
-            this.strOAuth_Token = strOAuth_Token;
-            this.strOAuth_Verifier = strOAuth_Verifier;
-        }
+        private String strOAuthVerifier;
 
         /**
          * A reference to a progress Dialog
          */
         private ProgressDialog progressDialog;
+
+        //Constructor
+        public TaskRetrieveAccessToken() {
+        }
+
+        /**
+         * Set the OAuthConsumer
+         * @param OAuthConsumer TheOAuthConsumer to which tokens will be applied
+         */
+        public void setOAuthConsumer(CommonsHttpOAuthConsumer OAuthConsumer) {
+            this.commonsHttpOAuthConsumer = OAuthConsumer;
+        }
+
+        /**
+         * Set the OAuthProvider
+         * @param OAuthProvider The OAuthProvider which makes the request for tokens
+         */
+        public void setOAuthProvider(CommonsHttpOAuthProvider OAuthProvider) {
+            this.commonsHttpOAuthProvider = OAuthProvider;
+        }
+
+        /**
+         * Set the OAuthVerifier
+         * @param OAuthVerifier The OAuthVerifier token which is used as a param to retrieve access tokens
+         */
+        public void setOAuthVerifier(String OAuthVerifier) {
+            this.strOAuthVerifier = OAuthVerifier;
+        }
 
         @Override
         protected void onPreExecute() {
@@ -219,16 +237,20 @@ public class TumblrLoginActivity extends AppCompatActivity {
             try {
                 //Queries the service provider for access tokens. The method does not return anything.
                 //It stores the OAuthToken & OAuthToken secret in the commonsHttpOAuthConsumer object.
-                commonsHttpOAuthProvider.retrieveAccessToken(commonsHttpOAuthConsumer, strOAuth_Verifier);
+                commonsHttpOAuthProvider.retrieveAccessToken(commonsHttpOAuthConsumer, strOAuthVerifier);
                 //Check if tokens were received. If Yes, save them to SharedPreferences for later use.
                 if(!TextUtils.isEmpty(commonsHttpOAuthConsumer.getToken())) {
                     PreferenceHandler.setTumblrKey(getBaseContext(), commonsHttpOAuthConsumer.getToken());
                     Log.i(TAG, "OAuthToken : " + PreferenceHandler.getTumblrKey(getBaseContext()));
-                }
+                } else
+                    return false;
+
                 if(!TextUtils.isEmpty(commonsHttpOAuthConsumer.getTokenSecret())) {
                     PreferenceHandler.setTumblrSecret(getBaseContext(), commonsHttpOAuthConsumer.getTokenSecret());
                     Log.i(TAG, "OAuthSecretToken : " + PreferenceHandler.getTumblrSecret(getBaseContext()));
-                }
+                } else
+                    return false;
+
                 return true;
             } catch (OAuthCommunicationException e) {
                 e.printStackTrace();
@@ -250,12 +272,15 @@ public class TumblrLoginActivity extends AppCompatActivity {
             super.onPostExecute(aBoolean);
             //Dismiss progress bar
             progressDialog.dismiss();
-            //Check if tokens were retrieved. If yes, Set result as successfull and finish activity
+            //Check if tokens were retrieved. If yes, Set result as successful and finish activity
             //otherwise, set as failed.
             if(aBoolean)
                 setResult(RESULT_OK);
-            else
+            else {
                 setResult(RESULT_CANCELED);
+                //Delete shared preferences if tokens were not received.
+                PreferenceHandler.DeletePreferences(getBaseContext());
+            }
             finish();
         }
     }

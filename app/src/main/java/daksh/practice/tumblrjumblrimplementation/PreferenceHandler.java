@@ -16,6 +16,16 @@ public class PreferenceHandler {
     private static final String PREF_TUMBLR_SECRET = "PREF_TUMBLR_SECRET";
 
     /**
+     * Is used to delete all user data
+     * @param context the context of the cang aglling activity
+     */
+    public static void DeletePreferences(Context context) {
+        SharedPreferences.Editor sharedPreferences
+                = context.getSharedPreferences(PREFERENCE_SETTINGS, Context.MODE_PRIVATE).edit();
+        sharedPreferences.clear().apply();
+    }
+
+    /**
      * Is used to set the Tumblr Consumer key to the shared pref
      * @param context The context of the calling activity to access the shared pref
      * @param strConsumerKey Tumblr Consumer key
