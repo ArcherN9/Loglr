@@ -34,19 +34,48 @@ public class TumblrLoginActivity extends AppCompatActivity {
     public static final String TUMBLR_SECRET_KEY = "ENTER CONSUMER SECRET KEY HERE";
 
     /**
-     * Tumblr API URLs
+     * An object of the interface defined on this class. The interface is called
+     * when the activity receives a response from the Login process
      */
-    private static final String TUMBLR_REQUEST = "https://www.tumblr.com/oauth/request_token";
-    private static final String TUMBLR_ACCESS = "https://www.tumblr.com/oauth/access_token";
-    private static final String TUMBLR_AUTH = "https://www.tumblr.com/oauth/authorize";
-    private static final String TUMBLR_CALLBACK = "http://somewebsite.com/";
+    private LoginListener loginListener;
+
+    /**
+     * An object of the interface defined on this class. The interface is called
+     * when the activity throws an exception caused by various reasons due which
+     * the code cannot continue function.
+     */
+    private ExceptionHandler exceptionHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tumblr_login);
-        //Initiate an AsyncTask to begin TumblrLogin
-        new TaskTumblrLogin().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        if(loginListener != null)
+            //Initiate an AsyncTask to begin TumblrLogin
+            new TaskTumblrLogin().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        else {
+            if(exceptionHandler != null)
+                exceptionHandler.onLoginFailed(new TumblrLoginException());
+            finish();
+        }
+    }
+
+    /**
+     * The method receives a reference of the interface to be executed when a result is retrieved
+     * from the login process
+     * @param loginListener
+     */
+    public void setLoginListener(LoginListener loginListener) {
+        this.loginListener = loginListener;
+    }
+
+    /**
+     * Optional | Recommended though to handle code in a better fashion
+     * The method receives a reference of the interface to be executed when an exception is thrown
+     * @param exceptionHandler
+     */
+    public void setExceptionHandler(ExceptionHandler exceptionHandler) {
+        this.exceptionHandler = exceptionHandler;
     }
 
     /**
@@ -56,7 +85,7 @@ public class TumblrLoginActivity extends AppCompatActivity {
      * 3) Makes a network request to retrieve authorization URL. The user is to be navigated
      * to this URL so he may login by entering his/her user credentials.
      */
-    private class TaskTumblrLogin extends AsyncTask<Void, Void, String> {
+    private class TaskTumblrLogin extends AsyncTask<Void, Exception, String> {
 
         /**
          * The OAuth provider
@@ -77,7 +106,7 @@ public class TumblrLoginActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             //Show a progress Dialog while the request tokens are fetched
-            progressDialog = ProgressDialog.show(TumblrLoginActivity.this, null, "Loading...");
+            progressDialog = ProgressDialog.show(TumblrLoginActivity.this, null, getResources().getString(R.string.tumblrlogin_loading));
         }
 
         @Override
@@ -88,21 +117,39 @@ public class TumblrLoginActivity extends AppCompatActivity {
                         = new CommonsHttpOAuthConsumer(TUMBLR_CONSUMER_KEY, TUMBLR_SECRET_KEY);
                 //Generate a new oAuthProvider object
                 commonsHttpOAuthProvider
-                        = new CommonsHttpOAuthProvider(TUMBLR_REQUEST, TUMBLR_ACCESS, TUMBLR_AUTH);
+                        = new CommonsHttpOAuthProvider(
+                        getResources().getString(R.string.tumblr_request),
+                        getResources().getString(R.string.tumblr_access),
+                        getResources().getString(R.string.tumblr_auth));
                 //Retrieve the URL to which the user must be sent in order to authorize the consumer
-                return commonsHttpOAuthProvider.retrieveRequestToken(commonsHttpOAuthConsumer, TUMBLR_CALLBACK);
+                return commonsHttpOAuthProvider.retrieveRequestToken(commonsHttpOAuthConsumer,
+                        getResources().getString(R.string.tumblr_callback_url));
             } catch (OAuthMessageSignerException e) {
                 e.printStackTrace();
+                publishProgress(e);
                 return null;
             } catch (OAuthNotAuthorizedException e) {
                 e.printStackTrace();
+                publishProgress(e);
                 return null;
             } catch (OAuthExpectationFailedException e) {
                 e.printStackTrace();
+                publishProgress(e);
                 return null;
             } catch (OAuthCommunicationException e) {
                 e.printStackTrace();
+                publishProgress(e);
                 return null;
+            }
+        }
+
+        @Override
+        protected void onProgressUpdate(Exception... values) {
+            super.onProgressUpdate(values);
+            if(values != null && values.length > 0) {
+                Exception exception = values[0];
+                if(exceptionHandler != null)
+                    exceptionHandler.onLoginFailed(exception);
             }
         }
 
@@ -124,7 +171,8 @@ public class TumblrLoginActivity extends AppCompatActivity {
                         //Log Current loading URL
                         Log.i(TAG, strUrl);
                         //Check if the Currently loading URL is that of the call back URL mentioned on top
-                        if (strUrl.contains(TUMBLR_CALLBACK.toLowerCase())) {
+                        if (strUrl.contains(
+                                getResources().getString(R.string.tumblr_callback_url).toLowerCase())) {
                             //Parse string URL to conver to URI
                             Uri uri = Uri.parse(strUrl);
                             //instantiate String variables to store OAuth & Verifier tokens
@@ -162,12 +210,8 @@ public class TumblrLoginActivity extends AppCompatActivity {
                 });
                 //Load URL
                 webView.loadUrl(strAuthUrl);
-            } else {
-                //Authorization URL was not received, finish the activity, set 'Failed' in activity
-                //result
-                setResult(RESULT_CANCELED);
+            } else
                 finish();
-            }
         }
     }
 
@@ -175,7 +219,7 @@ public class TumblrLoginActivity extends AppCompatActivity {
      * The asyncTask utilises the parameters passed and makes a network call to retrieve
      * the access tokens & save them to SharedPreferences.
      */
-    private class TaskRetrieveAccessToken extends AsyncTask<Void, Void, Boolean> {
+    private class TaskRetrieveAccessToken extends AsyncTask<Void, Exception, LoginResult> {
 
         /**
          * The OAuth provider
@@ -233,55 +277,76 @@ public class TumblrLoginActivity extends AppCompatActivity {
         }
 
         @Override
-        protected Boolean doInBackground(Void... voids) {
+        protected LoginResult doInBackground(Void... voids) {
+            //Instantiate a new LoginResult object which will store the Consumer key and secret key
+            //to be returned to the
+            LoginResult loginResult = new LoginResult();
             try {
                 //Queries the service provider for access tokens. The method does not return anything.
                 //It stores the OAuthToken & OAuthToken secret in the commonsHttpOAuthConsumer object.
                 commonsHttpOAuthProvider.retrieveAccessToken(commonsHttpOAuthConsumer, strOAuthVerifier);
                 //Check if tokens were received. If Yes, save them to SharedPreferences for later use.
                 if(!TextUtils.isEmpty(commonsHttpOAuthConsumer.getToken())) {
-                    PreferenceHandler.setTumblrKey(getBaseContext(), commonsHttpOAuthConsumer.getToken());
+                    //Set the consumer key token in the LoginResult object
+                    loginResult.setStrTumblrKey(commonsHttpOAuthConsumer.getToken());
                     Log.i(TAG, "OAuthToken : " + PreferenceHandler.getTumblrKey(getBaseContext()));
-                } else
-                    return false;
+                }
 
                 if(!TextUtils.isEmpty(commonsHttpOAuthConsumer.getTokenSecret())) {
-                    PreferenceHandler.setTumblrSecret(getBaseContext(), commonsHttpOAuthConsumer.getTokenSecret());
+                    //Set the Secret consumer key token in the LoginResult object
+                    loginResult.setStrTumblrKey(commonsHttpOAuthConsumer.getTokenSecret());
                     Log.i(TAG, "OAuthSecretToken : " + PreferenceHandler.getTumblrSecret(getBaseContext()));
-                } else
-                    return false;
-
-                return true;
+                }
+                //Return the login result with ConsumerKey and ConsumerSecret Key
+                return loginResult;
             } catch (OAuthCommunicationException e) {
                 e.printStackTrace();
-                return false;
+                publishProgress(e);
+                return null;
             } catch (OAuthExpectationFailedException e) {
                 e.printStackTrace();
-                return false;
+                publishProgress(e);
+                return null;
             } catch (OAuthNotAuthorizedException e) {
                 e.printStackTrace();
-                return false;
+                publishProgress(e);
+                return null;
             } catch (OAuthMessageSignerException e) {
                 e.printStackTrace();
-                return false;
+                publishProgress(e);
+                return null;
             }
         }
 
         @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
+        protected void onProgressUpdate(Exception... values) {
+            super.onProgressUpdate(values);
+            if(values != null && values.length > 0) {
+                Exception exception = values[0];
+                if(exceptionHandler != null)
+                    exceptionHandler.onLoginFailed(exception);
+            }
+        }
+
+        @Override
+        protected void onPostExecute(LoginResult loginResult) {
+            super.onPostExecute(loginResult);
             //Dismiss progress bar
             progressDialog.dismiss();
             //Check if tokens were retrieved. If yes, Set result as successful and finish activity
             //otherwise, set as failed.
-            if(aBoolean)
-                setResult(RESULT_OK);
-            else {
-                setResult(RESULT_CANCELED);
-                //Delete shared preferences if tokens were not received.
-                PreferenceHandler.DeletePreferences(getBaseContext());
-            }
+            if(loginResult != null)
+                if(loginListener != null)
+                    loginListener.onLoginSuccessful(loginResult);
             finish();
         }
+    }
+
+    public interface LoginListener {
+        void onLoginSuccessful(LoginResult loginResult);
+    }
+
+    public interface ExceptionHandler {
+        void onLoginFailed(Exception exception);
     }
 }
