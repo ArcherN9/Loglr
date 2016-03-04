@@ -10,6 +10,8 @@ import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import daksh.practice.tumblrjumblrimplementation.Exceptions.TumblrBundleException;
+import daksh.practice.tumblrjumblrimplementation.Exceptions.TumblrLoginException;
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 import oauth.signpost.commonshttp.CommonsHttpOAuthProvider;
 import oauth.signpost.exception.OAuthCommunicationException;
@@ -30,8 +32,8 @@ public class TumblrLoginActivity extends AppCompatActivity {
     /**
      * Tumblr Consumer and Secret keys on which basis the user is logged in
      */
-    public static final String TUMBLR_CONSUMER_KEY = "ENTER CONSUMER KEY HERE";
-    public static final String TUMBLR_SECRET_KEY = "ENTER CONSUMER SECRET KEY HERE";
+    private static String TUMBLR_CONSUMER_KEY = "ENTER CONSUMER KEY HERE";
+    private static String TUMBLR_SECRET_KEY = "ENTER CONSUMER SECRET KEY HERE";
 
     /**
      * An object of the interface defined on this class. The interface is called
@@ -50,14 +52,37 @@ public class TumblrLoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tumblr_login);
-        if(loginListener != null)
-            //Initiate an AsyncTask to begin TumblrLogin
-            new TaskTumblrLogin().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        else {
-            if(exceptionHandler != null)
-                exceptionHandler.onLoginFailed(new TumblrLoginException());
-            finish();
-        }
+        //Test if Bundle was transferred to the Activity
+        if(getIntent().getExtras() != null) {
+            //Extract Bundle
+            Bundle keyBundle = getIntent().getExtras();
+            //Extract Consumer Key
+            if(keyBundle.containsKey(getResources().getString(R.string.tumblr_consumer_key)))
+                TUMBLR_CONSUMER_KEY = keyBundle.getString(getResources().getString(R.string.tumblr_consumer_key));
+            else
+                throw new TumblrBundleException();
+
+            //Extract Secret Key
+            if(keyBundle.containsKey(getResources().getString(R.string.tumblr_consumer_secret_key)))
+                TUMBLR_SECRET_KEY = keyBundle.getString(getResources().getString(R.string.tumblr_consumer_secret_key));
+            else
+                //If key is not found
+                throw new TumblrBundleException();
+
+            //test if LoginListener was registered
+            if(loginListener != null)
+                //Initiate an AsyncTask to begin TumblrLogin
+                new TaskTumblrLogin().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            else {
+                //If Exceptionhandler was registered by the dev, use it to return a call back.
+                //Otherwise, just throw the exception and make the application crash
+                if (exceptionHandler != null)
+                    exceptionHandler.onLoginFailed(new TumblrLoginException());
+                else
+                    throw new TumblrLoginException();
+            }
+        } else
+            throw new TumblrBundleException();
     }
 
     /**
@@ -347,6 +372,6 @@ public class TumblrLoginActivity extends AppCompatActivity {
     }
 
     public interface ExceptionHandler {
-        void onLoginFailed(Exception exception);
+        void onLoginFailed(RuntimeException exception);
     }
 }

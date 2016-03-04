@@ -10,4 +10,7 @@
     <!-- Loading messages -->
     <string name="tumblrlogin_loading">Loading...</string>
 
+    <!-- Bundle keys -->
+    <string name="tumblr_consumer_key">tumblr_consumer_key</string>
+    <string name="tumblr_consumer_secret_key">tumblr_consumer_secret_key</string>
 </resources>
