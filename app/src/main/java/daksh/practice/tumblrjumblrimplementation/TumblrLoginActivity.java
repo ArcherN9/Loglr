@@ -70,10 +70,12 @@ public class TumblrLoginActivity extends AppCompatActivity {
                 throw new TumblrBundleException();
 
             //test if LoginListener was registered
-            if(loginListener != null)
+            if(loginListener != null) {
+                if(exceptionHandler == null)
+                    Log.w(TAG, "Continuing execution without ExceptionHandler. No Exception call backs will be sent. It is recommended to set one.");
                 //Initiate an AsyncTask to begin TumblrLogin
                 new TaskTumblrLogin().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            else {
+            } else {
                 //If Exception handler was registered by the dev, use it to return a call back.
                 //Otherwise, just throw the exception and make the application crash
                 if (exceptionHandler != null)
@@ -175,6 +177,8 @@ public class TumblrLoginActivity extends AppCompatActivity {
                 RuntimeException exception = values[0];
                 if(exceptionHandler != null)
                     exceptionHandler.onLoginFailed(exception);
+                else
+                    finish();
             }
         }
 
@@ -350,6 +354,8 @@ public class TumblrLoginActivity extends AppCompatActivity {
                 RuntimeException exception = values[0];
                 if(exceptionHandler != null)
                     exceptionHandler.onLoginFailed(exception);
+                else
+                    finish();
             }
         }
 
