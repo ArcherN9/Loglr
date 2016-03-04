@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/Loglr/Loglr.iml" filepath="$PROJECT_DIR$/Loglr/Loglr.iml" />
       <module fileurl="file://$PROJECT_DIR$/TumblrJumblrImplementation.iml" filepath="$PROJECT_DIR$/TumblrJumblrImplementation.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>

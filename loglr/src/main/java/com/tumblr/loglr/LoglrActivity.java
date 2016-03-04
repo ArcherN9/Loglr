@@ -1,4 +1,4 @@
-package daksh.practice.tumblrjumblrimplementation;
+package com.tumblr.loglr;
 
 import android.app.ProgressDialog;
 import android.net.Uri;
@@ -10,8 +10,9 @@ import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import daksh.practice.tumblrjumblrimplementation.Exceptions.TumblrBundleException;
-import daksh.practice.tumblrjumblrimplementation.Exceptions.TumblrLoginException;
+import com.tumblr.loglr.Exceptions.TumblrBundleException;
+import com.tumblr.loglr.Exceptions.TumblrLoginException;
+
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 import oauth.signpost.commonshttp.CommonsHttpOAuthProvider;
 import oauth.signpost.exception.OAuthCommunicationException;
@@ -22,31 +23,18 @@ import oauth.signpost.exception.OAuthNotAuthorizedException;
 /**
  * Created by wits123 on 31/12/15.
  */
-public class TumblrLoginActivity extends AppCompatActivity {
+public class LoglrActivity extends AppCompatActivity {
 
     /**
      * A tag for logging
      */
-    private static final String TAG = TumblrLoginActivity.class.getSimpleName();
+    private static final String TAG = LoglrActivity.class.getSimpleName();
 
     /**
      * Tumblr Consumer and Secret keys on which basis the user is logged in
      */
     private static String TUMBLR_CONSUMER_KEY = "ENTER CONSUMER KEY HERE";
     private static String TUMBLR_SECRET_KEY = "ENTER CONSUMER SECRET KEY HERE";
-
-    /**
-     * An object of the interface defined on this class. The interface is called
-     * when the activity receives a response from the Login process
-     */
-    private LoginListener loginListener;
-
-    /**
-     * An object of the interface defined on this class. The interface is called
-     * when the activity throws an exception caused by various reasons due which
-     * the code cannot continue function.
-     */
-    private ExceptionHandler exceptionHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,52 +45,36 @@ public class TumblrLoginActivity extends AppCompatActivity {
             //Extract Bundle
             Bundle keyBundle = getIntent().getExtras();
             //Extract Consumer Key
-            if(keyBundle.containsKey(getResources().getString(R.string.tumblr_consumer_key)))
+            if(keyBundle.containsKey(getResources().getString(R.string.tumblr_consumer_key))
+                    && !TextUtils.isEmpty(keyBundle.getString(getResources().getString(R.string.tumblr_consumer_key))))
                 TUMBLR_CONSUMER_KEY = keyBundle.getString(getResources().getString(R.string.tumblr_consumer_key));
             else
                 throw new TumblrBundleException();
 
             //Extract Secret Key
-            if(keyBundle.containsKey(getResources().getString(R.string.tumblr_consumer_secret_key)))
+            if(keyBundle.containsKey(getResources().getString(R.string.tumblr_consumer_secret_key))
+                    && !TextUtils.isEmpty(keyBundle.getString(getResources().getString(R.string.tumblr_consumer_secret_key))))
                 TUMBLR_SECRET_KEY = keyBundle.getString(getResources().getString(R.string.tumblr_consumer_secret_key));
             else
                 //If key is not found
                 throw new TumblrBundleException();
 
             //test if LoginListener was registered
-            if(loginListener != null) {
-                if(exceptionHandler == null)
+            if(Loglr.getInstance().getLoginListener() != null) {
+                if(Loglr.getInstance().getExceptionHandler() == null)
                     Log.w(TAG, "Continuing execution without ExceptionHandler. No Exception call backs will be sent. It is recommended to set one.");
                 //Initiate an AsyncTask to begin TumblrLogin
                 new TaskTumblrLogin().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             } else {
                 //If Exception handler was registered by the dev, use it to return a call back.
                 //Otherwise, just throw the exception and make the application crash
-                if (exceptionHandler != null)
-                    exceptionHandler.onLoginFailed(new TumblrLoginException());
+                if (Loglr.getInstance().getExceptionHandler() != null)
+                    Loglr.getInstance().getExceptionHandler().onLoginFailed(new TumblrLoginException());
                 else
                     throw new TumblrLoginException();
             }
         } else
             throw new TumblrBundleException();
-    }
-
-    /**
-     * Receives a reference of the interface to be called when a result is retrieved
-     * from the login process
-     * @param loginListener
-     */
-    public void setLoginListener(LoginListener loginListener) {
-        this.loginListener = loginListener;
-    }
-
-    /**
-     * Optional | Recommended though to handle code in a better fashion
-     * The method receives a reference of the interface to be executed when an exception is thrown
-     * @param exceptionHandler
-     */
-    public void setExceptionHandler(ExceptionHandler exceptionHandler) {
-        this.exceptionHandler = exceptionHandler;
     }
 
     /**
@@ -133,7 +105,7 @@ public class TumblrLoginActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             //Show a progress Dialog while the request tokens are fetched
-            progressDialog = ProgressDialog.show(TumblrLoginActivity.this, null, getResources().getString(R.string.tumblrlogin_loading));
+            progressDialog = ProgressDialog.show(LoglrActivity.this, null, getResources().getString(R.string.tumblrlogin_loading));
         }
 
         @Override
@@ -175,8 +147,8 @@ public class TumblrLoginActivity extends AppCompatActivity {
             super.onProgressUpdate(values);
             if(values != null && values.length > 0) {
                 RuntimeException exception = values[0];
-                if(exceptionHandler != null)
-                    exceptionHandler.onLoginFailed(exception);
+                if(Loglr.getInstance().getExceptionHandler() != null)
+                    Loglr.getInstance().getExceptionHandler().onLoginFailed(exception);
                 else
                     finish();
             }
@@ -302,7 +274,7 @@ public class TumblrLoginActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             //Show Progress Dialog while the user waits
-            progressDialog = ProgressDialog.show(TumblrLoginActivity.this, null, "Loading...");
+            progressDialog = ProgressDialog.show(LoglrActivity.this, null, "Loading...");
         }
 
         @Override
@@ -318,13 +290,13 @@ public class TumblrLoginActivity extends AppCompatActivity {
                 if(!TextUtils.isEmpty(commonsHttpOAuthConsumer.getToken())) {
                     //Set the consumer key token in the LoginResult object
                     loginResult.setStrTumblrKey(commonsHttpOAuthConsumer.getToken());
-                    Log.i(TAG, "OAuthToken : " + PreferenceHandler.getTumblrKey(getBaseContext()));
+                    Log.i(TAG, "OAuthToken : " + loginResult.getStrTumblrKey());
                 }
 
                 if(!TextUtils.isEmpty(commonsHttpOAuthConsumer.getTokenSecret())) {
                     //Set the Secret consumer key token in the LoginResult object
                     loginResult.setStrTumblrKey(commonsHttpOAuthConsumer.getTokenSecret());
-                    Log.i(TAG, "OAuthSecretToken : " + PreferenceHandler.getTumblrSecret(getBaseContext()));
+                    Log.i(TAG, "OAuthSecretToken : " + loginResult.getStrTumblrSecreyKey());
                 }
                 //Return the login result with ConsumerKey and ConsumerSecret Key
                 return loginResult;
@@ -352,8 +324,8 @@ public class TumblrLoginActivity extends AppCompatActivity {
             super.onProgressUpdate(values);
             if(values != null && values.length > 0) {
                 RuntimeException exception = values[0];
-                if(exceptionHandler != null)
-                    exceptionHandler.onLoginFailed(exception);
+                if(Loglr.getInstance().getExceptionHandler() != null)
+                    Loglr.getInstance().getExceptionHandler().onLoginFailed(exception);
                 else
                     finish();
             }
@@ -367,16 +339,8 @@ public class TumblrLoginActivity extends AppCompatActivity {
             //Check if tokens were retrieved. If yes, Set result as successful and finish activity
             //otherwise, set as failed.
             if(loginResult != null)
-                loginListener.onLoginSuccessful(loginResult);
+                Loglr.getInstance().getLoginListener().onLoginSuccessful(loginResult);
             finish();
         }
-    }
-
-    public interface LoginListener {
-        void onLoginSuccessful(LoginResult loginResult);
-    }
-
-    public interface ExceptionHandler {
-        void onLoginFailed(RuntimeException exception);
     }
 }

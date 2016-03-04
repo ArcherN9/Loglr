@@ -1,4 +1,4 @@
-package daksh.practice.tumblrjumblrimplementation;
+package com.tumblr.loglr;
 
 /**
  * Created by guesthouser on 3/1/16.

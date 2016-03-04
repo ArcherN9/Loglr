@@ -1,4 +1,4 @@
-package daksh.practice.tumblrjumblrimplementation.Exceptions;
+package com.tumblr.loglr.Exceptions;
 
 /**
  * Created by guesthouser on 3/1/16.
