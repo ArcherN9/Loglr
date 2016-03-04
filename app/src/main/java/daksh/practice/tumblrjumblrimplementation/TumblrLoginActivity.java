@@ -74,7 +74,7 @@ public class TumblrLoginActivity extends AppCompatActivity {
                 //Initiate an AsyncTask to begin TumblrLogin
                 new TaskTumblrLogin().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             else {
-                //If Exceptionhandler was registered by the dev, use it to return a call back.
+                //If Exception handler was registered by the dev, use it to return a call back.
                 //Otherwise, just throw the exception and make the application crash
                 if (exceptionHandler != null)
                     exceptionHandler.onLoginFailed(new TumblrLoginException());
@@ -86,7 +86,7 @@ public class TumblrLoginActivity extends AppCompatActivity {
     }
 
     /**
-     * The method receives a reference of the interface to be executed when a result is retrieved
+     * Receives a reference of the interface to be called when a result is retrieved
      * from the login process
      * @param loginListener
      */
@@ -110,7 +110,7 @@ public class TumblrLoginActivity extends AppCompatActivity {
      * 3) Makes a network request to retrieve authorization URL. The user is to be navigated
      * to this URL so he may login by entering his/her user credentials.
      */
-    private class TaskTumblrLogin extends AsyncTask<Void, Exception, String> {
+    private class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> {
 
         /**
          * The OAuth provider
@@ -151,28 +151,28 @@ public class TumblrLoginActivity extends AppCompatActivity {
                         getResources().getString(R.string.tumblr_callback_url));
             } catch (OAuthMessageSignerException e) {
                 e.printStackTrace();
-                publishProgress(e);
+                publishProgress(new TumblrLoginException(e.getMessage()));
                 return null;
             } catch (OAuthNotAuthorizedException e) {
                 e.printStackTrace();
-                publishProgress(e);
+                publishProgress(new TumblrLoginException(e.getResponseBody()));
                 return null;
             } catch (OAuthExpectationFailedException e) {
                 e.printStackTrace();
-                publishProgress(e);
+                publishProgress(new TumblrLoginException(e.getMessage()));
                 return null;
             } catch (OAuthCommunicationException e) {
                 e.printStackTrace();
-                publishProgress(e);
+                publishProgress(new TumblrLoginException(e.getResponseBody()));
                 return null;
             }
         }
 
         @Override
-        protected void onProgressUpdate(Exception... values) {
+        protected void onProgressUpdate(RuntimeException... values) {
             super.onProgressUpdate(values);
             if(values != null && values.length > 0) {
-                Exception exception = values[0];
+                RuntimeException exception = values[0];
                 if(exceptionHandler != null)
                     exceptionHandler.onLoginFailed(exception);
             }
@@ -244,7 +244,7 @@ public class TumblrLoginActivity extends AppCompatActivity {
      * The asyncTask utilises the parameters passed and makes a network call to retrieve
      * the access tokens & save them to SharedPreferences.
      */
-    private class TaskRetrieveAccessToken extends AsyncTask<Void, Exception, LoginResult> {
+    private class TaskRetrieveAccessToken extends AsyncTask<Void, RuntimeException, LoginResult> {
 
         /**
          * The OAuth provider
@@ -326,28 +326,28 @@ public class TumblrLoginActivity extends AppCompatActivity {
                 return loginResult;
             } catch (OAuthCommunicationException e) {
                 e.printStackTrace();
-                publishProgress(e);
+                publishProgress(new TumblrLoginException(e.getResponseBody()));
                 return null;
             } catch (OAuthExpectationFailedException e) {
                 e.printStackTrace();
-                publishProgress(e);
+                publishProgress(new TumblrLoginException(e.getMessage()));
                 return null;
             } catch (OAuthNotAuthorizedException e) {
                 e.printStackTrace();
-                publishProgress(e);
+                publishProgress(new TumblrLoginException(e.getResponseBody()));
                 return null;
             } catch (OAuthMessageSignerException e) {
                 e.printStackTrace();
-                publishProgress(e);
+                publishProgress(new TumblrLoginException(e.getMessage()));
                 return null;
             }
         }
 
         @Override
-        protected void onProgressUpdate(Exception... values) {
+        protected void onProgressUpdate(RuntimeException... values) {
             super.onProgressUpdate(values);
             if(values != null && values.length > 0) {
-                Exception exception = values[0];
+                RuntimeException exception = values[0];
                 if(exceptionHandler != null)
                     exceptionHandler.onLoginFailed(exception);
             }
@@ -361,8 +361,7 @@ public class TumblrLoginActivity extends AppCompatActivity {
             //Check if tokens were retrieved. If yes, Set result as successful and finish activity
             //otherwise, set as failed.
             if(loginResult != null)
-                if(loginListener != null)
-                    loginListener.onLoginSuccessful(loginResult);
+                loginListener.onLoginSuccessful(loginResult);
             finish();
         }
     }

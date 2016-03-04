@@ -10,16 +10,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="05131cd2-8d6e-4064-b1bb-238bd3a3ece7" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/daksh/practice/tumblrjumblrimplementation/Exceptions/TumblrBundleException.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/daksh/practice/tumblrjumblrimplementation/Exceptions/TumblrLoginException.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/java/daksh/practice/tumblrjumblrimplementation/TumblrLoginException.java" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/daksh/practice/tumblrjumblrimplementation/TumblrLoginActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/daksh/practice/tumblrjumblrimplementation/TumblrLoginActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/app.iml" afterPath="$PROJECT_DIR$/app/app.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/appcompat_v7_23_1_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/appcompat_v7_23_1_1.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_annotations_23_1_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_annotations_23_1_1.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_v4_23_1_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_v4_23_1_1.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/daksh/practice/tumblrjumblrimplementation/Exceptions/TumblrLoginException.java" afterPath="$PROJECT_DIR$/app/src/main/java/daksh/practice/tumblrjumblrimplementation/Exceptions/TumblrLoginException.java" />
     </list>
     <ignored path="TumblrJumblrImplementation.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -43,21 +35,48 @@
       <file leaf-file-name="TumblrLoginActivity.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/daksh/practice/tumblrjumblrimplementation/TumblrLoginActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6174334">
-              <caret line="68" column="37" selection-start-line="68" selection-start-column="37" selection-end-line="68" selection-end-column="37" />
+            <state vertical-scroll-proportion="-2.7227602">
+              <caret line="176" column="32" selection-start-line="176" selection-start-column="32" selection-end-line="176" selection-end-column="32" />
               <folding>
+                <element signature="imports" expanded="true" />
                 <element signature="e#2256#2310#0" expanded="true" />
                 <element signature="e#2371#2425#0" expanded="true" />
                 <element signature="e#2567#2628#0" expanded="true" />
                 <element signature="e#2687#2748#0" expanded="true" />
-                <element signature="e#5284#5338#0" expanded="true" />
-                <element signature="e#5812#5861#0" expanded="true" />
-                <element signature="e#5887#5935#0" expanded="true" />
-                <element signature="e#5961#6007#0" expanded="true" />
-                <element signature="e#6230#6284#0" expanded="true" />
-                <element signature="e#8061#10864#0" expanded="true" />
-                <element signature="e#8482#8536#0" expanded="true" />
-                <element signature="e#10863#10864#0" expanded="true" />
+                <element signature="e#5279#5333#0" expanded="true" />
+                <element signature="e#5807#5856#0" expanded="true" />
+                <element signature="e#5882#5930#0" expanded="true" />
+                <element signature="e#5956#6002#0" expanded="true" />
+                <element signature="e#6225#6279#0" expanded="true" />
+                <element signature="e#8236#11039#0" expanded="true" />
+                <element signature="e#8657#8711#0" expanded="true" />
+                <element signature="e#11038#11039#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="OAuthCommunicationException.java" pinned="false" current-in-tab="false">
+        <entry file="jar://$USER_HOME$/.ideaLibSources/signpost-core-1.2.1.2-sources.jar!/oauth/signpost/exception/OAuthCommunicationException.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="28" column="22" selection-start-line="28" selection-start-column="22" selection-end-line="28" selection-end-column="22" />
+              <folding>
+                <element signature="e#1150#1151#0" expanded="true" />
+                <element signature="e#1185#1186#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TumblrLoginException.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/daksh/practice/tumblrjumblrimplementation/Exceptions/TumblrLoginException.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="11" column="31" selection-start-line="11" selection-start-column="11" selection-end-line="11" selection-end-column="31" />
+              <folding>
+                <element signature="e#376#377#0" expanded="true" />
+                <element signature="e#409#410#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -1623,9 +1642,9 @@
         <option value="$PROJECT_DIR$/app/src/main/java/daksh/practice/tumblrjumblrimplementation/TumblrException.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/daksh/practice/tumblrjumblrimplementation/TumblrBundle.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/daksh/practice/tumblrjumblrimplementation/TumblrLoginException.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/daksh/practice/tumblrjumblrimplementation/Exceptions/TumblrLoginException.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/daksh/practice/tumblrjumblrimplementation/Exceptions/TumblrBundleException.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/daksh/practice/tumblrjumblrimplementation/Exceptions/TumblrLoginException.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/daksh/practice/tumblrjumblrimplementation/TumblrLoginActivity.java" />
       </list>
     </option>
@@ -2043,7 +2062,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="1" />
+      <option name="time" value="3" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -2061,18 +2080,19 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
+            <element signature="imports" expanded="true" />
             <element signature="e#2256#2310#0" expanded="true" />
             <element signature="e#2371#2425#0" expanded="true" />
             <element signature="e#2567#2628#0" expanded="true" />
             <element signature="e#2687#2748#0" expanded="true" />
-            <element signature="e#5284#5338#0" expanded="true" />
-            <element signature="e#5812#5861#0" expanded="true" />
-            <element signature="e#5887#5935#0" expanded="true" />
-            <element signature="e#5961#6007#0" expanded="true" />
-            <element signature="e#6230#6284#0" expanded="true" />
-            <element signature="e#8061#10864#0" expanded="true" />
-            <element signature="e#8482#8536#0" expanded="true" />
-            <element signature="e#10863#10864#0" expanded="true" />
+            <element signature="e#5279#5333#0" expanded="true" />
+            <element signature="e#5807#5856#0" expanded="true" />
+            <element signature="e#5882#5930#0" expanded="true" />
+            <element signature="e#5956#6002#0" expanded="true" />
+            <element signature="e#6225#6279#0" expanded="true" />
+            <element signature="e#8236#11039#0" expanded="true" />
+            <element signature="e#8657#8711#0" expanded="true" />
+            <element signature="e#11038#11039#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2098,18 +2118,19 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
+            <element signature="imports" expanded="true" />
             <element signature="e#2256#2310#0" expanded="true" />
             <element signature="e#2371#2425#0" expanded="true" />
             <element signature="e#2567#2628#0" expanded="true" />
             <element signature="e#2687#2748#0" expanded="true" />
-            <element signature="e#5284#5338#0" expanded="true" />
-            <element signature="e#5812#5861#0" expanded="true" />
-            <element signature="e#5887#5935#0" expanded="true" />
-            <element signature="e#5961#6007#0" expanded="true" />
-            <element signature="e#6230#6284#0" expanded="true" />
-            <element signature="e#8061#10864#0" expanded="true" />
-            <element signature="e#8482#8536#0" expanded="true" />
-            <element signature="e#10863#10864#0" expanded="true" />
+            <element signature="e#5279#5333#0" expanded="true" />
+            <element signature="e#5807#5856#0" expanded="true" />
+            <element signature="e#5882#5930#0" expanded="true" />
+            <element signature="e#5956#6002#0" expanded="true" />
+            <element signature="e#6225#6279#0" expanded="true" />
+            <element signature="e#8236#11039#0" expanded="true" />
+            <element signature="e#8657#8711#0" expanded="true" />
+            <element signature="e#11038#11039#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2135,18 +2156,19 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
+            <element signature="imports" expanded="true" />
             <element signature="e#2256#2310#0" expanded="true" />
             <element signature="e#2371#2425#0" expanded="true" />
             <element signature="e#2567#2628#0" expanded="true" />
             <element signature="e#2687#2748#0" expanded="true" />
-            <element signature="e#5284#5338#0" expanded="true" />
-            <element signature="e#5812#5861#0" expanded="true" />
-            <element signature="e#5887#5935#0" expanded="true" />
-            <element signature="e#5961#6007#0" expanded="true" />
-            <element signature="e#6230#6284#0" expanded="true" />
-            <element signature="e#8061#10864#0" expanded="true" />
-            <element signature="e#8482#8536#0" expanded="true" />
-            <element signature="e#10863#10864#0" expanded="true" />
+            <element signature="e#5279#5333#0" expanded="true" />
+            <element signature="e#5807#5856#0" expanded="true" />
+            <element signature="e#5882#5930#0" expanded="true" />
+            <element signature="e#5956#6002#0" expanded="true" />
+            <element signature="e#6225#6279#0" expanded="true" />
+            <element signature="e#8236#11039#0" expanded="true" />
+            <element signature="e#8657#8711#0" expanded="true" />
+            <element signature="e#11038#11039#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2171,18 +2193,19 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="32" column="79" selection-start-line="32" selection-start-column="79" selection-end-line="32" selection-end-column="79" />
           <folding>
+            <element signature="imports" expanded="true" />
             <element signature="e#2256#2310#0" expanded="true" />
             <element signature="e#2371#2425#0" expanded="true" />
             <element signature="e#2567#2628#0" expanded="true" />
             <element signature="e#2687#2748#0" expanded="true" />
-            <element signature="e#5284#5338#0" expanded="true" />
-            <element signature="e#5812#5861#0" expanded="true" />
-            <element signature="e#5887#5935#0" expanded="true" />
-            <element signature="e#5961#6007#0" expanded="true" />
-            <element signature="e#6230#6284#0" expanded="true" />
-            <element signature="e#8061#10864#0" expanded="true" />
-            <element signature="e#8482#8536#0" expanded="true" />
-            <element signature="e#10863#10864#0" expanded="true" />
+            <element signature="e#5279#5333#0" expanded="true" />
+            <element signature="e#5807#5856#0" expanded="true" />
+            <element signature="e#5882#5930#0" expanded="true" />
+            <element signature="e#5956#6002#0" expanded="true" />
+            <element signature="e#6225#6279#0" expanded="true" />
+            <element signature="e#8236#11039#0" expanded="true" />
+            <element signature="e#8657#8711#0" expanded="true" />
+            <element signature="e#11038#11039#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2308,6 +2331,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.2905569">
           <caret line="31" column="11" selection-start-line="31" selection-start-column="11" selection-end-line="31" selection-end-column="11" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -2316,20 +2340,6 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="49" column="13" selection-start-line="49" selection-start-column="13" selection-end-line="49" selection-end-column="13" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.ideaLibSources/signpost-core-1.2.1.2-sources.jar!/oauth/signpost/exception/OAuthException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.23607749">
-          <caret line="14" column="8" selection-start-line="14" selection-start-column="8" selection-end-line="14" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.ideaLibSources/signpost-core-1.2.1.2-sources.jar!/oauth/signpost/exception/OAuthCommunicationException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.2723971">
-          <caret line="28" column="37" selection-start-line="28" selection-start-column="37" selection-end-line="28" selection-end-column="37" />
         </state>
       </provider>
     </entry>
@@ -2375,29 +2385,68 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/daksh/practice/tumblrjumblrimplementation/Exceptions/TumblrLoginException.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.12711865">
-          <caret line="7" column="11" selection-start-line="7" selection-start-column="11" selection-end-line="7" selection-end-column="11" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="11" column="31" selection-start-line="11" selection-start-column="11" selection-end-line="11" selection-end-column="31" />
+          <folding>
+            <element signature="e#376#377#0" expanded="true" />
+            <element signature="e#409#410#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.ideaLibSources/signpost-core-1.2.1.2-sources.jar!/oauth/signpost/exception/OAuthCommunicationException.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="28" column="22" selection-start-line="28" selection-start-column="22" selection-end-line="28" selection-end-column="22" />
+          <folding>
+            <element signature="e#1150#1151#0" expanded="true" />
+            <element signature="e#1185#1186#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.ideaLibSources/signpost-core-1.2.1.2-sources.jar!/oauth/signpost/exception/OAuthException.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.05447942">
+          <caret line="3" column="22" selection-start-line="3" selection-start-column="22" selection-end-line="3" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.ideaLibSources/signpost-core-1.2.1.2-sources.jar!/oauth/signpost/exception/OAuthExpectationFailedException.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.07263923">
+          <caret line="17" column="60" selection-start-line="17" selection-start-column="60" selection-end-line="17" selection-end-column="60" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.ideaLibSources/signpost-core-1.2.1.2-sources.jar!/oauth/signpost/exception/OAuthMessageSignerException.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.07263923">
+          <caret line="17" column="13" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/daksh/practice/tumblrjumblrimplementation/TumblrLoginActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6174334">
-          <caret line="68" column="37" selection-start-line="68" selection-start-column="37" selection-end-line="68" selection-end-column="37" />
+        <state vertical-scroll-proportion="-2.7227602">
+          <caret line="176" column="32" selection-start-line="176" selection-start-column="32" selection-end-line="176" selection-end-column="32" />
           <folding>
+            <element signature="imports" expanded="true" />
             <element signature="e#2256#2310#0" expanded="true" />
             <element signature="e#2371#2425#0" expanded="true" />
             <element signature="e#2567#2628#0" expanded="true" />
             <element signature="e#2687#2748#0" expanded="true" />
-            <element signature="e#5284#5338#0" expanded="true" />
-            <element signature="e#5812#5861#0" expanded="true" />
-            <element signature="e#5887#5935#0" expanded="true" />
-            <element signature="e#5961#6007#0" expanded="true" />
-            <element signature="e#6230#6284#0" expanded="true" />
-            <element signature="e#8061#10864#0" expanded="true" />
-            <element signature="e#8482#8536#0" expanded="true" />
-            <element signature="e#10863#10864#0" expanded="true" />
+            <element signature="e#5279#5333#0" expanded="true" />
+            <element signature="e#5807#5856#0" expanded="true" />
+            <element signature="e#5882#5930#0" expanded="true" />
+            <element signature="e#5956#6002#0" expanded="true" />
+            <element signature="e#6225#6279#0" expanded="true" />
+            <element signature="e#8236#11039#0" expanded="true" />
+            <element signature="e#8657#8711#0" expanded="true" />
+            <element signature="e#11038#11039#0" expanded="true" />
           </folding>
         </state>
       </provider>
