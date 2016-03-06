@@ -9,6 +9,7 @@
 # Java class files
 *.class
 
+/.idea/vcs.xml
 # Generated files
 bin/
 gen/
