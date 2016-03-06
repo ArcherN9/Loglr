@@ -5,6 +5,7 @@
 # Files for the Dalvik VM
 *.dex
 
+/Loglr.iml
 # Java class files
 *.class
 
@@ -26,6 +27,10 @@ proguard/
 *.log
 
 # Android Studio Navigation editor temp files
+/.idea
+/loglr/loglr.iml
+/app/app.iml
+/.idea/libraries
 .navigation/
 
 # Android Studio captures folder
