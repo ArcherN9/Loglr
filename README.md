@@ -1,3 +1,4 @@
+[ ![Download](https://api.bintray.com/packages/dakshsrivastava/maven/Loglr/images/download.svg) ](https://bintray.com/dakshsrivastava/maven/Loglr/_latestVersion)
 # Loglr #
 ### The easiest way to get your user logged in via Tumblr ###
 
