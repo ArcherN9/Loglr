@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TumblrJumblrImplementation</string>
+    <string name="app_name">Loglr</string>
 
     <!-- Bundle keys -->
     <string name="tumblr_consumer_key">tumblr_consumer_key</string>

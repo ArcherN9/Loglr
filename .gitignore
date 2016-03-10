@@ -9,6 +9,8 @@
 # Java class files
 *.class
 
+/.idea/modules.xml
+/.idea/workspace.xml
 /.idea/vcs.xml
 # Generated files
 bin/

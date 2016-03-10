@@ -9,6 +9,7 @@
         <activity
             android:name=".LoglrActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
             android:label="@string/app_name">
         </activity>
     </application>

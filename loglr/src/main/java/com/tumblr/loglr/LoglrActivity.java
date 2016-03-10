@@ -33,8 +33,8 @@ public class LoglrActivity extends AppCompatActivity {
     /**
      * Tumblr Consumer and Secret keys on which basis the user is logged in
      */
-    private static String TUMBLR_CONSUMER_KEY = "ENTER CONSUMER KEY HERE";
-    private static String TUMBLR_SECRET_KEY = "ENTER CONSUMER SECRET KEY HERE";
+    private static String TUMBLR_CONSUMER_KEY = "";
+    private static String TUMBLR_SECRET_KEY = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -295,7 +295,7 @@ public class LoglrActivity extends AppCompatActivity {
 
                 if(!TextUtils.isEmpty(commonsHttpOAuthConsumer.getTokenSecret())) {
                     //Set the Secret consumer key token in the LoginResult object
-                    loginResult.setStrTumblrKey(commonsHttpOAuthConsumer.getTokenSecret());
+                    loginResult.setStrTumblrSecreyKey(commonsHttpOAuthConsumer.getTokenSecret());
                     Log.i(TAG, "OAuthSecretToken : " + loginResult.getStrTumblrSecreyKey());
                 }
                 //Return the login result with ConsumerKey and ConsumerSecret Key
