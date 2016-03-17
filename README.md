@@ -38,8 +38,8 @@ Loglr.getInstance()
 
 On overriding the LoginListener, an object of `LoginResult` is received. To extract Token and Secret Token :
 ```
-String strTumblrKey = loginResult.getStrTumblrKey();
-String strTumblrSecretKey = loginResult.getStrTumblrSecreyKey();
+String strOAuthToken = loginResult.getOAuthToken();
+String strOAuthTokenSecret = loginResult.getOAuthTokenSecret();
 ```
 
 ###License###
