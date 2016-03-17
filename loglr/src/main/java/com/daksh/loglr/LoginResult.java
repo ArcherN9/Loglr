@@ -5,39 +5,39 @@ public class LoginResult {
     /**
      * The Tumblr Key used to make API calls to Tumblr using Jumble client
      */
-    private String strTumblrKey;
+    private String strOAuthToken;
 
     /**
      * The Tumblr Secret Key used to make API calls to Tumblr using Jumble client
      */
-    private String strTumblrSecreyKey;
+    private String strOAuthTokenSecret;
 
     /**
      * @return Return the TumblrKey
      */
-    public String getStrTumblrKey() {
-        return strTumblrKey;
+    public String getOAuthToken() {
+        return strOAuthToken;
     }
 
     /**
      * Sets the Tumblr Key to the object
-     * @param strTumblrKey
+     * @param strOAuthToken
      */
-    void setStrTumblrKey(String strTumblrKey) {
-        this.strTumblrKey = strTumblrKey;
+    void setStrOAuthToken(String strOAuthToken) {
+        this.strOAuthToken = strOAuthToken;
     }
 
     /**
      * @return Return the Tumblr secret key
      */
-    public String getStrTumblrSecreyKey() {
-        return strTumblrSecreyKey;
+    public String getOAuthTokenSecret() {
+        return strOAuthTokenSecret;
     }
 
     /**
      * @return Return the TumblrKey
      */
-    void setStrTumblrSecreyKey(String strTumblrSecreyKey) {
-        this.strTumblrSecreyKey = strTumblrSecreyKey;
+    void setStrOAuthTokenSecret(String strOAuthTokenSecret) {
+        this.strOAuthTokenSecret = strOAuthTokenSecret;
     }
 }
