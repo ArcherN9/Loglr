@@ -2,7 +2,9 @@
 # Loglr #
 ### The easiest way to get your user logged in via Tumblr ###
 
-Loglr is an open source library that enables developers to implement 'Login via Tumblr' with as minimum frustration as possible. 
+Loglr is an open source library that enables developers to implement 'Login via Tumblr' with as minimum frustration as possible.
+
+Note : The library is still in development. On and off, one may encounter bugs or mistakes. Please report them on the issue tracker. I'll fix and send out an immediate release.
 
 ###Dependencies###
 ```Gradle : compile 'com.daksh:loglr:0.2.2'```
