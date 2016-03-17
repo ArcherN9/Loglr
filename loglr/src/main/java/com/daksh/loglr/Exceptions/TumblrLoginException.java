@@ -1,8 +1,5 @@
-package com.tumblr.loglr.Exceptions;
+package com.daksh.loglr.Exceptions;
 
-/**
- * Created by guesthouser on 3/1/16.
- */
 public class TumblrLoginException extends RuntimeException {
 
     public TumblrLoginException() {

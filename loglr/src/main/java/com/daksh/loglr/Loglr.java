@@ -1,12 +1,9 @@
-package com.tumblr.loglr;
+package com.daksh.loglr;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-/**
- * Created by guesthouser on 3/4/16.
- */
 public class Loglr {
 
     /**

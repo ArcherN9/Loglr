@@ -1,8 +1,5 @@
-package com.tumblr.loglr;
+package com.daksh.loglr;
 
-/**
- * Created by guesthouser on 3/1/16.
- */
 public class LoginResult {
 
     /**

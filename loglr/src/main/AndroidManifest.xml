@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tumblr.loglr">
+    package="com.daksh.loglr">
 
     <application
         android:allowBackup="true"
@@ -7,7 +7,7 @@
         android:supportsRtl="true">
 
         <activity
-            android:name=".LoglrActivity"
+            android:name="com.daksh.loglr.LoglrActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:label="@string/app_name">

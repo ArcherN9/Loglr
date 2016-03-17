@@ -1,4 +1,4 @@
-package com.tumblr.loglr;
+package com.daksh.loglr;
 
 import android.app.ProgressDialog;
 import android.net.Uri;
@@ -10,8 +10,8 @@ import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.tumblr.loglr.Exceptions.TumblrBundleException;
-import com.tumblr.loglr.Exceptions.TumblrLoginException;
+import com.daksh.loglr.Exceptions.TumblrBundleException;
+import com.daksh.loglr.Exceptions.TumblrLoginException;
 
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 import oauth.signpost.commonshttp.CommonsHttpOAuthProvider;
@@ -20,9 +20,6 @@ import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
 import oauth.signpost.exception.OAuthNotAuthorizedException;
 
-/**
- * Created by wits123 on 31/12/15.
- */
 public class LoglrActivity extends AppCompatActivity {
 
     /**
