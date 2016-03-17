@@ -9,7 +9,6 @@ import android.widget.Button;
 
 import com.tumblr.loglr.LoginResult;
 import com.tumblr.loglr.Loglr;
-import com.tumblr.loglr.LoglrActivity;
 
 /**
  * Created by wits123 on 31/12/15.
@@ -47,9 +46,9 @@ public class MainActivity extends AppCompatActivity implements Loglr.LoginListen
 
     @Override
     public void onLoginSuccessful(LoginResult loginResult) {
-        if(loginResult != null && !TextUtils.isEmpty(loginResult.getStrTumblrKey()) && !TextUtils.isEmpty(loginResult.getStrTumblrSecreyKey())) {
-            Log.i(TAG, "Tumblr Token : " + loginResult.getStrTumblrKey());
-            Log.i(TAG, "Tumblr Secret Token : " + loginResult.getStrTumblrSecreyKey());
+        if(loginResult != null && !TextUtils.isEmpty(loginResult.getOAuthToken()) && !TextUtils.isEmpty(loginResult.getOAuthTokenSecret())) {
+            Log.i(TAG, "Tumblr Token : " + loginResult.getOAuthToken());
+            Log.i(TAG, "Tumblr Secret Token : " + loginResult.getOAuthTokenSecret());
             Button btnClickMe = (Button) findViewById(R.id.mainactivity_button);
             btnClickMe.setText("Congratulations, Tumblr login succeeded");
         }

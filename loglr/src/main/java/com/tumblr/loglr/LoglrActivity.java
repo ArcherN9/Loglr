@@ -289,14 +289,14 @@ public class LoglrActivity extends AppCompatActivity {
                 //Check if tokens were received. If Yes, save them to SharedPreferences for later use.
                 if(!TextUtils.isEmpty(commonsHttpOAuthConsumer.getToken())) {
                     //Set the consumer key token in the LoginResult object
-                    loginResult.setStrTumblrKey(commonsHttpOAuthConsumer.getToken());
-                    Log.i(TAG, "OAuthToken : " + loginResult.getStrTumblrKey());
+                    loginResult.setStrOAuthToken(commonsHttpOAuthConsumer.getToken());
+                    Log.i(TAG, "OAuthToken : " + loginResult.getOAuthToken());
                 }
 
                 if(!TextUtils.isEmpty(commonsHttpOAuthConsumer.getTokenSecret())) {
                     //Set the Secret consumer key token in the LoginResult object
-                    loginResult.setStrTumblrSecreyKey(commonsHttpOAuthConsumer.getTokenSecret());
-                    Log.i(TAG, "OAuthSecretToken : " + loginResult.getStrTumblrSecreyKey());
+                    loginResult.setStrOAuthTokenSecret(commonsHttpOAuthConsumer.getTokenSecret());
+                    Log.i(TAG, "OAuthSecretToken : " + loginResult.getOAuthTokenSecret());
                 }
                 //Return the login result with ConsumerKey and ConsumerSecret Key
                 return loginResult;
