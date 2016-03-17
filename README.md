@@ -2,10 +2,12 @@
 # Loglr #
 ### The easiest way to get your user logged in via Tumblr ###
 
-Loglr is an open source library that enables developers to implement 'Login via Tumblr' with as minimum frustration as possible. 
+Loglr is an open source library that enables developers to implement 'Login via Tumblr' with as minimum frustration as possible.
+
+Note : The library is still in development. On and off, one may encounter bugs or mistakes. Please report them on the issue tracker. I'll fix and send out an immediate release.
 
 ###Dependencies###
-```Gradle : compile 'com.daksh:loglr:0.2.1'```
+```Gradle : compile 'com.daksh:loglr:0.2.2'```
 
 --- OR ---
 ```
@@ -13,7 +15,7 @@ Maven :
 <dependency>
   <groupId>com.daksh</groupId>
   <artifactId>loglr</artifactId>
-  <version>0.2.1</version>
+  <version>0.2.2</version>
   <type>pom</type>
 </dependency>
 ```
@@ -38,8 +40,8 @@ Loglr.getInstance()
 
 On overriding the LoginListener, an object of `LoginResult` is received. To extract Token and Secret Token :
 ```
-String strTumblrKey = loginResult.getStrTumblrKey();
-String strTumblrSecretKey = loginResult.getStrTumblrSecreyKey();
+String strOAuthToken = loginResult.getOAuthToken();
+String strOAuthTokenSecret = loginResult.getOAuthTokenSecret();
 ```
 
 ###License###
