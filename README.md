@@ -5,7 +5,7 @@
 Loglr is an open source library that enables developers to implement 'Login via Tumblr' with as minimum frustration as possible. 
 
 ###Dependencies###
-```Gradle : compile 'com.daksh:loglr:0.2.1'```
+```Gradle : compile 'com.daksh:loglr:0.2.2'```
 
 --- OR ---
 ```
@@ -13,7 +13,7 @@ Maven :
 <dependency>
   <groupId>com.daksh</groupId>
   <artifactId>loglr</artifactId>
-  <version>0.2.1</version>
+  <version>0.2.2</version>
   <type>pom</type>
 </dependency>
 ```
