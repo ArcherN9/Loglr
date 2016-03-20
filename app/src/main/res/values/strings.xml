@@ -1,7 +1,4 @@
 <resources>
     <string name="app_name">Loglr</string>
-
-    <!-- Bundle keys -->
-    <string name="tumblr_consumer_key">tumblr_consumer_key</string>
-    <string name="tumblr_consumer_secret_key">tumblr_consumer_secret_key</string>
+    <string name="tumblr_callback_url">https://github.com/dakshsrivastava/Loglr</string>
 </resources>

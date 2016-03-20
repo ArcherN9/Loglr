@@ -7,13 +7,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.tumblr.loglr.Interfaces.ExceptionHandler;
+import com.tumblr.loglr.Interfaces.LoginListener;
 import com.tumblr.loglr.LoginResult;
 import com.tumblr.loglr.Loglr;
 
-/**
- * Created by wits123 on 31/12/15.
- */
-public class MainActivity extends AppCompatActivity implements Loglr.LoginListener, Loglr.ExceptionHandler {
+public class MainActivity extends AppCompatActivity implements LoginListener, ExceptionHandler {
 
     /**
      * A tag for logging
@@ -36,11 +35,12 @@ public class MainActivity extends AppCompatActivity implements Loglr.LoginListen
         @Override
         public void onClick(View v) {
             Loglr.getInstance()
-                    .setConsumerKey("ENTER CONSUMER KEY HERE")
-                    .setConsumerSecretKey("ENTER CONSUMER SECRET KEY")
+                    .setConsumerKey("SET CONSUMER KEY HERE")
+                    .setConsumerSecretKey("SET CONSUMER SECRET HERE")
+                    .setUrlCallBack(getResources().getString(R.string.tumblr_callback_url))
                     .setLoginListener(MainActivity.this)
                     .setExceptionHandler(MainActivity.this)
-                    .initiate(MainActivity.this);
+                    .initiateInActivity(MainActivity.this);
         }
     };
 
@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements Loglr.LoginListen
             Log.i(TAG, "Tumblr Secret Token : " + loginResult.getOAuthTokenSecret());
             Button btnClickMe = (Button) findViewById(R.id.mainactivity_button);
             btnClickMe.setText("Congratulations, Tumblr login succeeded");
+            btnClickMe.setEnabled(false);
         }
     }
 

@@ -5,7 +5,6 @@
     <string name="tumblr_request">https://www.tumblr.com/oauth/request_token</string>
     <string name="tumblr_access">https://www.tumblr.com/oauth/access_token</string>
     <string name="tumblr_auth">https://www.tumblr.com/oauth/authorize</string>
-    <string name="tumblr_callback_url">http://somewebsite.com/</string>
 
     <!-- Loading messages -->
     <string name="tumblrlogin_loading">Loading...</string>
