@@ -7,7 +7,7 @@ Loglr is an open source library that enables developers to implement 'Login via 
 Note : The library is still in development. On and off, one may encounter bugs or mistakes. Please report them on the issue tracker. I'll fix and send out an immediate release.
 
 ###Dependencies###
-```Gradle : compile 'com.daksh:loglr:0.2.2'```
+```Gradle : compile 'com.daksh:loglr:0.3.1'```
 
 --- OR ---
 ```
@@ -15,7 +15,7 @@ Maven :
 <dependency>
   <groupId>com.daksh</groupId>
   <artifactId>loglr</artifactId>
-  <version>0.2.2</version>
+  <version>0.3.1</version>
   <type>pom</type>
 </dependency>
 ```
@@ -34,8 +34,22 @@ Loglr.getInstance()
                     //Interface to receive call backs when things go wrong
                     .setExceptionHandler(exceptionHandler) 
                     
-                    //initiate login process and provide a context of Activity
-                    .initiate(context); 
+                    //The URL set as a callback on Tumblr
+                    //NOTE: Has to be same as the one entered on Tumblr dev console. 
+                    //Library will not work otherwise
+                    .setUrlCallBack(strUrlCallback)
+                    
+                    //There are two ways to initiate the login process
+                    
+                    //First :
+                    //initiate login process in an activity
+                    .initiateInActivity(context); 
+                    
+                    //OR
+                    
+                    //Second :
+                    //Initiate the login process in a dialogFragment | The support fragmentManager is an mandatory field
+                    .initiateInDialog(getSupportFragmentManager());
 ```
 
 On overriding the LoginListener, an object of `LoginResult` is received. To extract Token and Secret Token :
