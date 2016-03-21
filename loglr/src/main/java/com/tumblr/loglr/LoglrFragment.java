@@ -30,8 +30,23 @@ public class LoglrFragment extends DialogFragment implements DismissListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+
+        //Remove the fragment title
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+
         return inflater.inflate(R.layout.fragment_tumblr_login, null, false);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        //Set custom height and width of webview
+        int width = getResources().getDisplayMetrics().widthPixels;
+        int height = getResources().getDisplayMetrics().heightPixels;
+        getDialog().getWindow().setLayout(
+                Double.valueOf(width * 0.95).intValue(),
+                Double.valueOf(height * 0.80).intValue()
+        );
     }
 
     @Override
