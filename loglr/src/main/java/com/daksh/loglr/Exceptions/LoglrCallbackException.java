@@ -1,4 +1,4 @@
-package com.tumblr.loglr.Exceptions;
+package com.daksh.loglr.Exceptions;
 
 public class LoglrCallbackException extends RuntimeException {
 

@@ -1,4 +1,4 @@
-package com.tumblr.loglr;
+package com.daksh.loglr;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.tumblr.loglr.Exceptions.LoglrLoginException;
+import com.daksh.loglr.Exceptions.LoglrLoginException;
 
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 import oauth.signpost.commonshttp.CommonsHttpOAuthProvider;

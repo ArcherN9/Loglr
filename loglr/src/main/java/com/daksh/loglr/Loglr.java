@@ -1,12 +1,11 @@
-package com.tumblr.loglr;
+package com.daksh.loglr;
 
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 
-import com.tumblr.loglr.Interfaces.ExceptionHandler;
-import com.tumblr.loglr.Interfaces.LoginListener;
+import com.daksh.loglr.Interfaces.ExceptionHandler;
+import com.daksh.loglr.Interfaces.LoginListener;
 
 public class Loglr {
 
@@ -165,7 +164,7 @@ public class Loglr {
     /**
      * The method initiates the login procedure by calling the Tumblr APIs in a different dialog Fragment
      * which hosts a WebView.
-     * @param context The context of the calling Activity / Application
+     * @param context The context of the calling Activity / Abcpplication
      */
     public void initiateInActivity(Context context) {
         Intent intent = new Intent(context, LoglrActivity.class);

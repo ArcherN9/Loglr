@@ -1,16 +1,16 @@
 package daksh.practice.tumblrjumblrimplementation;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import com.tumblr.loglr.Interfaces.ExceptionHandler;
-import com.tumblr.loglr.Interfaces.LoginListener;
-import com.tumblr.loglr.LoginResult;
-import com.tumblr.loglr.Loglr;
+import com.daksh.loglr.Interfaces.ExceptionHandler;
+import com.daksh.loglr.Interfaces.LoginListener;
+import com.daksh.loglr.LoginResult;
+import com.daksh.loglr.Loglr;
+
 
 public class MainActivity extends AppCompatActivity implements LoginListener, ExceptionHandler {
 

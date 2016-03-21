@@ -1,16 +1,13 @@
-package com.tumblr.loglr;
+package com.daksh.loglr;
 
+import android.app.DialogFragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
-/**
- * Created by dakshsrivastava on 20/03/16.
- */
 public class LoglrFragment extends DialogFragment {
 
     @Nullable

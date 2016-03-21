@@ -1,4 +1,4 @@
-package com.tumblr.loglr;
+package com.daksh.loglr;
 
 public class LoginResult {
 

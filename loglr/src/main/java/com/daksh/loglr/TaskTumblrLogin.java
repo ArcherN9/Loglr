@@ -1,4 +1,4 @@
-package com.tumblr.loglr;
+package com.daksh.loglr;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -11,7 +11,7 @@ import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.tumblr.loglr.Exceptions.LoglrLoginException;
+import com.daksh.loglr.Exceptions.LoglrLoginException;
 
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 import oauth.signpost.commonshttp.CommonsHttpOAuthProvider;
@@ -96,7 +96,7 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> {
     protected void onPreExecute() {
         super.onPreExecute();
         //Show a progress Dialog while the request tokens are fetched
-        progressDialog = ProgressDialog.show(context, null, resources.getString(R.string.tumblrlogin_loading));
+        progressDialog = ProgressDialog.show(context, null, resources.getString(com.tumblr.loglr.R.string.tumblrlogin_loading));
     }
 
     @Override

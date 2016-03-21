@@ -1,14 +1,13 @@
-package com.tumblr.loglr;
+package com.daksh.loglr;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.tumblr.loglr.Exceptions.LoglrAPIException;
-import com.tumblr.loglr.Exceptions.LoglrCallbackException;
-import com.tumblr.loglr.Exceptions.LoglrLoginException;
+import com.daksh.loglr.Exceptions.LoglrAPIException;
+import com.daksh.loglr.Exceptions.LoglrCallbackException;
+import com.daksh.loglr.Exceptions.LoglrLoginException;
 
 public class LoglrActivity extends AppCompatActivity {
 

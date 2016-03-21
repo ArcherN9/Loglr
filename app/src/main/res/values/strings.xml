@@ -1,4 +1,3 @@
 <resources>
     <string name="app_name">Loglr</string>
-    <string name="tumblr_callback_url">https://github.com/dakshsrivastava/Loglr</string>
 </resources>

@@ -1,6 +1,7 @@
-package com.tumblr.loglr.Interfaces;
+package com.daksh.loglr.Interfaces;
 
-import com.tumblr.loglr.LoginResult;
+
+import com.daksh.loglr.LoginResult;
 
 public interface LoginListener {
     void onLoginSuccessful(LoginResult loginResult);
