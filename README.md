@@ -58,6 +58,22 @@ String strOAuthToken = loginResult.getOAuthToken();
 String strOAuthTokenSecret = loginResult.getOAuthTokenSecret();
 ```
 
+###Change log###
+#####v0.3.1#####
+* Support for initiating login process in a DialogFragment;
+* Custom URL callback;
+* Code clean up;
+
+#####v0.2.2#####
+* Changed method names for better understanding;
+
+#####v0.2.1#####
+* Bug Fixes;
+
+#####v0.2#####
+* First Release;
+
+
 ###License###
 <one line to give the program's name and a brief idea of what it does.>
     Copyright (C) 2016  Daksh Srivastava
