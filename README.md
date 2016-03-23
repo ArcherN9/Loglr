@@ -48,7 +48,7 @@ Loglr.getInstance()
                     //OR
                     
                     //Second :
-                    //Initiate the login process in a dialogFragment | The support fragmentManager is an mandatory field
+                    //Initiate the login process in a dialogFragment | The support fragmentManager is a mandatory field
                     .initiateInDialog(getSupportFragmentManager());
 ```
 
