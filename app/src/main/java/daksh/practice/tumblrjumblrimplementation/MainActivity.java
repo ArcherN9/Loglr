@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements LoginListener, Ex
                     .setUrlCallBack(getResources().getString(R.string.tumblr_callback_url))
                     .setLoginListener(MainActivity.this)
                     .setExceptionHandler(MainActivity.this)
-                    .initiateInDialog(getSupportFragmentManager());
+                    .initiateInActivity(MainActivity.this);
         }
     };
 
