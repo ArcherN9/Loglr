@@ -7,7 +7,7 @@ Loglr is an open source library that enables developers to implement 'Login via 
 Note : The library is still in development. On and off, one may encounter bugs or mistakes. Please report them on the issue tracker. I'll fix and send out an immediate release.
 
 ###Dependencies###
-```Gradle : compile 'com.daksh:loglr:0.3.1'```
+```Gradle : compile 'com.daksh:loglr:0.3.2'```
 
 --- OR ---
 ```
@@ -15,7 +15,7 @@ Maven :
 <dependency>
   <groupId>com.daksh</groupId>
   <artifactId>loglr</artifactId>
-  <version>0.3.1</version>
+  <version>0.3.2</version>
   <type>pom</type>
 </dependency>
 ```
