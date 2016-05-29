@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 ext{
     PUBLISH_GROUP_ID = 'com.daksh'
     PUBLISH_ARTIFACT_ID = 'loglr'
-    PUBLISH_VERSION = '0.3.2'
+    PUBLISH_VERSION = '1.0.0'
 }
 
 android {
@@ -20,7 +20,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 23
         versionCode 1
-        versionName "0.3.2"
+        versionName "1.0.0"
     }
     buildTypes {
         release {

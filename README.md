@@ -7,7 +7,7 @@ Loglr is an open source library that enables developers to implement 'Login via 
 Note : The library is still in development. On and off, one may encounter bugs or mistakes. Please report them on the issue tracker. I'll fix and send out an immediate release.
 
 ###Dependencies###
-```Gradle : compile 'com.daksh:loglr:0.3.2'```
+```Gradle : compile 'com.daksh:loglr:1.0.0'```
 
 --- OR ---
 ```
@@ -15,7 +15,7 @@ Maven :
 <dependency>
   <groupId>com.daksh</groupId>
   <artifactId>loglr</artifactId>
-  <version>0.3.2</version>
+  <version>1.0.0</version>
   <type>pom</type>
 </dependency>
 ```
@@ -53,12 +53,16 @@ Loglr.getInstance()
 ```
 
 On overriding the LoginListener, an object of `LoginResult` is received. To extract Token and Secret Token :
-```
-String strOAuthToken = loginResult.getOAuthToken();
-String strOAuthTokenSecret = loginResult.getOAuthTokenSecret();
-```
+
+    String strOAuthToken = loginResult.getOAuthToken();
+    String strOAuthTokenSecret = loginResult.getOAuthTokenSecret();
 
 ###Change log###
+
+#####v1.0.0#####
+* Changed Version to v1 post no bug being reported
+* Marked as stable release
+
 #####v0.3.1#####
 * Support for initiating login process in a DialogFragment;
 * Custom URL callback;
@@ -73,9 +77,29 @@ String strOAuthTokenSecret = loginResult.getOAuthTokenSecret();
 #####v0.2#####
 * First Release;
 
+###Open Source Libraries###
+
+* SignPost
+
+
+    
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+    
 
 ###License###
-<one line to give the program's name and a brief idea of what it does.>
+
+
+    Loglr is an open source library that enables developers to implement 'Login via Tumblr' with as minimum frustration as possible.
     Copyright (C) 2016  Daksh Srivastava
 
     This program is free software: you can redistribute it and/or modify
