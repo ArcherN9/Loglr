@@ -1,4 +1,4 @@
-[ ![Download](https://api.bintray.com/packages/dakshsrivastava/maven/Loglr/images/download.svg) ](https://bintray.com/dakshsrivastava/maven/Loglr/_latestVersion) [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Loglr-green.svg?style=true)](https://android-arsenal.com/details/1/3265)
+[ ![Download](https://api.bintray.com/packages/dakshsrivastava/maven/Loglr/images/download.svg) ](https://bintray.com/dakshsrivastava/maven/Loglr/_latestVersion) [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Loglr-green.svg?style=true)](https://android-arsenal.com/details/1/3265) [![HitCount](https://hitt.herokuapp.com/dakshsrivastava/Loglr.svg)](https://github.com/dakshsrivastava/Loglr)
 # Loglr #
 ### The easiest way to get your user logged in via Tumblr ###
 
