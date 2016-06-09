@@ -36,8 +36,8 @@ public class MainActivity extends AppCompatActivity implements LoginListener, Ex
         @Override
         public void onClick(View v) {
             Loglr.getInstance()
-                    .setConsumerKey("rgZ9KfcotI4P0zcEYRgjNJG6F2UtSYbXxyofD1zcgXCk7BFFvN")
-                    .setConsumerSecretKey("7s5DNYgoJ3v9OkCufczkl0v4zOsSquOFs7Gns8t7ckgA5Bjoa4")
+                    .setConsumerKey("ENTER CONSUMER KEY HERE")
+                    .setConsumerSecretKey("ENTER CONSUMER SECRET HERE")
                     .setUrlCallBack(getResources().getString(R.string.tumblr_callback_url))
                     .setLoadingDialog(LoadingDialog.class)
                     .setLoginListener(MainActivity.this)
