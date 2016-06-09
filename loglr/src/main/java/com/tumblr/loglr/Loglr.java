@@ -2,7 +2,6 @@ package com.tumblr.loglr;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 
 import com.tumblr.loglr.Interfaces.ExceptionHandler;

@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.tumblr.loglr.Exceptions.LoglrLoginException;
+import com.tumblr.loglr.Interfaces.DismissListener;
 
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 import oauth.signpost.commonshttp.CommonsHttpOAuthProvider;
@@ -51,8 +52,23 @@ class TaskRetrieveAccessToken extends AsyncTask<Void, RuntimeException, LoginRes
      */
     private Context context;
 
+    /**
+     * A dismiss listener is to be called in case the AsyncTask's calling context is that
+     * of a dialogFragment
+     */
+    private DismissListener dismissListener;
+
     //Constructor
     TaskRetrieveAccessToken() {
+    }
+
+    /**
+     * A method to pass the dismiss listener to the AsyncTask. Is used exclusively by the
+     * dialog Fragment
+     * @param dismissListener A reference to the Dismiss listener interface
+     */
+    void setDismissListener(DismissListener dismissListener) {
+        this.dismissListener = dismissListener;
     }
 
     /**
@@ -164,7 +180,16 @@ class TaskRetrieveAccessToken extends AsyncTask<Void, RuntimeException, LoginRes
      * A method to finish the calling activity
      */
     private void finish() {
-        LoglrActivity loglrActivity = (LoglrActivity) context;
-        loglrActivity.finish();
+        try {
+            LoglrActivity loglrActivity = (LoglrActivity) context;
+            loglrActivity.finish();
+        } catch (ClassCastException e) {
+            //Class cast exception is thrown when the container activity is not
+            //LoglrActivity. In such a scenario, it is obvious that Loglr
+            //was called using the dialogFragment. In this case, we dismiss the fragment
+            //Not printing the stacktrace so it does not go to dev's console
+            if(dismissListener != null)
+                dismissListener.onDismiss();
+        }
     }
 }

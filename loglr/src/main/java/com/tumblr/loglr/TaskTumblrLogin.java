@@ -12,6 +12,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.tumblr.loglr.Exceptions.LoglrLoginException;
+import com.tumblr.loglr.Interfaces.DismissListener;
 
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 import oauth.signpost.commonshttp.CommonsHttpOAuthProvider;
@@ -64,8 +65,23 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> {
      */
     private WebView webView;
 
+    /**
+     * A dismiss listener is to be called in case the AsyncTask's calling context is that
+     * of a dialogFragment
+     */
+    private DismissListener dismissListener;
+
     TaskTumblrLogin() {
         //empty constructor
+    }
+
+    /**
+     * A method to pass the dismiss listener to the AsyncTask. Is used exclusively by the
+     * dialog Fragment
+     * @param dismissListener A reference to the Dismiss listener interface
+     */
+    void setDismissListener(DismissListener dismissListener) {
+        this.dismissListener = dismissListener;
     }
 
     /**
@@ -197,6 +213,9 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> {
                         taskRetrieveAccessToken.setContext(context);
                         //Pass OAuthVerifier as an argument
                         taskRetrieveAccessToken.setOAuthVerifier(strOAuthVerifier);
+                        //Set the Dismiss listener
+                        taskRetrieveAccessToken.setDismissListener(dismissListener);
+                        //Execute the AsyncTask on a different thread;
                         taskRetrieveAccessToken.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         return true;
                     }
@@ -213,7 +232,16 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> {
      * A method to finish the calling activity
      */
     private void finish() {
-        LoglrActivity loglrActivity = (LoglrActivity) context;
-        loglrActivity.finish();
+        try {
+            LoglrActivity loglrActivity = (LoglrActivity) context;
+            loglrActivity.finish();
+        } catch (ClassCastException e) {
+            //Class cast exception is thrown when the container activity is not
+            //LoglrActivity. In such a scenario, it is obvious that Loglr
+            //was called using the dialogFragment. In this case, we dismiss the fragment
+            //Not printing the stacktrace so it does not go to dev's console
+            if(dismissListener != null)
+                dismissListener.onDismiss();
+        }
     }
 }
