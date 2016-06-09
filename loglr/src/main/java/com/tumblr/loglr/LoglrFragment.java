@@ -1,5 +1,7 @@
 package com.tumblr.loglr;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,6 +17,8 @@ import com.tumblr.loglr.Exceptions.LoglrAPIException;
 import com.tumblr.loglr.Exceptions.LoglrCallbackException;
 import com.tumblr.loglr.Exceptions.LoglrLoginException;
 import com.tumblr.loglr.Interfaces.DismissListener;
+
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * Created by dakshsrivastava on 20/03/16.
@@ -64,16 +68,45 @@ public class LoglrFragment extends DialogFragment implements DismissListener {
         if(TextUtils.isEmpty(Loglr.getInstance().getUrlCallBack()))
             throw new LoglrCallbackException();
 
+        //Declare a LoadingDialog that will be passed to the AsyncTasks
+        Dialog LoadingDialog = null;
+        //Test if Loading Dialog was receiver
+        if(Loglr.getInstance().getLoadingDialog() != null) {
+            try {
+                //Extract Loading Dialog class passed by the Activity
+                Class<? extends Dialog> classDialog = Loglr.getInstance().getLoadingDialog();
+                //get default constructor and create new instance for the Dialog
+                LoadingDialog = classDialog.getConstructor(Context.class).newInstance(getActivity());
+            } catch (java.lang.InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+        }
+
         //test if LoginListener was registered
         if(Loglr.getInstance().getLoginListener() != null) {
             if(Loglr.getInstance().getExceptionHandler() == null)
                 Log.w(TAG, "Continuing execution without ExceptionHandler. No Exception call backs will be sent. It is recommended to set one.");
-            //Initiate an AsyncTask to begin TumblrLogin
+            //Initiate an AsyncTask to begin Tumblr Login
             TaskTumblrLogin taskTumblrLogin = new TaskTumblrLogin();
+            //Pass context to AsyncTask
             taskTumblrLogin.setContext(getActivity());
+            //Pass Resources reference
             taskTumblrLogin.setResources(getResources());
+            //Pass LoadingDialog as passed on by developer
+            taskTumblrLogin.setLoadingDialog(LoadingDialog);
+            //Pass dismiss listener
             taskTumblrLogin.setDismissListener(LoglrFragment.this);
+            //Pass reference of WebView
             taskTumblrLogin.setWebView(getView().findViewById(R.id.activity_tumblr_webview));
+            //Execute AsyncTask
             taskTumblrLogin.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
             //If Exception handler was registered by the dev, use it to return a call back.

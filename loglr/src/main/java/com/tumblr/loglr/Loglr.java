@@ -107,7 +107,7 @@ public class Loglr {
      *               during sign in
      * @return LoglrInstance
      */
-    public Loglr setLoadingDialog(@NonNull Class<? extends Dialog> dialog) {
+    public Loglr setLoadingDialog(Class<? extends Dialog> dialog) {
         this.loadingDialog = dialog;
         return loglrInstance;
     }

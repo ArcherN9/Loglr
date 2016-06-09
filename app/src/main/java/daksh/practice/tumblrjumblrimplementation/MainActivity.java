@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.tumblr.loglr.Interfaces.ExceptionHandler;
 import com.tumblr.loglr.Interfaces.LoginListener;
@@ -35,13 +36,13 @@ public class MainActivity extends AppCompatActivity implements LoginListener, Ex
         @Override
         public void onClick(View v) {
             Loglr.getInstance()
-                    .setConsumerKey("ENTER CONSUMER KEY HERE")
-                    .setConsumerSecretKey("ENTER CONSUMER SECRET HERE")
+                    .setConsumerKey("rgZ9KfcotI4P0zcEYRgjNJG6F2UtSYbXxyofD1zcgXCk7BFFvN")
+                    .setConsumerSecretKey("7s5DNYgoJ3v9OkCufczkl0v4zOsSquOFs7Gns8t7ckgA5Bjoa4")
                     .setUrlCallBack(getResources().getString(R.string.tumblr_callback_url))
                     .setLoadingDialog(LoadingDialog.class)
                     .setLoginListener(MainActivity.this)
                     .setExceptionHandler(MainActivity.this)
-                    .initiateInActivity(MainActivity.this);
+                    .initiateInDialog(getSupportFragmentManager());
         }
     };
 
@@ -58,6 +59,6 @@ public class MainActivity extends AppCompatActivity implements LoginListener, Ex
 
     @Override
     public void onLoginFailed(RuntimeException exception) {
-
+        Toast.makeText(getBaseContext(), exception.getMessage(), Toast.LENGTH_SHORT).show();
     }
 }

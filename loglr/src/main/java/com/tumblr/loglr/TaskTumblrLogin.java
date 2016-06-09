@@ -158,7 +158,7 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> {
             return null;
         } catch (OAuthNotAuthorizedException e) {
             e.printStackTrace();
-            publishProgress(new LoglrLoginException(e.getResponseBody()));
+            publishProgress(new LoglrLoginException(e.getMessage()));
             return null;
         } catch (OAuthExpectationFailedException e) {
             e.printStackTrace();
@@ -166,7 +166,7 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> {
             return null;
         } catch (OAuthCommunicationException e) {
             e.printStackTrace();
-            publishProgress(new LoglrLoginException(e.getResponseBody()));
+            publishProgress(new LoglrLoginException(e.getMessage()));
             return null;
         }
     }
