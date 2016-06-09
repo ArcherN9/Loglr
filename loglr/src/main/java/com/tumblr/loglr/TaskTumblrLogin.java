@@ -1,5 +1,6 @@
 package com.tumblr.loglr;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Resources;
@@ -51,6 +52,11 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> {
     private ProgressDialog progressDialog;
 
     /**
+     * A loading Dialog to display to user if passed by developer
+     */
+    private Dialog loadingDialog;
+
+    /**
      * Android Resources used to access Strings.xml files
      */
     private Resources resources;
@@ -85,6 +91,14 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> {
     }
 
     /**
+     * Accept Loading dialog passed on by the developer. Null in case no Dialog was passed
+     * @param loadingDialog Loading Dialog to display to user
+     */
+    void setLoadingDialog(Dialog loadingDialog) {
+        this.loadingDialog = loadingDialog;
+    }
+
+    /**
      * The Resources set method to give access to resources to the AsyncTask
      * @param resources resources from the Activity
      */
@@ -111,8 +125,12 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        //Show a progress Dialog while the request tokens are fetched
-        progressDialog = ProgressDialog.show(context, null, resources.getString(R.string.tumblrlogin_loading));
+        //If the developer a loading dialog, show that instead of default.
+        if(loadingDialog != null)
+            loadingDialog.show();
+        else
+            //Show Progress Dialog while the user waits
+            progressDialog = ProgressDialog.show(context, null, "Loading...");
     }
 
     @Override
@@ -169,7 +187,11 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> {
     protected void onPostExecute(String strAuthUrl) {
         super.onPostExecute(strAuthUrl);
         //Dismiss progress bar
-        progressDialog.dismiss();
+        if(progressDialog != null)
+            progressDialog.dismiss();
+        else
+            loadingDialog.dismiss();
+
         if(!TextUtils.isEmpty(strAuthUrl)) {
             //Enable JS support on web browser - important since TumblrLogin utilises JS components
             //Login page will not show up properly if this is not done
@@ -211,6 +233,8 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> {
                         taskRetrieveAccessToken.setOAuthProvider(commonsHttpOAuthProvider);
                         //Pass context to AsyncTask
                         taskRetrieveAccessToken.setContext(context);
+                        //Pass Loading Dialog
+                        taskRetrieveAccessToken.setLoadingDialog(loadingDialog);
                         //Pass OAuthVerifier as an argument
                         taskRetrieveAccessToken.setOAuthVerifier(strOAuthVerifier);
                         //Set the Dismiss listener

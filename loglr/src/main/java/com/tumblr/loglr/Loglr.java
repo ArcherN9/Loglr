@@ -1,7 +1,9 @@
 package com.tumblr.loglr;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 
 import com.tumblr.loglr.Interfaces.ExceptionHandler;
@@ -44,6 +46,14 @@ public class Loglr {
      */
     private static String CONSUMER_SECRET_KEY;
 
+    /**
+     * A developer defined LoadingDialog which is shown to the user in cases when data is loading from
+     * the server and the user is made to wait.
+     * If no Dialog is passed to Loglr, default implementation is used with a ProgressDialog and
+     * "loading..." as string.
+     */
+    private static Class<? extends Dialog> loadingDialog;
+
     private Loglr() {
         //Empty private constructor to disallow creation of object
     }
@@ -65,7 +75,7 @@ public class Loglr {
      * from the login process
      * @param listener
      */
-    public Loglr setLoginListener(LoginListener listener) {
+    public Loglr setLoginListener(@NonNull LoginListener listener) {
         loginListener = listener;
         return loglrInstance;
     }
@@ -75,7 +85,7 @@ public class Loglr {
      * The method receives a reference of the interface to be executed when an exception is thrown
      * @param listener
      */
-    public Loglr setExceptionHandler(ExceptionHandler listener) {
+    public Loglr setExceptionHandler(@NonNull ExceptionHandler listener) {
         exceptionHandler = listener;
         return loglrInstance;
     }
@@ -86,9 +96,29 @@ public class Loglr {
      * @param strUrl
      * @return
      */
-    public Loglr setUrlCallBack(String strUrl) {
+    public Loglr setUrlCallBack(@NonNull String strUrl) {
         this.strUrl = strUrl;
         return loglrInstance;
+    }
+
+    /**
+     * Accepts custom dialogs to replace with default ProgressDialogs whilst the
+     * @param dialog A loading dialog to be shown to the user when data is loading from the server
+     *               during sign in
+     * @return LoglrInstance
+     */
+    public Loglr setLoadingDialog(@NonNull Class<? extends Dialog> dialog) {
+        this.loadingDialog = dialog;
+        return loglrInstance;
+    }
+
+    /**
+     * A method to return the instance of loading dialog passed on by the developer |
+     * To replace the default Dialog passed
+     * @return
+     */
+    Class<? extends Dialog> getLoadingDialog() {
+        return loadingDialog;
     }
 
     /**

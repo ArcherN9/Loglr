@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements LoginListener, Ex
                     .setConsumerKey("ENTER CONSUMER KEY HERE")
                     .setConsumerSecretKey("ENTER CONSUMER SECRET HERE")
                     .setUrlCallBack(getResources().getString(R.string.tumblr_callback_url))
+                    .setLoadingDialog(LoadingDialog.class)
                     .setLoginListener(MainActivity.this)
                     .setExceptionHandler(MainActivity.this)
                     .initiateInActivity(MainActivity.this);

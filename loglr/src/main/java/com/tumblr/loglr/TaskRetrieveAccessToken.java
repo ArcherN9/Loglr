@@ -1,5 +1,6 @@
 package com.tumblr.loglr;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -58,6 +59,11 @@ class TaskRetrieveAccessToken extends AsyncTask<Void, RuntimeException, LoginRes
      */
     private DismissListener dismissListener;
 
+    /**
+     * A loading Dialog to display to user if passed by developer
+     */
+    private Dialog loadingDialog;
+
     //Constructor
     TaskRetrieveAccessToken() {
     }
@@ -77,6 +83,14 @@ class TaskRetrieveAccessToken extends AsyncTask<Void, RuntimeException, LoginRes
      */
     void setContext(Context context) {
         this.context = context;
+    }
+
+    /**
+     * Accept Loading dialog passed on by the developer. Null in case no Dialog was passed
+     * @param loadingDialog Loading Dialog to display to user
+     */
+    void setLoadingDialog(Dialog loadingDialog) {
+        this.loadingDialog = loadingDialog;
     }
 
     /**
@@ -106,8 +120,12 @@ class TaskRetrieveAccessToken extends AsyncTask<Void, RuntimeException, LoginRes
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        //Show Progress Dialog while the user waits
-        progressDialog = ProgressDialog.show(context, null, "Loading...");
+        //If the developer a loading dialog, show that instead of default.
+        if(loadingDialog != null)
+            loadingDialog.show();
+        else
+            //Show Progress Dialog while the user waits
+            progressDialog = ProgressDialog.show(context, null, "Loading...");
     }
 
     @Override
@@ -167,8 +185,11 @@ class TaskRetrieveAccessToken extends AsyncTask<Void, RuntimeException, LoginRes
     @Override
     protected void onPostExecute(LoginResult loginResult) {
         super.onPostExecute(loginResult);
-        //Dismiss progress bar
-        progressDialog.dismiss();
+        if(progressDialog != null)
+            //Dismiss progress bar
+            progressDialog.dismiss();
+        else
+            loadingDialog.dismiss();
         //Check if tokens were retrieved. If yes, Set result as successful and finish activity
         //otherwise, set as failed.
         if(loginResult != null)
