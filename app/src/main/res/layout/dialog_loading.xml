@@ -10,7 +10,6 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:gravity="center"
-        android:background="@android:color/white"
         android:orientation="vertical">
 
         <ProgressBar

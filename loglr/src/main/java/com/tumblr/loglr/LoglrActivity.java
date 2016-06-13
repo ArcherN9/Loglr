@@ -48,14 +48,22 @@ public class LoglrActivity extends AppCompatActivity {
                 LoadingDialog = classDialog.getConstructor(Context.class).newInstance(LoglrActivity.this);
             } catch (InstantiationException e) {
                 e.printStackTrace();
+                LoadingDialog = null;
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
+                LoadingDialog = null;
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
+                LoadingDialog = null;
             } catch (InvocationTargetException e) {
                 e.printStackTrace();
+                LoadingDialog = null;
             } catch (NullPointerException e) {
                 e.printStackTrace();
+                LoadingDialog = null;
+            } catch (ClassCastException e) {
+                e.printStackTrace();
+                LoadingDialog = null;
             }
         }
 

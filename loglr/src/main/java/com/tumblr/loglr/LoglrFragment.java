@@ -79,14 +79,19 @@ public class LoglrFragment extends DialogFragment implements DismissListener {
                 LoadingDialog = classDialog.getConstructor(Context.class).newInstance(getActivity());
             } catch (java.lang.InstantiationException e) {
                 e.printStackTrace();
+                LoadingDialog = null;
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
+                LoadingDialog = null;
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
+                LoadingDialog = null;
             } catch (InvocationTargetException e) {
                 e.printStackTrace();
+                LoadingDialog = null;
             } catch (NullPointerException e) {
                 e.printStackTrace();
+                LoadingDialog = null;
             }
         }
 
