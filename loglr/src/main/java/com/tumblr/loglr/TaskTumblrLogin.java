@@ -14,6 +14,7 @@ import android.webkit.WebViewClient;
 
 import com.tumblr.loglr.Exceptions.LoglrLoginException;
 import com.tumblr.loglr.Interfaces.DismissListener;
+import com.tumblr.loglr.Interfaces.OTPReceiptListener;
 
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 import oauth.signpost.commonshttp.CommonsHttpOAuthProvider;
@@ -29,7 +30,8 @@ import oauth.signpost.exception.OAuthNotAuthorizedException;
  * 3) Makes a network request to retrieve authorization URL. The user is to be navigated
  * to this URL so he may login by entering his/her user credentials.
  */
-class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> {
+class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> implements
+        OTPReceiptListener {
 
     /**
      * Tag for logging
@@ -70,6 +72,11 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> {
      * The webview which opens the Tumblr Website
      */
     private WebView webView;
+
+    /**
+     * The OTP received from Tumblr
+     */
+    private long lngOTP;
 
     /**
      * A dismiss listener is to be called in case the AsyncTask's calling context is that
@@ -198,6 +205,16 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> {
             webView.getSettings().setJavaScriptEnabled(true);
             //Set a web view client to monitor browser interactions
             webView.setWebViewClient(new WebViewClient() {
+
+                @Override
+                public void onPageFinished(WebView view, String url) {
+                    super.onPageFinished(view, url);
+                    if(!TextUtils.isEmpty(url) && url.equalsIgnoreCase(context.getResources().getString(R.string.tumblr_auth_otp_redirect))
+                            && lngOTP != 0) {
+                        webView.loadUrl("javascript:document.getElementById(\"tfa_response_field\").value= " + lngOTP + " ;");
+                    }
+                }
+
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, String strUrl) {
                     //Log Current loading URL
@@ -246,6 +263,7 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> {
                     return super.shouldOverrideUrlLoading(view, strUrl);
                 }
             });
+
             //Load URL
             webView.loadUrl(strAuthUrl);
         } else
@@ -267,5 +285,13 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> {
             if(dismissListener != null)
                 dismissListener.onDismiss();
         }
+    }
+
+    @Override
+    public void onReceived(WebView webview, long lngOTP) {
+        Log.i(TAG, "OTP Received to populate WebView : " + lngOTP);
+        this.lngOTP = lngOTP;
+        if(webView != null)
+            webview.loadUrl("javascript:document.getElementById(\"tfa_response_field\").value=" + lngOTP + ";");
     }
 }
