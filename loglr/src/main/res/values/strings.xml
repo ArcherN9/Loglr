@@ -17,4 +17,7 @@
     <!-- OTP Related strings -->
     <string name="tumblr_otp_manual">Please enter OTP Manually</string>
     <string name="tumblr_otp_provider">android.provider.Telephony.SMS_RECEIVED</string>
+
+    <!-- OTP Dialog strings -->
+    <string name="dialog_2FA_enabled">Do you have 2 Factor Authentication enabled?</string>
 </resources>

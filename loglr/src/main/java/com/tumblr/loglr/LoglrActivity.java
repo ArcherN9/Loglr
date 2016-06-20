@@ -12,13 +12,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.WebView;
-import android.widget.Toast;
 
 import com.tumblr.loglr.Exceptions.LoglrAPIException;
 import com.tumblr.loglr.Exceptions.LoglrCallbackException;
 import com.tumblr.loglr.Exceptions.LoglrLoginException;
+import com.tumblr.loglr.Interfaces.DialogCallbackListener;
 
-public class LoglrActivity extends AppCompatActivity {
+public class LoglrActivity extends AppCompatActivity implements DialogCallbackListener {
 
     /**
      * A tag for logging
@@ -46,37 +46,11 @@ public class LoglrActivity extends AppCompatActivity {
         if(TextUtils.isEmpty(Loglr.getInstance().getUrlCallBack()))
             throw new LoglrCallbackException();
 
-        //Check if SMS read permissions have been granted to the application
-        if(Utils.isSMSReadPermissionGranted(LoglrActivity.this)) {
-            //Register the SMS receiver
-            registerReceiver();
-            //test if LoginListener was registered
-            if(Loglr.getInstance().getLoginListener() != null) {
-                if(Loglr.getInstance().getExceptionHandler() == null)
-                    Log.w(TAG, "Continuing execution without ExceptionHandler. No Exception call backs will be sent. It is recommended to set one.");
-                initiateLoginProcess();
-            } else {
-                //If Exception handler was registered by the dev, use it to return a call back.
-                //Otherwise, just throw the exception and make the application crash
-                if (Loglr.getInstance().getExceptionHandler() != null)
-                    Loglr.getInstance().getExceptionHandler().onLoginFailed(new LoglrLoginException());
-                else
-                    throw new LoglrLoginException();
-            }
-            //If not, Check if Its an android device that runs Marshmallow.
-            //if it is, request user to grant permission
-        } else if(Utils.isMarshmallowAbove()) {
-            //Request user for permission.
-            //Once granted or denied, callback will be on onRequestPermissionsResult
-            ActivityCompat.requestPermissions(LoglrActivity.this,
-                    new String[]{
-                            Manifest.permission.READ_SMS,
-                            Manifest.permission.RECEIVE_SMS
-                    },
-                    OTPBroadcastReceiver.REQUEST_OTP_PERMISSION);
-        } else
-            //If permissions are not granted and its not Marshmallow, get on with login
-            initiateLoginProcess();
+        SeekPermissionDialog seekPermissionDialog = new SeekPermissionDialog(LoglrActivity.this);
+        seekPermissionDialog.setCanceledOnTouchOutside(false);
+        seekPermissionDialog.setCancelable(false);
+        seekPermissionDialog.setCallback(this);
+        seekPermissionDialog.show();
     }
 
     @Override
@@ -93,9 +67,7 @@ public class LoglrActivity extends AppCompatActivity {
                         //if result is granted, set is granted to true
                         isGranted = intGrantResult == PackageManager.PERMISSION_GRANTED;
                     //Test final grant status
-                    if(!isGranted)
-                        Toast.makeText(getBaseContext(), getResources().getText(R.string.tumblr_otp_manual), Toast.LENGTH_SHORT).show();
-                    else
+                    if(isGranted)
                         //Register the SMS receiver
                         registerReceiver();
                     initiateLoginProcess();
@@ -142,5 +114,50 @@ public class LoglrActivity extends AppCompatActivity {
                     getResources().getString(R.string.tumblr_otp_provider)
             ));
         }
+    }
+
+    @Override
+    public void onPermissionDenied() {
+
+    }
+
+    @Override
+    public void onPermissionGranted() {
+        //Check if SMS read permissions have been granted to the application
+        if(Utils.isSMSReadPermissionGranted(LoglrActivity.this)) {
+            //Register the SMS receiver
+            registerReceiver();
+            //test if LoginListener was registered
+            if(Loglr.getInstance().getLoginListener() != null) {
+                if(Loglr.getInstance().getExceptionHandler() == null)
+                    Log.w(TAG, "Continuing execution without ExceptionHandler. No Exception call backs will be sent. It is recommended to set one.");
+                initiateLoginProcess();
+            } else {
+                //If Exception handler was registered by the dev, use it to return a call back.
+                //Otherwise, just throw the exception and make the application crash
+                if (Loglr.getInstance().getExceptionHandler() != null)
+                    Loglr.getInstance().getExceptionHandler().onLoginFailed(new LoglrLoginException());
+                else
+                    throw new LoglrLoginException();
+            }
+            //If not, Check if Its an android device that runs Marshmallow.
+            //if it is, request user to grant permission
+        } else if(Utils.isMarshmallowAbove()) {
+            //Request user for permission.
+            //Once granted or denied, callback will be on onRequestPermissionsResult
+            ActivityCompat.requestPermissions(LoglrActivity.this,
+                    new String[]{
+                            Manifest.permission.READ_SMS,
+                            Manifest.permission.RECEIVE_SMS
+                    },
+                    OTPBroadcastReceiver.REQUEST_OTP_PERMISSION);
+        } else
+            //If permissions are not granted and its not Marshmallow, get on with login
+            initiateLoginProcess();
+    }
+
+    @Override
+    public void onNegativePressed() {
+
     }
 }

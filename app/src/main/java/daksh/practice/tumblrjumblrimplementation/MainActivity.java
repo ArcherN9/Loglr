@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements LoginListener, Ex
                     .setLoadingDialog(LoadingDialog.class)
                     .setLoginListener(MainActivity.this)
                     .setExceptionHandler(MainActivity.this)
-                    .initiateInDialog(getSupportFragmentManager());
+                    .initiateInActivity(MainActivity.this);
         }
     };
 
