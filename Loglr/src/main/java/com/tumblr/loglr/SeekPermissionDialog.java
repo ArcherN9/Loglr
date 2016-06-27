@@ -30,6 +30,8 @@ public class SeekPermissionDialog extends Dialog implements View.OnClickListener
 
     /**
      * A method to accept callback listener for positive and negative button presses
+     * @param dialogCallbackListener the callback listener that registered calls for options selected
+     *                               on the dialog
      */
     void setCallback(DialogCallbackListener dialogCallbackListener) {
         this.dialogCallbackListener = dialogCallbackListener;
@@ -41,20 +43,13 @@ public class SeekPermissionDialog extends Dialog implements View.OnClickListener
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_seek_permission);
 
-        TextView txYes = (TextView) findViewById(R.id.dialog_seek_permission_yes);
-        txYes.setOnClickListener(this);
-
-        TextView txNo = (TextView) findViewById(R.id.dialog_seek_permission_no);
-        txNo.setOnClickListener(this);
+        TextView txOkay = (TextView) findViewById(R.id.dialog_seek_permission_okay);
+        txOkay.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        int i = v.getId();
-        if (i == R.id.dialog_seek_permission_yes)
-            dialogCallbackListener.onPositivePressed();
-        else if (i == R.id.dialog_seek_permission_no)
-            dialogCallbackListener.onNegativePressed();
-        this.dismiss();
+        dismiss();
+        dialogCallbackListener.onButtonOkay();
     }
 }

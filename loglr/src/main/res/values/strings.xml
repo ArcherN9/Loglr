@@ -19,5 +19,5 @@
     <string name="tumblr_otp_provider">android.provider.Telephony.SMS_RECEIVED</string>
 
     <!-- OTP Dialog strings -->
-    <string name="dialog_2FA_enabled">Do you have 2 Factor Authentication enabled?</string>
+    <string name="dialog_2FA_enabled">If you have OTP based sign in, please grant SMS read permission so we may auto-fill.</string>
 </resources>

@@ -46,11 +46,14 @@ public class LoglrActivity extends AppCompatActivity implements DialogCallbackLi
         if(TextUtils.isEmpty(Loglr.getInstance().getUrlCallBack()))
             throw new LoglrCallbackException();
 
-        SeekPermissionDialog seekPermissionDialog = new SeekPermissionDialog(LoglrActivity.this);
-        seekPermissionDialog.setCanceledOnTouchOutside(false);
-        seekPermissionDialog.setCancelable(false);
-        seekPermissionDialog.setCallback(this);
-        seekPermissionDialog.show();
+        if(Utils.isMarshmallowAbove()) {
+            SeekPermissionDialog seekPermissionDialog = new SeekPermissionDialog(LoglrActivity.this);
+            seekPermissionDialog.setCanceledOnTouchOutside(false);
+            seekPermissionDialog.setCancelable(false);
+            seekPermissionDialog.setCallback(this);
+            seekPermissionDialog.show();
+        } else
+            onButtonOkay();
     }
 
     @Override
@@ -117,12 +120,7 @@ public class LoglrActivity extends AppCompatActivity implements DialogCallbackLi
     }
 
     @Override
-    public void onPermissionDenied() {
-
-    }
-
-    @Override
-    public void onPermissionGranted() {
+    public void onButtonOkay() {
         //Check if SMS read permissions have been granted to the application
         if(Utils.isSMSReadPermissionGranted(LoglrActivity.this)) {
             //Register the SMS receiver
@@ -154,10 +152,5 @@ public class LoglrActivity extends AppCompatActivity implements DialogCallbackLi
         } else
             //If permissions are not granted and its not Marshmallow, get on with login
             initiateLoginProcess();
-    }
-
-    @Override
-    public void onNegativePressed() {
-
     }
 }

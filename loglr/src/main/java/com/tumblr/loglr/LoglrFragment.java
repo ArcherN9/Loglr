@@ -1,10 +1,14 @@
 package com.tumblr.loglr;
 
-import android.app.Dialog;
-import android.content.Context;
+import android.Manifest;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Telephony;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -12,23 +16,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.webkit.WebView;
 
 import com.tumblr.loglr.Exceptions.LoglrAPIException;
 import com.tumblr.loglr.Exceptions.LoglrCallbackException;
 import com.tumblr.loglr.Exceptions.LoglrLoginException;
+import com.tumblr.loglr.Interfaces.DialogCallbackListener;
 import com.tumblr.loglr.Interfaces.DismissListener;
 
-import java.lang.reflect.InvocationTargetException;
-
-/**
- * Created by dakshsrivastava on 20/03/16.
- */
-public class LoglrFragment extends DialogFragment implements DismissListener {
+public class LoglrFragment extends DialogFragment implements DismissListener, DialogCallbackListener {
 
     /**
      * A tag for logging
      */
     private static final String TAG = LoglrFragment.class.getSimpleName();
+
+    /**
+     * The AsyncTask that initiates the login process by loading up Tumblr on the webview
+     */
+    private TaskTumblrLogin taskTumblrLogin;
+
+    /**
+     * The SMS broadcast receiver that receives text messages
+     */
+    private OTPBroadcastReceiver otpBroadcastReceiver;
 
     @Nullable
     @Override
@@ -57,74 +68,143 @@ public class LoglrFragment extends DialogFragment implements DismissListener {
     public void onResume() {
         super.onResume();
         //Test if consumer key was received
-        if(TextUtils.isEmpty(Loglr.getInstance().getConsumerKey()))
+        if (TextUtils.isEmpty(Loglr.getInstance().getConsumerKey()))
             throw new LoglrAPIException();
 
         //Test if Secret Key was received
-        if(TextUtils.isEmpty(Loglr.getInstance().getConsumerSecretKey()))
+        if (TextUtils.isEmpty(Loglr.getInstance().getConsumerSecretKey()))
             throw new LoglrAPIException();
 
         //Test if URL Call back was received
-        if(TextUtils.isEmpty(Loglr.getInstance().getUrlCallBack()))
+        if (TextUtils.isEmpty(Loglr.getInstance().getUrlCallBack()))
             throw new LoglrCallbackException();
 
-        //Declare a LoadingDialog that will be passed to the AsyncTasks
-        Dialog LoadingDialog = null;
-        //Test if Loading Dialog was receiver
-        if(Loglr.getInstance().getLoadingDialog() != null) {
+        if (Utils.isMarshmallowAbove()) {
+            SeekPermissionDialog seekPermissionDialog = new SeekPermissionDialog(getActivity());
+            seekPermissionDialog.setCanceledOnTouchOutside(false);
+            seekPermissionDialog.setCancelable(false);
+            seekPermissionDialog.setCallback(this);
+            seekPermissionDialog.show();
+        } else
+            onButtonOkay();
+    }
+
+    /**
+     * Register the SMS OTP broadcast receiver
+     */
+    private void registerReceiver() {
+        //Initiate an AsyncTask to begin TumblrLogin
+        taskTumblrLogin = new TaskTumblrLogin();
+        //Depending on whether device is running Kitkat or above,
+        //Register broadcast receiver
+        if(Utils.isKitkatAbove()) {
             try {
-                //Extract Loading Dialog class passed by the Activity
-                Class<? extends Dialog> classDialog = Loglr.getInstance().getLoadingDialog();
-                //get default constructor and create new instance for the Dialog
-                LoadingDialog = classDialog.getConstructor(Context.class).newInstance(getActivity());
-            } catch (java.lang.InstantiationException e) {
-                e.printStackTrace();
-                LoadingDialog = null;
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-                LoadingDialog = null;
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-                LoadingDialog = null;
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-                LoadingDialog = null;
+                otpBroadcastReceiver = new OTPBroadcastReceiver();
+                otpBroadcastReceiver.setCallback(taskTumblrLogin);
+                otpBroadcastReceiver.setWebView((WebView) getView().findViewById(R.id.activity_tumblr_webview));
+                getActivity().registerReceiver(otpBroadcastReceiver, new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION));
             } catch (NullPointerException e) {
                 e.printStackTrace();
-                LoadingDialog = null;
+                //NullPointer is thrown when getView().findViewById() is executed with getView() returning null
+                //Usually happens when the dialog is closed and getView() is executed
             }
-        }
-
-        //test if LoginListener was registered
-        if(Loglr.getInstance().getLoginListener() != null) {
-            if(Loglr.getInstance().getExceptionHandler() == null)
-                Log.w(TAG, "Continuing execution without ExceptionHandler. No Exception call backs will be sent. It is recommended to set one.");
-            //Initiate an AsyncTask to begin Tumblr Login
-            TaskTumblrLogin taskTumblrLogin = new TaskTumblrLogin();
-            //Pass context to AsyncTask
-            taskTumblrLogin.setContext(getActivity());
-            //Pass Resources reference
-            taskTumblrLogin.setResources(getResources());
-            //Pass LoadingDialog as passed on by developer
-            taskTumblrLogin.setLoadingDialog(LoadingDialog);
-            //Pass dismiss listener
-            taskTumblrLogin.setDismissListener(LoglrFragment.this);
-            //Pass reference of WebView
-            taskTumblrLogin.setWebView(getView().findViewById(R.id.activity_tumblr_webview));
-            //Execute AsyncTask
-            taskTumblrLogin.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
-            //If Exception handler was registered by the dev, use it to return a call back.
-            //Otherwise, just throw the exception and make the application crash
-            if (Loglr.getInstance().getExceptionHandler() != null)
-                Loglr.getInstance().getExceptionHandler().onLoginFailed(new LoglrLoginException());
-            else
-                throw new LoglrLoginException();
+            otpBroadcastReceiver = new OTPBroadcastReceiver();
+            otpBroadcastReceiver.setCallback(taskTumblrLogin);
+            getActivity().registerReceiver(otpBroadcastReceiver, new IntentFilter(
+                    getResources().getString(R.string.tumblr_otp_provider)
+            ));
         }
+    }
+
+    /**
+     * A method to continue with the login process.
+     */
+    private void initiateLoginProcess() {
+        //Initiate an AsyncTask to begin Tumblr Login
+        if(taskTumblrLogin == null)
+            taskTumblrLogin = new TaskTumblrLogin();
+        //Pass context to AsyncTask
+        taskTumblrLogin.setContext(getActivity());
+        //Pass Resources reference
+        taskTumblrLogin.setResources(getResources());
+        //Pass LoadingDialog as passed on by developer
+        taskTumblrLogin.setLoadingDialog(Utils.getLoadingDialog(getActivity()));
+        //Pass dismiss listener
+        taskTumblrLogin.setDismissListener(LoglrFragment.this);
+        //Pass reference of WebView
+        taskTumblrLogin.setWebView(getView().findViewById(R.id.activity_tumblr_webview));
+        //Execute AsyncTask
+        taskTumblrLogin.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
     public void onDismiss() {
-        getDialog().dismiss();
+        try {
+            getActivity().unregisterReceiver(otpBroadcastReceiver);
+        } catch (Exception e) {
+            e.printStackTrace();
+            //In all probability, exception will be thrown when there is nothing to unregister.
+        } finally {
+            getDialog().dismiss();
+        }
+    }
+
+    @Override
+    public void onButtonOkay() {
+        //Check if SMS read permissions have been granted to the application
+        if(Utils.isSMSReadPermissionGranted(getActivity())) {
+            //Register the SMS receiver
+            registerReceiver();
+            //test if LoginListener was registered
+            if(Loglr.getInstance().getLoginListener() != null) {
+                if(Loglr.getInstance().getExceptionHandler() == null)
+                    Log.w(TAG, "Continuing execution without ExceptionHandler. No Exception call backs will be sent. It is recommended to set one.");
+                initiateLoginProcess();
+            } else {
+                //If Exception handler was registered by the dev, use it to return a call back.
+                //Otherwise, just throw the exception and make the application crash
+                if (Loglr.getInstance().getExceptionHandler() != null)
+                    Loglr.getInstance().getExceptionHandler().onLoginFailed(new LoglrLoginException());
+                else
+                    throw new LoglrLoginException();
+            }
+            //If not, Check if Its an android device that runs Marshmallow.
+            //if it is, request user to grant permission
+        } else if(Utils.isMarshmallowAbove()) {
+            //Request user for permission.
+            //Once granted or denied, callback will be on onRequestPermissionsResult
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{
+                            Manifest.permission.READ_SMS,
+                            Manifest.permission.RECEIVE_SMS
+                    },
+                    OTPBroadcastReceiver.REQUEST_OTP_PERMISSION);
+        } else
+            //If permissions are not granted and its not Marshmallow, get on with login
+            initiateLoginProcess();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            //Run case if permissions were requested for SMS read / write services
+            case OTPBroadcastReceiver.REQUEST_OTP_PERMISSION:
+                boolean isGranted = false;
+                //Run only when grant result and permissions have data in them.
+                //Used to avoid a certain scenario when this method is auto executed even before the user accepts or denies permission request
+                if(permissions.length > 0 && grantResults.length > 0) {
+                    for (int intGrantResult : grantResults)
+                        //if result is granted, set is granted to true
+                        isGranted = intGrantResult == PackageManager.PERMISSION_GRANTED;
+                    //Test final grant status
+                    if(isGranted)
+                        //Register the SMS receiver
+                        registerReceiver();
+                    initiateLoginProcess();
+                }
+                break;
+        }
     }
 }
