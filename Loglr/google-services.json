@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "946302581909",
+    "firebase_url": "https://project-6154953717261928193.firebaseio.com",
+    "project_id": "project-6154953717261928193",
+    "storage_bucket": "project-6154953717261928193.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:946302581909:android:b0e3b2812b8744bb",
+        "android_client_info": {
+          "package_name": "com.tumblr.loglr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "946302581909-04ol1v6oi0ev9p33imkghj025avre0e0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9xD-iVVCzcXsLhCJ0BbVy9J7hVJbT-U0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
