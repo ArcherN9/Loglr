@@ -1,6 +1,7 @@
 package com.tumblr.loglr;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -18,8 +19,10 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.webkit.WebView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.tumblr.loglr.Exceptions.LoglrAPIException;
 import com.tumblr.loglr.Exceptions.LoglrCallbackException;
+import com.tumblr.loglr.Exceptions.LoglrLoginCanceled;
 import com.tumblr.loglr.Exceptions.LoglrLoginException;
 import com.tumblr.loglr.Interfaces.DialogCallbackListener;
 import com.tumblr.loglr.Interfaces.DismissListener;
@@ -41,6 +44,26 @@ public class LoglrFragment extends DialogFragment implements DismissListener, Di
      */
     private OTPBroadcastReceiver otpBroadcastReceiver;
 
+    /**
+     * FireBase Analytics object
+     */
+    private FirebaseAnalytics mFirebaseAnalytics;
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        return new Dialog(getActivity(), getTheme()) {
+
+            @Override
+            public void onBackPressed() {
+                super.onBackPressed();
+                //Pass reason for closing loglr
+                if (Loglr.getInstance().getExceptionHandler() != null)
+                    Loglr.getInstance().getExceptionHandler().onLoginFailed(new LoglrLoginCanceled());
+            }
+        };
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,6 +71,24 @@ public class LoglrFragment extends DialogFragment implements DismissListener, Di
 
         //Remove the fragment title
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+
+        //Instantiate object & send event no notify of attempt to login via Activity
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SIGN_UP_METHOD, "Fragment");
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
+
+        //Test if consumer key was received
+        if (TextUtils.isEmpty(Loglr.getInstance().getConsumerKey()))
+            throw new LoglrAPIException();
+
+        //Test if Secret Key was received
+        if (TextUtils.isEmpty(Loglr.getInstance().getConsumerSecretKey()))
+            throw new LoglrAPIException();
+
+        //Test if URL Call back was received
+        if (TextUtils.isEmpty(Loglr.getInstance().getUrlCallBack()))
+            throw new LoglrCallbackException();
 
         return inflater.inflate(R.layout.fragment_tumblr_login, null, false);
     }
@@ -62,30 +103,15 @@ public class LoglrFragment extends DialogFragment implements DismissListener, Di
                 Double.valueOf(width * 0.95).intValue(),
                 Double.valueOf(height * 0.80).intValue()
         );
-    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        //Test if consumer key was received
-        if (TextUtils.isEmpty(Loglr.getInstance().getConsumerKey()))
-            throw new LoglrAPIException();
-
-        //Test if Secret Key was received
-        if (TextUtils.isEmpty(Loglr.getInstance().getConsumerSecretKey()))
-            throw new LoglrAPIException();
-
-        //Test if URL Call back was received
-        if (TextUtils.isEmpty(Loglr.getInstance().getUrlCallBack()))
-            throw new LoglrCallbackException();
-
-        if (Utils.isMarshmallowAbove()) {
+        //Display a permission dialog if user is on Marshmallow and above
+        if (Utils.isMarshmallowAbove() && !Utils.isSMSReadPermissionGranted(getActivity()) && taskTumblrLogin == null) {
             SeekPermissionDialog seekPermissionDialog = new SeekPermissionDialog(getActivity());
             seekPermissionDialog.setCanceledOnTouchOutside(false);
             seekPermissionDialog.setCancelable(false);
             seekPermissionDialog.setCallback(this);
             seekPermissionDialog.show();
-        } else
+        } else if(taskTumblrLogin == null)
             onButtonOkay();
     }
 
@@ -107,13 +133,26 @@ public class LoglrFragment extends DialogFragment implements DismissListener, Di
                 e.printStackTrace();
                 //NullPointer is thrown when getView().findViewById() is executed with getView() returning null
                 //Usually happens when the dialog is closed and getView() is executed
+                //If NullPointer is thrown, it implies BroadCast receiver did not receive the webview
+                //Hence, no point of OTP receiver
+                otpBroadcastReceiver = null;
             }
         } else {
-            otpBroadcastReceiver = new OTPBroadcastReceiver();
-            otpBroadcastReceiver.setCallback(taskTumblrLogin);
-            getActivity().registerReceiver(otpBroadcastReceiver, new IntentFilter(
-                    getResources().getString(R.string.tumblr_otp_provider)
-            ));
+            try {
+                otpBroadcastReceiver = new OTPBroadcastReceiver();
+                otpBroadcastReceiver.setCallback(taskTumblrLogin);
+                otpBroadcastReceiver.setWebView((WebView) getView().findViewById(R.id.activity_tumblr_webview));
+                getActivity().registerReceiver(otpBroadcastReceiver, new IntentFilter(
+                        getResources().getString(R.string.tumblr_otp_provider)
+                ));
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+                //NullPointer is thrown when getView().findViewById() is executed with getView() returning null
+                //Usually happens when the dialog is closed and getView() is executed
+                //If NullPointer is thrown, it implies BroadCast receiver did not receive the webview
+                //Hence, no point of OTP receiver
+                otpBroadcastReceiver = null;
+            }
         }
     }
 

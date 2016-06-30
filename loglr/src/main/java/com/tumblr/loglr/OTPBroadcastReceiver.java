@@ -74,9 +74,8 @@ public class OTPBroadcastReceiver extends BroadcastReceiver {
                 }
                 Log.i(TAG, strMessage);
                 strMessage = strMessage.replaceAll("\\D+","");
-                long lngOTP = Long.decode(strMessage);
-                Log.i(TAG, String.valueOf(lngOTP));
-                otpReceiptListener.onReceived(webview, lngOTP);
+                Log.i(TAG, strMessage);
+                otpReceiptListener.onReceived(webview, strMessage);
             }
         }
     }

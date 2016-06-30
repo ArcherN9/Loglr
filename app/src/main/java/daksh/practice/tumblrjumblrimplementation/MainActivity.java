@@ -1,6 +1,7 @@
 package daksh.practice.tumblrjumblrimplementation;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -59,6 +60,12 @@ public class MainActivity extends AppCompatActivity implements LoginListener, Ex
 
     @Override
     public void onLoginFailed(RuntimeException exception) {
-        Toast.makeText(getBaseContext(), exception.getMessage(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getBaseContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Loglr.getInstance().onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }

@@ -13,8 +13,10 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.WebView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.tumblr.loglr.Exceptions.LoglrAPIException;
 import com.tumblr.loglr.Exceptions.LoglrCallbackException;
+import com.tumblr.loglr.Exceptions.LoglrLoginCanceled;
 import com.tumblr.loglr.Exceptions.LoglrLoginException;
 import com.tumblr.loglr.Interfaces.DialogCallbackListener;
 
@@ -30,10 +32,27 @@ public class LoglrActivity extends AppCompatActivity implements DialogCallbackLi
      */
     private TaskTumblrLogin taskTumblrLogin;
 
+    /**
+     * FireBase Analytics object
+     */
+    private FirebaseAnalytics mFirebaseAnalytics;
+
+    /**
+     * The OTP broadcast receiver that monitors for incoming SMS.
+     */
+    OTPBroadcastReceiver otpBroadcastReceiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tumblr_login);
+
+        //Instantiate object & send event no notify of attempt to login via Activity
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SIGN_UP_METHOD, "Activity");
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
+
         //Test if consumer key was received
         if(TextUtils.isEmpty(Loglr.getInstance().getConsumerKey()))
             throw new LoglrAPIException();
@@ -46,7 +65,7 @@ public class LoglrActivity extends AppCompatActivity implements DialogCallbackLi
         if(TextUtils.isEmpty(Loglr.getInstance().getUrlCallBack()))
             throw new LoglrCallbackException();
 
-        if(Utils.isMarshmallowAbove()) {
+        if(Utils.isMarshmallowAbove() && !Utils.isSMSReadPermissionGranted(this)) {
             SeekPermissionDialog seekPermissionDialog = new SeekPermissionDialog(LoglrActivity.this);
             seekPermissionDialog.setCanceledOnTouchOutside(false);
             seekPermissionDialog.setCancelable(false);
@@ -70,9 +89,17 @@ public class LoglrActivity extends AppCompatActivity implements DialogCallbackLi
                         //if result is granted, set is granted to true
                         isGranted = intGrantResult == PackageManager.PERMISSION_GRANTED;
                     //Test final grant status
-                    if(isGranted)
+                    if(isGranted) {
                         //Register the SMS receiver
                         registerReceiver();
+                        Bundle bundle = new Bundle();
+                        bundle.putBoolean(getString(R.string.FireBase_Param_Granted), true);
+                        mFirebaseAnalytics.logEvent(getString(R.string.FireBase_Event_Read_Permission), bundle);
+                    } else {
+                        Bundle bundle = new Bundle();
+                        bundle.putBoolean(getString(R.string.FireBase_Param_Granted), false);
+                        mFirebaseAnalytics.logEvent(getString(R.string.FireBase_Event_Read_Permission), bundle);
+                    }
                     initiateLoginProcess();
                 }
                 break;
@@ -84,7 +111,8 @@ public class LoglrActivity extends AppCompatActivity implements DialogCallbackLi
      */
     private void initiateLoginProcess() {
         //Initiate an AsyncTask to begin TumblrLogin
-        taskTumblrLogin = new TaskTumblrLogin();
+        if(taskTumblrLogin == null)
+            taskTumblrLogin = new TaskTumblrLogin();
         //Pass context to AsyncTask
         taskTumblrLogin.setContext(LoglrActivity.this);
         //Pass Resources reference
@@ -106,12 +134,12 @@ public class LoglrActivity extends AppCompatActivity implements DialogCallbackLi
         //Depending on whether device is running Kitkat or above,
         //Register broadcast receiver
         if(Utils.isKitkatAbove()) {
-            OTPBroadcastReceiver otpBroadcastReceiver = new OTPBroadcastReceiver();
+            otpBroadcastReceiver = new OTPBroadcastReceiver();
             otpBroadcastReceiver.setCallback(taskTumblrLogin);
             otpBroadcastReceiver.setWebView((WebView) findViewById(R.id.activity_tumblr_webview));
             registerReceiver(otpBroadcastReceiver, new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION));
         } else {
-            OTPBroadcastReceiver otpBroadcastReceiver = new OTPBroadcastReceiver();
+            otpBroadcastReceiver = new OTPBroadcastReceiver();
             otpBroadcastReceiver.setCallback(taskTumblrLogin);
             registerReceiver(otpBroadcastReceiver, new IntentFilter(
                     getResources().getString(R.string.tumblr_otp_provider)
@@ -152,5 +180,26 @@ public class LoglrActivity extends AppCompatActivity implements DialogCallbackLi
         } else
             //If permissions are not granted and its not Marshmallow, get on with login
             initiateLoginProcess();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        //Pass reason for closing loglr
+        if (Loglr.getInstance().getExceptionHandler() != null)
+            Loglr.getInstance().getExceptionHandler().onLoginFailed(new LoglrLoginCanceled());
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        try {
+            if(otpBroadcastReceiver != null)
+                unregisterReceiver(otpBroadcastReceiver);
+        } catch (Exception e) {
+            e.printStackTrace();
+            //caught exceptions just in case
+        }
     }
 }

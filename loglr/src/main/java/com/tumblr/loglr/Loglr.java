@@ -54,6 +54,11 @@ public class Loglr {
      */
     private static Class<? extends Dialog> loadingDialog;
 
+    /**
+     * The Dialog fragment serves as a second option to carry out the sign in procedure.
+     */
+    private LoglrFragment loglrFragment;
+
     private Loglr() {
         //Empty private constructor to disallow creation of object
     }
@@ -208,8 +213,25 @@ public class Loglr {
      */
     public void initiateInDialog(FragmentManager fragmentManager) {
         //Instantiate Dialog Fragment
-        LoglrFragment loglrFragment = new LoglrFragment();
+        loglrFragment = new LoglrFragment();
         //Show the dialogFragment
         loglrFragment.show(fragmentManager, LoglrFragment.class.getSimpleName());
+    }
+
+    /**
+     * As ActivityCompat.requestPermissions() triggers a callback on the activity and not the fragment, it is
+     * important to manually call the onRequestPermissionsResult() method on the fragment passing all
+     * necessary parameters to the fragment from the parent activity.
+     * This method is used only while using Loglr in Fragment mode and may be ignored if login is via Activity.
+     * @param requestCode The Request code specified while requesting for SMS read permissions
+     *                    Note : Do not modify
+     * @param permissions The Permissions which were requested by the application
+     *                    Note : Do not modify
+     * @param grantResults The grant results array for each permission requested
+     *                     Note : Do not modify
+     */
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(loglrFragment != null)
+            loglrFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }

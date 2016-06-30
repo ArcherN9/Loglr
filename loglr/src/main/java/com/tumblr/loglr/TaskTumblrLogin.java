@@ -6,12 +6,14 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.tumblr.loglr.Exceptions.LoglrLoginException;
 import com.tumblr.loglr.Interfaces.DismissListener;
 import com.tumblr.loglr.Interfaces.OTPReceiptListener;
@@ -76,13 +78,18 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> implemen
     /**
      * The OTP received from Tumblr
      */
-    private long lngOTP;
+    private String strOTP;
 
     /**
      * A dismiss listener is to be called in case the AsyncTask's calling context is that
      * of a dialogFragment
      */
     private DismissListener dismissListener;
+
+    /**
+     * FireBase Analytics object
+     */
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     TaskTumblrLogin() {
         //empty constructor
@@ -132,6 +139,10 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> implemen
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
+
+        //Instantiate object & send event no notify of attempt to login via Activity
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
+
         //If the developer a loading dialog, show that instead of default.
         if(loadingDialog != null)
             loadingDialog.show();
@@ -209,9 +220,15 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> implemen
                 @Override
                 public void onPageFinished(WebView view, String url) {
                     super.onPageFinished(view, url);
-                    if(!TextUtils.isEmpty(url) && url.equalsIgnoreCase(context.getResources().getString(R.string.tumblr_auth_otp_redirect))
-                            && lngOTP != 0) {
-                        webView.loadUrl("javascript:document.getElementById(\"tfa_response_field\").value= " + lngOTP + " ;");
+                    if(!TextUtils.isEmpty(url)
+                            && url.equalsIgnoreCase(context.getResources().getString(R.string.tumblr_auth_otp_redirect))
+                            && !TextUtils.isEmpty(strOTP)
+                            && !strOTP.equalsIgnoreCase(String.valueOf(0))) {
+                        webView.loadUrl("javascript:document.getElementById(\"tfa_response_field\").value= " + strOTP + " ;");
+
+                        Bundle bundle = new Bundle();
+                        bundle.putBoolean(context.getString(R.string.FireBase_Param_AutoFill), true);
+                        mFirebaseAnalytics.logEvent(context.getString(R.string.FireBase_Event_2FA), bundle);
                     }
                 }
 
@@ -288,10 +305,10 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> implemen
     }
 
     @Override
-    public void onReceived(WebView webview, long lngOTP) {
-        Log.i(TAG, "OTP Received to populate WebView : " + lngOTP);
-        this.lngOTP = lngOTP;
+    public void onReceived(WebView webview, String strOTP) {
+        Log.i(TAG, "OTP Received to populate WebView : " + strOTP);
+        this.strOTP = strOTP;
         if(webView != null)
-            webview.loadUrl("javascript:document.getElementById(\"tfa_response_field\").value=" + lngOTP + ";");
+            webview.loadUrl("javascript:document.getElementById(\"tfa_response_field\").value=" + strOTP + ";");
     }
 }

@@ -20,4 +20,12 @@
 
     <!-- OTP Dialog strings -->
     <string name="dialog_2FA_enabled">If you have OTP based sign in, please grant SMS read permission so we may auto-fill.</string>
+
+    <!-- Firebase Events -->
+    <string name="FireBase_Event_Read_Permission">OTP Permission</string>
+    <string name="FireBase_Event_2FA">2FA Populated</string>
+
+    <!-- Firebase Params -->
+    <string name="FireBase_Param_Granted">OTP Permission</string>
+    <string name="FireBase_Param_AutoFill">OTP Auto Populated</string>
 </resources>

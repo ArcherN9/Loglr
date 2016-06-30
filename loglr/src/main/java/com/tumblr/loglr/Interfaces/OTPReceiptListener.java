@@ -4,5 +4,5 @@ import android.webkit.WebView;
 
 public interface OTPReceiptListener {
 
-    void onReceived(WebView webview, long lngOTP);
+    void onReceived(WebView webview, String strOTP);
 }
