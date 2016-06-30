@@ -65,6 +65,15 @@ The second option is to use a Dialog Fragment which hoists on top of your runnin
         
         .initiateInDialog(getSupportFragmentManager());
 
+In the event you decide to go ahead with login using a DialogFragment, it is imperative that `onRequestPermissionsResult` method be overridden. Without this, Loglr will incur undesired behaviour. This method will be executed on interaction with the Marshmallow permission dialog. Since the permissions were requested from a DialogFragment, the parent Activity receives the callback. To forward call to the fragment, override the method like so :
+        
+        @Override
+        public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            //This line passes callback to the DialogFragment
+            Loglr.getInstance().onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+
 When login succeeds, a call back is executed to the LoginListener that was passed with `.setLoginListener(loginListener)` method. An object of `LoginResult` is passed which contains Token and Secret Token  which may be used in conjunction with [Jumlr Library](https://github.com/tumblr/jumblr) to retrieve user information or make requests on user's behalf.
 
         String strOAuthToken = loginResult.getOAuthToken();
@@ -83,6 +92,8 @@ With Jumblr client set, API requests may be made. For more information on basic 
 
 #####v1.1.1#####
 * Custom Loading Dialogs when tokens are being exchanged and the user is required to wait
+* Auto populate OTP if 2 Factor-Authentication is enabled by user
+* Crash analytics so I may push out new builds if any one is experiencing crashes in their apps due Loglr 
 
 #####v1.0.0#####
 * Changed Version to v1 post no bug being reported
