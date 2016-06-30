@@ -9,18 +9,23 @@ Note : The library is in active development. On and off, one may encounter bugs 
 ###Importing to your project###
 Gradle : 
         
-        compile 'com.daksh:loglr:1.0.0'
+        compile 'com.daksh:loglr:1.1.1'
 
 Maven : 
 
         <dependency>
           <groupId>com.daksh</groupId>
           <artifactId>loglr</artifactId>
-          <version>1.0.0</version>
+          <version>1.1.1</version>
           <type>pom</type>
         </dependency>
 
 ###Usage###
+
+In your App's AndroidManifest.xml, add the following two permissions. They are used to auto-populate OTP (2 Factor-Authentication) if the user has them enabled on Tumblr.
+        
+        <uses-permission android:name="android.permission.READ_SMS" />
+        <uses-permission android:name="android.permission.RECEIVE_SMS" />
 
 Loglr uses singleton pattern and accepts a minimum of 5 parameters to complete the login process. Each method that accepts a parameter returns the Loglr Instance to avoid boiler plate code.
 Retrieve the Loglr instance to start passing parameters to the library. 
