@@ -33,25 +33,24 @@ public class LoglrActivity extends AppCompatActivity implements DialogCallbackLi
     private TaskTumblrLogin taskTumblrLogin;
 
     /**
-     * FireBase Analytics object
-     */
-    private FirebaseAnalytics mFirebaseAnalytics;
-
-    /**
      * The OTP broadcast receiver that monitors for incoming SMS.
      */
     OTPBroadcastReceiver otpBroadcastReceiver;
+
+    /**
+     * A bundle to store only login related params this bundle is sent alongwith the 'login' event
+     */
+    private Bundle loginBundle = new Bundle();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tumblr_login);
 
-        //Instantiate object & send event no notify of attempt to login via Activity
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-        Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.SIGN_UP_METHOD, "Activity");
-        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
+        //Instantiate object & set to Loglr class
+        Loglr.getInstance().setFirebase(FirebaseAnalytics.getInstance(this));
+        //Save param Activity to login bundle
+        loginBundle.putString(FirebaseAnalytics.Param.SIGN_UP_METHOD, "Activity");
 
         //Test if consumer key was received
         if(TextUtils.isEmpty(Loglr.getInstance().getConsumerKey()))
@@ -65,14 +64,32 @@ public class LoglrActivity extends AppCompatActivity implements DialogCallbackLi
         if(TextUtils.isEmpty(Loglr.getInstance().getUrlCallBack()))
             throw new LoglrCallbackException();
 
-        if(Utils.isMarshmallowAbove() && !Utils.isSMSReadPermissionGranted(this)) {
-            SeekPermissionDialog seekPermissionDialog = new SeekPermissionDialog(LoglrActivity.this);
-            seekPermissionDialog.setCanceledOnTouchOutside(false);
-            seekPermissionDialog.setCancelable(false);
-            seekPermissionDialog.setCallback(this);
-            seekPermissionDialog.show();
-        } else
+        if(Loglr.getInstance().is2FAEnabled()) {
+            //If the developer allowed the 2FA authentication feature, continue with execution and
+            //send a shoutout to Firebase
+            Bundle otpBundle = new Bundle();
+            otpBundle.putBoolean(getString(R.string.FireBase_Param_DevGranted), true);
+            if(Loglr.getInstance().getFirebase() != null)
+                Loglr.getInstance().getFirebase().logEvent(getString(R.string.FireBase_Event_Read_Permission), otpBundle);
+
+            //Test if permissions will need to be sought for OTP
+            if (Utils.isMarshmallowAbove() && !Utils.isSMSReadPermissionGranted(this)) {
+                SeekPermissionDialog seekPermissionDialog = new SeekPermissionDialog(LoglrActivity.this);
+                seekPermissionDialog.setCanceledOnTouchOutside(false);
+                seekPermissionDialog.setCancelable(false);
+                seekPermissionDialog.setCallback(this);
+                seekPermissionDialog.show();
+            } else
+                onButtonOkay();
+        } else {
+            //If the developer explicitly disabled the 2FA authentication feature, continue with
+            //execution of the program but also, send an intimation to firebase
+            Bundle otpBundle = new Bundle();
+            otpBundle.putBoolean(getString(R.string.FireBase_Param_DevGranted), false);
+            if(Loglr.getInstance().getFirebase() != null)
+                Loglr.getInstance().getFirebase().logEvent(getString(R.string.FireBase_Event_Read_Permission), otpBundle);
             onButtonOkay();
+        }
     }
 
     @Override
@@ -93,12 +110,14 @@ public class LoglrActivity extends AppCompatActivity implements DialogCallbackLi
                         //Register the SMS receiver
                         registerReceiver();
                         Bundle bundle = new Bundle();
-                        bundle.putBoolean(getString(R.string.FireBase_Param_Granted), true);
-                        mFirebaseAnalytics.logEvent(getString(R.string.FireBase_Event_Read_Permission), bundle);
+                        bundle.putBoolean(getString(R.string.FireBase_Param_UserGranted), true);
+                        if(Loglr.getInstance().getFirebase() != null)
+                            Loglr.getInstance().getFirebase().logEvent(getString(R.string.FireBase_Event_Read_Permission), bundle);
                     } else {
                         Bundle bundle = new Bundle();
-                        bundle.putBoolean(getString(R.string.FireBase_Param_Granted), false);
-                        mFirebaseAnalytics.logEvent(getString(R.string.FireBase_Event_Read_Permission), bundle);
+                        bundle.putBoolean(getString(R.string.FireBase_Param_UserGranted), false);
+                        if(Loglr.getInstance().getFirebase() != null)
+                            Loglr.getInstance().getFirebase().logEvent(getString(R.string.FireBase_Event_Read_Permission), bundle);
                     }
                     initiateLoginProcess();
                 }
@@ -121,6 +140,8 @@ public class LoglrActivity extends AppCompatActivity implements DialogCallbackLi
         taskTumblrLogin.setLoadingDialog(Utils.getLoadingDialog(LoglrActivity.this));
         //Pass reference of WebView
         taskTumblrLogin.setWebView(findViewById(R.id.activity_tumblr_webview));
+        //Pass the login bundle as well | Will be used when the login succeeds in the end
+        taskTumblrLogin.setLoginBundle(loginBundle);
         //Execute AsyncTask
         taskTumblrLogin.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -149,35 +170,42 @@ public class LoglrActivity extends AppCompatActivity implements DialogCallbackLi
 
     @Override
     public void onButtonOkay() {
-        //Check if SMS read permissions have been granted to the application
-        if(Utils.isSMSReadPermissionGranted(LoglrActivity.this)) {
-            //Register the SMS receiver
-            registerReceiver();
-            //test if LoginListener was registered
-            if(Loglr.getInstance().getLoginListener() != null) {
-                if(Loglr.getInstance().getExceptionHandler() == null)
-                    Log.w(TAG, "Continuing execution without ExceptionHandler. No Exception call backs will be sent. It is recommended to set one.");
+        //Test if 2FA has been enabled by the user at all
+        if(Loglr.getInstance().is2FAEnabled())
+            //Check if SMS read permissions have been granted to the application
+            if(Utils.isSMSReadPermissionGranted(LoglrActivity.this)) {
+                //Register the SMS receiver
+                registerReceiver();
+                //test if LoginListener was registered
+                if(Loglr.getInstance().getLoginListener() != null) {
+                    if(Loglr.getInstance().getExceptionHandler() == null)
+                        Log.w(TAG, "Continuing execution without ExceptionHandler. No Exception call backs will be sent. It is recommended to set one.");
+                    initiateLoginProcess();
+                } else {
+                    //If Exception handler was registered by the dev, use it to return a call back.
+                    //Otherwise, just throw the exception and make the application crash
+                    if (Loglr.getInstance().getExceptionHandler() != null) {
+                        if(Loglr.getInstance().getFirebase() != null)
+                            Loglr.getInstance().getFirebase().logEvent(getString(R.string.FireBase_Event_LoginFailed), loginBundle);
+                        Loglr.getInstance().getExceptionHandler().onLoginFailed(new LoglrLoginException());
+                    } else
+                        throw new LoglrLoginException();
+                }
+                //If not, Check if Its an android device that runs Marshmallow.
+                //if it is, request user to grant permission
+            } else if(Utils.isMarshmallowAbove()) {
+                //Request user for permission.
+                //Once granted or denied, callback will be on onRequestPermissionsResult
+                ActivityCompat.requestPermissions(LoglrActivity.this,
+                        new String[]{
+                                Manifest.permission.READ_SMS,
+                                Manifest.permission.RECEIVE_SMS
+                        },
+                        OTPBroadcastReceiver.REQUEST_OTP_PERMISSION);
+            } else
+                //If permissions are not granted and its not Marshmallow, get on with login
                 initiateLoginProcess();
-            } else {
-                //If Exception handler was registered by the dev, use it to return a call back.
-                //Otherwise, just throw the exception and make the application crash
-                if (Loglr.getInstance().getExceptionHandler() != null)
-                    Loglr.getInstance().getExceptionHandler().onLoginFailed(new LoglrLoginException());
-                else
-                    throw new LoglrLoginException();
-            }
-            //If not, Check if Its an android device that runs Marshmallow.
-            //if it is, request user to grant permission
-        } else if(Utils.isMarshmallowAbove()) {
-            //Request user for permission.
-            //Once granted or denied, callback will be on onRequestPermissionsResult
-            ActivityCompat.requestPermissions(LoglrActivity.this,
-                    new String[]{
-                            Manifest.permission.READ_SMS,
-                            Manifest.permission.RECEIVE_SMS
-                    },
-                    OTPBroadcastReceiver.REQUEST_OTP_PERMISSION);
-        } else
+        else
             //If permissions are not granted and its not Marshmallow, get on with login
             initiateLoginProcess();
     }
@@ -187,8 +215,11 @@ public class LoglrActivity extends AppCompatActivity implements DialogCallbackLi
         super.onBackPressed();
         finish();
         //Pass reason for closing loglr
-        if (Loglr.getInstance().getExceptionHandler() != null)
+        if (Loglr.getInstance().getExceptionHandler() != null) {
+            if(Loglr.getInstance().getFirebase() != null)
+                Loglr.getInstance().getFirebase().logEvent(getString(R.string.FireBase_Event_LoginFailed), loginBundle);
             Loglr.getInstance().getExceptionHandler().onLoginFailed(new LoglrLoginCanceled());
+        }
     }
 
     @Override

@@ -45,9 +45,9 @@ public class LoglrFragment extends DialogFragment implements DismissListener, Di
     private OTPBroadcastReceiver otpBroadcastReceiver;
 
     /**
-     * FireBase Analytics object
+     * A bundle to store only login related params this bundle is sent alongwith the 'login' event
      */
-    private FirebaseAnalytics mFirebaseAnalytics;
+    private Bundle loginBundle = new Bundle();
 
     @NonNull
     @Override
@@ -58,8 +58,11 @@ public class LoglrFragment extends DialogFragment implements DismissListener, Di
             public void onBackPressed() {
                 super.onBackPressed();
                 //Pass reason for closing loglr
-                if (Loglr.getInstance().getExceptionHandler() != null)
+                if (Loglr.getInstance().getExceptionHandler() != null) {
+                    if(Loglr.getInstance().getFirebase() != null)
+                        Loglr.getInstance().getFirebase().logEvent(getString(R.string.FireBase_Event_LoginFailed), loginBundle);
                     Loglr.getInstance().getExceptionHandler().onLoginFailed(new LoglrLoginCanceled());
+                }
             }
         };
     }
@@ -72,11 +75,10 @@ public class LoglrFragment extends DialogFragment implements DismissListener, Di
         //Remove the fragment title
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
-        //Instantiate object & send event no notify of attempt to login via Activity
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
-        Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.SIGN_UP_METHOD, "Fragment");
-        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
+        //Instantiate object & set to Loglr class
+        Loglr.getInstance().setFirebase(FirebaseAnalytics.getInstance(getActivity()));
+        //Save param Fragment to login bundle
+        loginBundle.putString(FirebaseAnalytics.Param.SIGN_UP_METHOD, "Fragment");
 
         //Test if consumer key was received
         if (TextUtils.isEmpty(Loglr.getInstance().getConsumerKey()))
@@ -90,7 +92,7 @@ public class LoglrFragment extends DialogFragment implements DismissListener, Di
         if (TextUtils.isEmpty(Loglr.getInstance().getUrlCallBack()))
             throw new LoglrCallbackException();
 
-        return inflater.inflate(R.layout.fragment_tumblr_login, null, false);
+        return inflater.inflate(R.layout.fragment_tumblr_login, container, false);
     }
 
     @Override
@@ -173,6 +175,8 @@ public class LoglrFragment extends DialogFragment implements DismissListener, Di
         taskTumblrLogin.setDismissListener(LoglrFragment.this);
         //Pass reference of WebView
         taskTumblrLogin.setWebView(getView().findViewById(R.id.activity_tumblr_webview));
+        //Pass the login bundle as well | Will be used when the login succeeds in the end
+        taskTumblrLogin.setLoginBundle(loginBundle);
         //Execute AsyncTask
         taskTumblrLogin.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -203,9 +207,11 @@ public class LoglrFragment extends DialogFragment implements DismissListener, Di
             } else {
                 //If Exception handler was registered by the dev, use it to return a call back.
                 //Otherwise, just throw the exception and make the application crash
-                if (Loglr.getInstance().getExceptionHandler() != null)
+                if (Loglr.getInstance().getExceptionHandler() != null) {
+                    if(Loglr.getInstance().getFirebase() != null)
+                        Loglr.getInstance().getFirebase().logEvent(getString(R.string.FireBase_Event_LoginFailed), loginBundle);
                     Loglr.getInstance().getExceptionHandler().onLoginFailed(new LoglrLoginException());
-                else
+                } else
                     throw new LoglrLoginException();
             }
             //If not, Check if Its an android device that runs Marshmallow.

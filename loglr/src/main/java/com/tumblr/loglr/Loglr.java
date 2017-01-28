@@ -3,9 +3,11 @@ package com.tumblr.loglr;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.tumblr.loglr.Interfaces.ExceptionHandler;
 import com.tumblr.loglr.Interfaces.LoginListener;
 
@@ -28,6 +30,17 @@ public class Loglr {
      * the code cannot continue function.
      */
     private static ExceptionHandler exceptionHandler;
+
+    /**
+     * Specifies whether or not the developer wishes to enable 2FA auto read for OTP message that arrives
+     * when the user is trying to login. Default value : true
+     */
+    private Boolean is2FAEnabled = true;
+
+    /**
+     * Firebase analytics object used module wide
+     */
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     /**
      * The Tumblr Call back URL
@@ -55,6 +68,12 @@ public class Loglr {
     private static Class<? extends Dialog> loadingDialog;
 
     /**
+     * A isDebug variable is used to specify if the build being run/deployed is a debug build or not.
+     * On deployment this variable is to be changed to false to imply shift from debug to production
+     */
+    private static Boolean IS_DEBUG = true;
+
+    /**
      * The Dialog fragment serves as a second option to carry out the sign in procedure.
      */
     private LoglrFragment loglrFragment;
@@ -73,6 +92,15 @@ public class Loglr {
             return loglrInstance;
         } else
             return loglrInstance;
+    }
+
+    /**
+     * A method to set the firebase analytics object to be available module wide to sent events
+     * and params
+     * @param mFirebaseAnalytics
+     */
+    void setFirebase(FirebaseAnalytics mFirebaseAnalytics) {
+        this.mFirebaseAnalytics = mFirebaseAnalytics;
     }
 
     /**
@@ -156,6 +184,36 @@ public class Loglr {
     public Loglr setConsumerSecretKey(String strConsumerSecretKey) {
         CONSUMER_SECRET_KEY = strConsumerSecretKey;
         return loglrInstance;
+    }
+
+    /**
+     * A toggle method to enable / disable the SMS OTP auto read functionality baked into Loglr.
+     * Default value : true;
+     * @param is2FAEnabled
+     * @return LoglrInstance
+     */
+    public Loglr enable2FA(Boolean is2FAEnabled) {
+        this.is2FAEnabled = is2FAEnabled;
+        return loglrInstance;
+    }
+
+    /**
+     * Returns whether Loglr can read the OTP or not
+     * @return is2FAEnabled
+     */
+    Boolean is2FAEnabled() {
+        return is2FAEnabled;
+    }
+
+    /**
+     * Returns the firebase analytics object set up
+     * @return mFirebaseAnalytics
+     */
+    FirebaseAnalytics getFirebase() {
+        if(!IS_DEBUG)
+            return this.mFirebaseAnalytics;
+        else
+            return null;
     }
 
     /**

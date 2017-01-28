@@ -4,9 +4,11 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.tumblr.loglr.Exceptions.LoglrLoginException;
 import com.tumblr.loglr.Interfaces.DismissListener;
 
@@ -64,6 +66,11 @@ class TaskRetrieveAccessToken extends AsyncTask<Void, RuntimeException, LoginRes
      */
     private Dialog loadingDialog;
 
+    /**
+     * A bundle to store only login related params this bundle is sent alongwith the 'login' event
+     */
+    private Bundle loginBundle;
+
     //Constructor
     TaskRetrieveAccessToken() {
     }
@@ -75,6 +82,15 @@ class TaskRetrieveAccessToken extends AsyncTask<Void, RuntimeException, LoginRes
      */
     void setDismissListener(DismissListener dismissListener) {
         this.dismissListener = dismissListener;
+    }
+
+    /**
+     * Accepts a login bundle that will be sent alongwith the login event if and when the login
+     * succeeds
+     * @param loginBundle
+     */
+    void setLoginBundle(Bundle loginBundle) {
+        this.loginBundle = loginBundle;
     }
 
     /**
@@ -175,8 +191,11 @@ class TaskRetrieveAccessToken extends AsyncTask<Void, RuntimeException, LoginRes
         super.onProgressUpdate(values);
         if(values != null && values.length > 0) {
             RuntimeException exception = values[0];
-            if(Loglr.getInstance().getExceptionHandler() != null)
+            if(Loglr.getInstance().getExceptionHandler() != null) {
+                if(Loglr.getInstance().getFirebase() != null)
+                    Loglr.getInstance().getFirebase().logEvent(context.getString(R.string.FireBase_Event_LoginFailed), loginBundle);
                 Loglr.getInstance().getExceptionHandler().onLoginFailed(exception);
+            }
             else
                 finish();
         }
@@ -192,8 +211,12 @@ class TaskRetrieveAccessToken extends AsyncTask<Void, RuntimeException, LoginRes
             loadingDialog.dismiss();
         //Check if tokens were retrieved. If yes, Set result as successful and finish activity
         //otherwise, set as failed.
-        if(loginResult != null)
+        if(loginResult != null) {
+            //Send firebase event for successful login alongwith bundle of method
+            if(Loglr.getInstance().getFirebase() != null)
+                Loglr.getInstance().getFirebase().logEvent(FirebaseAnalytics.Event.LOGIN, loginBundle);
             Loglr.getInstance().getLoginListener().onLoginSuccessful(loginResult);
+        }
         finish();
     }
 

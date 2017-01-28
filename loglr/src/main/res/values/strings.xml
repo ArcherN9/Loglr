@@ -24,8 +24,10 @@
     <!-- Firebase Events -->
     <string name="FireBase_Event_Read_Permission">OTP Permission</string>
     <string name="FireBase_Event_2FA">2FA Populated</string>
+    <string name="FireBase_Event_LoginFailed">Login Failed</string>
 
     <!-- Firebase Params -->
-    <string name="FireBase_Param_Granted">OTP Permission</string>
+    <string name="FireBase_Param_UserGranted">OTP Permission</string>
+    <string name="FireBase_Param_DevGranted">Dev Allowed OTP</string>
     <string name="FireBase_Param_AutoFill">OTP Auto Populated</string>
 </resources>

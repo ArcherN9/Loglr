@@ -13,7 +13,6 @@ import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.tumblr.loglr.Exceptions.LoglrLoginException;
 import com.tumblr.loglr.Interfaces.DismissListener;
 import com.tumblr.loglr.Interfaces.OTPReceiptListener;
@@ -87,9 +86,9 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> implemen
     private DismissListener dismissListener;
 
     /**
-     * FireBase Analytics object
+     * A bundle to store only login related params this bundle is sent alongwith the 'login' event
      */
-    private FirebaseAnalytics mFirebaseAnalytics;
+    private Bundle loginBundle = new Bundle();
 
     TaskTumblrLogin() {
         //empty constructor
@@ -102,6 +101,15 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> implemen
      */
     void setDismissListener(DismissListener dismissListener) {
         this.dismissListener = dismissListener;
+    }
+
+    /**
+     * Accepts a login bundle that will be sent alongwith the login event if and when the login
+     * succeeds
+     * @param loginBundle
+     */
+    void setLoginBundle(Bundle loginBundle) {
+        this.loginBundle = loginBundle;
     }
 
     /**
@@ -139,9 +147,6 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> implemen
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-
-        //Instantiate object & send event no notify of attempt to login via Activity
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
 
         //If the developer a loading dialog, show that instead of default.
         if(loadingDialog != null)
@@ -194,8 +199,11 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> implemen
         super.onProgressUpdate(values);
         if(values != null && values.length > 0) {
             RuntimeException exception = values[0];
-            if(Loglr.getInstance().getExceptionHandler() != null)
+            if(Loglr.getInstance().getExceptionHandler() != null) {
+                if(Loglr.getInstance().getFirebase() != null)
+                    Loglr.getInstance().getFirebase().logEvent(context.getString(R.string.FireBase_Event_LoginFailed), loginBundle);
                 Loglr.getInstance().getExceptionHandler().onLoginFailed(exception);
+            }
             else
                 finish();
         }
@@ -228,7 +236,8 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> implemen
 
                         Bundle bundle = new Bundle();
                         bundle.putBoolean(context.getString(R.string.FireBase_Param_AutoFill), true);
-                        mFirebaseAnalytics.logEvent(context.getString(R.string.FireBase_Event_2FA), bundle);
+                        if(Loglr.getInstance().getFirebase() != null)
+                            Loglr.getInstance().getFirebase().logEvent(context.getString(R.string.FireBase_Event_2FA), bundle);
                     }
                 }
 
@@ -273,6 +282,8 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> implemen
                         taskRetrieveAccessToken.setOAuthVerifier(strOAuthVerifier);
                         //Set the Dismiss listener
                         taskRetrieveAccessToken.setDismissListener(dismissListener);
+                        //Pass the login bundle as well | Will be used when the login succeeds in the end
+                        taskRetrieveAccessToken.setLoginBundle(loginBundle);
                         //Execute the AsyncTask on a different thread;
                         taskRetrieveAccessToken.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         return true;
