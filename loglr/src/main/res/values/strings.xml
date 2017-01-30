@@ -50,6 +50,7 @@
     <string name="FireBase_Param_DevGranted">OTP Permission Dev</string>
     <string name="FireBase_Param_AutoFill">OTP Auto Populated</string>
     <string name="FireBase_Param_Reason">Fail Reason</string>
+    <string name="FireBase_Event_CustomDialogSet_displayed">Fail</string>
 
     <!-- Firebase Param values -->
     <!-- FirebaseAnalytics.Param.SIGN_UP_METHOD -->
@@ -58,6 +59,7 @@
 
     <!-- User Property value | FireBase_Property_Version -->
     <string name="FireBase_Property_Version_Value">1.2.1</string>
+
     <!-- ================================================================================== -->
 
 </resources>

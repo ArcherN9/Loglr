@@ -1,4 +1,4 @@
-[ ![Download](https://api.bintray.com/packages/dakshsrivastava/maven/Loglr/images/download.svg) ](https://bintray.com/dakshsrivastava/maven/Loglr/_latestVersion) [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Loglr-green.svg?style=true)](https://android-arsenal.com/details/1/3265) [![HitCount](https://hitt.herokuapp.com/dakshsrivastava/Loglr.svg)](https://github.com/dakshsrivastava/Loglr)
+[ ![Download](https://api.bintray.com/packages/dakshsrivastava/maven/Loglr/images/download.svg) ](https://bintray.com/dakshsrivastava/maven/Loglr/_latestVersion) [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Loglr-green.svg?style=true)](https://android-arsenal.com/details/1/3265)
 # Loglr #
 ### The easiest way to get your user logged in via Tumblr ###
 
@@ -9,14 +9,14 @@ Note : The library is in active development. On and off, one may encounter bugs 
 ###Importing to your project###
 Gradle : 
         
-        compile 'com.daksh:loglr:1.0.0'
+        compile 'com.daksh:loglr:1.2.1'
 
 Maven : 
 
         <dependency>
           <groupId>com.daksh</groupId>
           <artifactId>loglr</artifactId>
-          <version>1.0.0</version>
+          <version>1.2.1</version>
           <type>pom</type>
         </dependency>
 
@@ -56,6 +56,11 @@ Please note, an object of the custom dialog is manufactured by Loglr by calling 
         //Pass the Loading Dialog class
         .setLoadingDialog(LoadingDialog.class)
 
+Loglr supports auto detecting the OTP message received by users with 2 Factor-Authentication enabled. A dialog informing the user is displayed before the permission is requested. If you wish to disable this feature, you may do so by calling the following method and passing a boolean variable. Note : by default, this feature is enabled.    
+
+        //Pass a boolean variable that informs loglr if OTP auto detection is to be enabled or not
+        .enable2FA(true)
+
 Finally, there are two ways to initiate login. The first option is to start it in an activity of it's own. Personally, I believe this is a better approach as the Tumblr user authentication website opens up better. 
 
         //Initiate login in an activity of it's own
@@ -89,6 +94,12 @@ With Jumblr client set, API requests may be made. For more information on basic 
 
 
 ###Change log###
+
+#####v1.2.1#####
+* Developer has option to toggle auto OTP detection for 2FA
+* Better analytics to track user/developer behavior with library
+* Bug fix for corner case when Tumblr OAuth page fails to open
+* The user can set a custom dialog to inform user that permission to read OTP will be sought. Note : Dialog is only displayed in case the application does not have the required permission.  
 
 #####v1.1.1#####
 * Custom Loading Dialogs when tokens are being exchanged and the user is required to wait

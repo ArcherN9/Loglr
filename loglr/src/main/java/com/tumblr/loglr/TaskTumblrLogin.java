@@ -150,11 +150,9 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> implemen
         super.onPreExecute();
 
         //If the developer a loading dialog, show that instead of default.
-        if(loadingDialog != null) {
+        if(loadingDialog != null)
             loadingDialog.show();
-            if(Loglr.getInstance().getFirebase() != null)
-                Loglr.getInstance().getFirebase().logEvent(context.getString(R.string.FireBase_Event_CustomDialogSet), null);
-        } else
+        else
             //Show Progress Dialog while the user waits
             progressDialog = ProgressDialog.show(context, null, "Loading...");
     }
