@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 
-import com.google.firebase.FirebaseOptions;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.tumblr.loglr.Interfaces.ExceptionHandler;
 import com.tumblr.loglr.Interfaces.LoginListener;
@@ -71,7 +70,7 @@ public class Loglr {
      * A isDebug variable is used to specify if the build being run/deployed is a debug build or not.
      * On deployment this variable is to be changed to false to imply shift from debug to production
      */
-    private static Boolean IS_DEBUG = true;
+    private static Boolean IS_DEBUG = false;
 
     /**
      * The Dialog fragment serves as a second option to carry out the sign in procedure.
