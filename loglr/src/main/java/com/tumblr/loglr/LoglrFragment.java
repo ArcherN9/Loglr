@@ -77,8 +77,11 @@ public class LoglrFragment extends DialogFragment implements DismissListener, Di
 
         //Instantiate object & set to Loglr class
         Loglr.getInstance().setFirebase(FirebaseAnalytics.getInstance(getActivity()));
+        //Send event for login button tap
+        if(Loglr.getInstance().getFirebase() != null)
+            Loglr.getInstance().getFirebase().logEvent(getString(R.string.FireBase_Event_ButtonClick), null);
         //Save param Fragment to login bundle
-        loginBundle.putString(FirebaseAnalytics.Param.SIGN_UP_METHOD, "Fragment");
+        loginBundle.putString(FirebaseAnalytics.Param.SIGN_UP_METHOD, getString(R.string.FireBase_Param_SignUp_Fragment));
 
         //Test if consumer key was received
         if (TextUtils.isEmpty(Loglr.getInstance().getConsumerKey()))
@@ -244,9 +247,21 @@ public class LoglrFragment extends DialogFragment implements DismissListener, Di
                         //if result is granted, set is granted to true
                         isGranted = intGrantResult == PackageManager.PERMISSION_GRANTED;
                     //Test final grant status
-                    if(isGranted)
+                    if(isGranted) {
                         //Register the SMS receiver
                         registerReceiver();
+
+                        Bundle bundle = new Bundle();
+                        bundle.putBoolean(getString(R.string.FireBase_Param_UserGranted), true);
+                        if (Loglr.getInstance().getFirebase() != null)
+                            Loglr.getInstance().getFirebase().logEvent(getString(R.string.FireBase_Event_Read_Permission), bundle);
+                    } else {
+                        Bundle bundle = new Bundle();
+                        bundle.putBoolean(getString(R.string.FireBase_Param_UserGranted), false);
+                        if(Loglr.getInstance().getFirebase() != null)
+                            Loglr.getInstance().getFirebase().logEvent(getString(R.string.FireBase_Event_Read_Permission), bundle);
+                    }
+
                     initiateLoginProcess();
                 }
                 break;

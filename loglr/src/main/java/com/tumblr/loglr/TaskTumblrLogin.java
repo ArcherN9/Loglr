@@ -149,9 +149,11 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> implemen
         super.onPreExecute();
 
         //If the developer a loading dialog, show that instead of default.
-        if(loadingDialog != null)
+        if(loadingDialog != null) {
             loadingDialog.show();
-        else
+            if(Loglr.getInstance().getFirebase() != null)
+                Loglr.getInstance().getFirebase().logEvent(context.getString(R.string.FireBase_Event_CustomDialogSet), null);
+        } else
             //Show Progress Dialog while the user waits
             progressDialog = ProgressDialog.show(context, null, "Loading...");
     }
@@ -200,6 +202,7 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> implemen
         if(values != null && values.length > 0) {
             RuntimeException exception = values[0];
             if(Loglr.getInstance().getExceptionHandler() != null) {
+                loginBundle.putString(context.getString(R.string.FireBase_Param_Reason), exception.getMessage());
                 if(Loglr.getInstance().getFirebase() != null)
                     Loglr.getInstance().getFirebase().logEvent(context.getString(R.string.FireBase_Event_LoginFailed), loginBundle);
                 Loglr.getInstance().getExceptionHandler().onLoginFailed(exception);

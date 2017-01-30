@@ -113,7 +113,7 @@ class TaskRetrieveAccessToken extends AsyncTask<Void, RuntimeException, LoginRes
      * Set the OAuthConsumer
      * @param OAuthConsumer TheOAuthConsumer to which tokens will be applied
      */
-    public void setOAuthConsumer(CommonsHttpOAuthConsumer OAuthConsumer) {
+    void setOAuthConsumer(CommonsHttpOAuthConsumer OAuthConsumer) {
         this.commonsHttpOAuthConsumer = OAuthConsumer;
     }
 
@@ -121,7 +121,7 @@ class TaskRetrieveAccessToken extends AsyncTask<Void, RuntimeException, LoginRes
      * Set the OAuthProvider
      * @param OAuthProvider The OAuthProvider which makes the request for tokens
      */
-    public void setOAuthProvider(CommonsHttpOAuthProvider OAuthProvider) {
+    void setOAuthProvider(CommonsHttpOAuthProvider OAuthProvider) {
         this.commonsHttpOAuthProvider = OAuthProvider;
     }
 
@@ -192,6 +192,7 @@ class TaskRetrieveAccessToken extends AsyncTask<Void, RuntimeException, LoginRes
         if(values != null && values.length > 0) {
             RuntimeException exception = values[0];
             if(Loglr.getInstance().getExceptionHandler() != null) {
+                loginBundle.putString(context.getString(R.string.FireBase_Param_Reason), exception.getMessage());
                 if(Loglr.getInstance().getFirebase() != null)
                     Loglr.getInstance().getFirebase().logEvent(context.getString(R.string.FireBase_Event_LoginFailed), loginBundle);
                 Loglr.getInstance().getExceptionHandler().onLoginFailed(exception);

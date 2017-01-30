@@ -3,7 +3,6 @@ package com.tumblr.loglr;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 
@@ -104,9 +103,8 @@ public class Loglr {
     }
 
     /**
-     * Receives a reference of the interface to be called when a result is retrieved
-     * from the login process
-     * @param listener
+     * Receives an interface to be called when login succeeds.
+     * @param listener An implementation of the login listener which is called when the login succeeds
      */
     public Loglr setLoginListener(@NonNull LoginListener listener) {
         loginListener = listener;
@@ -115,8 +113,10 @@ public class Loglr {
 
     /**
      * Optional | Recommended though to handle code in a better fashion
-     * The method receives a reference of the interface to be executed when an exception is thrown
-     * @param listener
+     * Receives an implementation of the interface to be executed when an exception is thrown and login fails to complete
+     * @param listener An implementation of the ExceptionHandler interface that is called when login fails
+     *                 the details of which are held in the exception object
+     * @return LoglrInstance
      */
     public Loglr setExceptionHandler(@NonNull ExceptionHandler listener) {
         exceptionHandler = listener;
@@ -126,8 +126,8 @@ public class Loglr {
     /**
      * A call back URL to monitor for login call back
      * Should be same as callback URL registered with Tumblr website.
-     * @param strUrl
-     * @return
+     * @param strUrl The url to which the user is redirected to when the login completes.
+     * @return LoglrInstance
      */
     public Loglr setUrlCallBack(@NonNull String strUrl) {
         this.strUrl = strUrl;
@@ -135,13 +135,14 @@ public class Loglr {
     }
 
     /**
-     * Accepts custom dialogs to replace with default ProgressDialogs whilst the
+     * Accepts custom loading dialogs to replace with default ProgressDialogs. If you do not wish
+     * to override login with custom loading dialogs, do not call this method.
      * @param dialog A loading dialog to be shown to the user when data is loading from the server
      *               during sign in
      * @return LoglrInstance
      */
-    public Loglr setLoadingDialog(Class<? extends Dialog> dialog) {
-        this.loadingDialog = dialog;
+    public Loglr setLoadingDialog(@NonNull Class<? extends Dialog> dialog) {
+        loadingDialog = dialog;
         return loglrInstance;
     }
 
@@ -163,10 +164,12 @@ public class Loglr {
     }
 
     /**
-     * A method to provide Loglr with the Consumer Key which will be used to access Tumblr APIs.
+     * Provides Loglr with the Consumer Key which will be used to access Tumblr APIs.
      * Without it, the app will fail.
      * #MANDATORY
-     * @param strConsumerKey The Tumblr app consumer Key in String format
+     *
+     * For more information on Tumblr Keys, please see : https://www.tumblr.com/docs/en/api/
+     * @param strConsumerKey The Tumblr app consumer Key retrieved from Tumblr's developer website
      * @return loglrInstance
      */
     public Loglr setConsumerKey(String strConsumerKey) {
@@ -175,9 +178,11 @@ public class Loglr {
     }
 
     /**
-     * A method to provide Loglr with the Consumer Secret Key which will be used to access Tumblr APIs.
+     * Provides Loglr with the Consumer Secret Key which will be used to access Tumblr APIs.
      * Without it, the app will fail.
      * #MANDATORY
+     *
+     * For more information on Tumblr Keys, please see : https://www.tumblr.com/docs/en/api/
      * @param strConsumerSecretKey The Tumblr app consumer Secret Key in String format
      * @return loglrInstance
      */
@@ -189,7 +194,8 @@ public class Loglr {
     /**
      * A toggle method to enable / disable the SMS OTP auto read functionality baked into Loglr.
      * Default value : true;
-     * @param is2FAEnabled
+     * @param is2FAEnabled A boolean value that tells Loglr if OTP auto read assistance is to be
+     *                     enabled
      * @return LoglrInstance
      */
     public Loglr enable2FA(Boolean is2FAEnabled) {
@@ -255,8 +261,10 @@ public class Loglr {
     }
 
     /**
-     * The method initiates the login procedure by calling the Tumblr APIs in a different dialog Fragment
-     * which hosts a WebView.
+     * Initiates the login procedure by calling calling the tumblr APIs in an activity that hosts
+     * a web view.
+     *
+     * Use this for a better experience of login in
      * @param context The context of the calling Activity / Application
      */
     public void initiateInActivity(Context context) {

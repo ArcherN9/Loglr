@@ -49,8 +49,11 @@ public class LoglrActivity extends AppCompatActivity implements DialogCallbackLi
 
         //Instantiate object & set to Loglr class
         Loglr.getInstance().setFirebase(FirebaseAnalytics.getInstance(this));
+        //Send event for login button tap
+        if(Loglr.getInstance().getFirebase() != null)
+            Loglr.getInstance().getFirebase().logEvent(getString(R.string.FireBase_Event_ButtonClick), null);
         //Save param Activity to login bundle
-        loginBundle.putString(FirebaseAnalytics.Param.SIGN_UP_METHOD, "Activity");
+        loginBundle.putString(FirebaseAnalytics.Param.SIGN_UP_METHOD, getString(R.string.FireBase_Param_SignUp_Activity));
 
         //Test if consumer key was received
         if(TextUtils.isEmpty(Loglr.getInstance().getConsumerKey()))

@@ -1,33 +1,57 @@
 <resources>
     <string name="app_name">Loglr</string>
 
+    <!-- ================================================================================== -->
     <!-- Tumblr API URLs and default call back URLs -->
     <string name="tumblr_request">https://www.tumblr.com/oauth/request_token</string>
     <string name="tumblr_access">https://www.tumblr.com/oauth/access_token</string>
     <string name="tumblr_auth">https://www.tumblr.com/oauth/authorize</string>
     <string name="tumblr_auth_otp_redirect">https://www.tumblr.com/login</string>
 
+    <!-- ================================================================================== -->
+
+
+    <!-- ================================================================================== -->
     <!-- Loading messages -->
     <string name="tumblrlogin_loading">Loading...</string>
+    <!-- ================================================================================== -->
 
+
+    <!-- ================================================================================== -->
     <!-- Bundle keys -->
     <string name="tumblr_consumer_key">tumblr_consumer_key</string>
     <string name="tumblr_consumer_secret_key">tumblr_consumer_secret_key</string>
+    <!-- ================================================================================== -->
 
+
+    <!-- ================================================================================== -->
     <!-- OTP Related strings -->
     <string name="tumblr_otp_manual">Please enter OTP Manually</string>
     <string name="tumblr_otp_provider">android.provider.Telephony.SMS_RECEIVED</string>
 
     <!-- OTP Dialog strings -->
     <string name="dialog_2FA_enabled">If you have OTP based sign in, please grant SMS read permission so we may auto-fill.</string>
+    <!-- ================================================================================== -->
 
+
+    <!-- ================================================================================== -->
     <!-- Firebase Events -->
+    <string name="FireBase_Event_ButtonClick">Login Button Click</string>
     <string name="FireBase_Event_Read_Permission">OTP Permission</string>
     <string name="FireBase_Event_2FA">2FA Populated</string>
     <string name="FireBase_Event_LoginFailed">Login Failed</string>
+    <string name="FireBase_Event_CustomDialogSet">Custom Progress dialog</string>
 
     <!-- Firebase Params -->
-    <string name="FireBase_Param_UserGranted">OTP Permission</string>
-    <string name="FireBase_Param_DevGranted">Dev Allowed OTP</string>
+    <string name="FireBase_Param_UserGranted">OTP Permission User</string>
+    <string name="FireBase_Param_DevGranted">OTP Permission Dev</string>
     <string name="FireBase_Param_AutoFill">OTP Auto Populated</string>
+    <string name="FireBase_Param_Reason">Fail Reason</string>
+
+    <!-- Firebase Param values -->
+    <!-- FirebaseAnalytics.Param.SIGN_UP_METHOD -->
+    <string name="FireBase_Param_SignUp_Fragment">Fragment</string>
+    <string name="FireBase_Param_SignUp_Activity">Activity</string>
+    <!-- ================================================================================== -->
+
 </resources>
