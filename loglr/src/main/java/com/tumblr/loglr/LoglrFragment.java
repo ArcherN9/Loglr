@@ -77,6 +77,9 @@ public class LoglrFragment extends DialogFragment implements DismissListener, Di
 
         //Instantiate object & set to Loglr class
         Loglr.getInstance().setFirebase(FirebaseAnalytics.getInstance(getActivity()));
+        //Set a new firebase user property to act as app version
+        if(Loglr.getInstance().getFirebase() != null)
+            Loglr.getInstance().getFirebase().setUserProperty(getString(R.string.FireBase_Property_Version), getString(R.string.FireBase_Property_Version_Value));
         //Send event for login button tap
         if(Loglr.getInstance().getFirebase() != null)
             Loglr.getInstance().getFirebase().logEvent(getString(R.string.FireBase_Event_ButtonClick), null);

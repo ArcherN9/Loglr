@@ -35,6 +35,9 @@
 
 
     <!-- ================================================================================== -->
+    <!-- Firebase User Properties -->
+    <string name="FireBase_Property_Version">Library Version</string>
+
     <!-- Firebase Events -->
     <string name="FireBase_Event_ButtonClick">Login Button Click</string>
     <string name="FireBase_Event_Read_Permission">OTP Permission</string>
@@ -52,6 +55,9 @@
     <!-- FirebaseAnalytics.Param.SIGN_UP_METHOD -->
     <string name="FireBase_Param_SignUp_Fragment">Fragment</string>
     <string name="FireBase_Param_SignUp_Activity">Activity</string>
+
+    <!-- User Property value | FireBase_Property_Version -->
+    <string name="FireBase_Property_Version_Value">1.2.1</string>
     <!-- ================================================================================== -->
 
 </resources>

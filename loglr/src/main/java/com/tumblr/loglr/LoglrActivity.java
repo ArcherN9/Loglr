@@ -2,8 +2,10 @@ package com.tumblr.loglr;
 
 import android.Manifest;
 import android.content.IntentFilter;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Telephony;
 import android.support.annotation.NonNull;
@@ -13,12 +15,16 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.WebView;
 
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.tumblr.loglr.Exceptions.LoglrAPIException;
 import com.tumblr.loglr.Exceptions.LoglrCallbackException;
 import com.tumblr.loglr.Exceptions.LoglrLoginCanceled;
 import com.tumblr.loglr.Exceptions.LoglrLoginException;
 import com.tumblr.loglr.Interfaces.DialogCallbackListener;
+
+import java.util.List;
 
 public class LoglrActivity extends AppCompatActivity implements DialogCallbackListener {
 
@@ -49,6 +55,9 @@ public class LoglrActivity extends AppCompatActivity implements DialogCallbackLi
 
         //Instantiate object & set to Loglr class
         Loglr.getInstance().setFirebase(FirebaseAnalytics.getInstance(this));
+        //Set a new firebase user property to act as app version
+        if(Loglr.getInstance().getFirebase() != null)
+            Loglr.getInstance().getFirebase().setUserProperty(getString(R.string.FireBase_Property_Version), getString(R.string.FireBase_Property_Version_Value));
         //Send event for login button tap
         if(Loglr.getInstance().getFirebase() != null)
             Loglr.getInstance().getFirebase().logEvent(getString(R.string.FireBase_Event_ButtonClick), null);
