@@ -1,7 +1,7 @@
 package com.tumblr.loglr;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.net.Uri;
@@ -13,7 +13,6 @@ import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.tumblr.loglr.Exceptions.LoglrLoginException;
 import com.tumblr.loglr.Interfaces.DismissListener;
 import com.tumblr.loglr.Interfaces.OTPReceiptListener;
@@ -51,11 +50,6 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> implemen
     private CommonsHttpOAuthConsumer commonsHttpOAuthConsumer;
 
     /**
-     * A reference to a progress Dialog
-     */
-    private ProgressDialog progressDialog;
-
-    /**
      * A loading Dialog to display to user if passed by developer
      */
     private Dialog loadingDialog;
@@ -85,11 +79,6 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> implemen
      * of a dialogFragment
      */
     private DismissListener dismissListener;
-
-    /**
-     * FireBase Analytics object
-     */
-    private FirebaseAnalytics mFirebaseAnalytics;
 
     TaskTumblrLogin() {
         //empty constructor
@@ -140,15 +129,9 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> implemen
     protected void onPreExecute() {
         super.onPreExecute();
 
-        //Instantiate object & send event no notify of attempt to login via Activity
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
-
         //If the developer a loading dialog, show that instead of default.
         if(loadingDialog != null)
             loadingDialog.show();
-        else
-            //Show Progress Dialog while the user waits
-            progressDialog = ProgressDialog.show(context, null, "Loading...");
     }
 
     @Override
@@ -194,20 +177,24 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> implemen
         super.onProgressUpdate(values);
         if(values != null && values.length > 0) {
             RuntimeException exception = values[0];
-            if(Loglr.getInstance().getExceptionHandler() != null)
+            if(Loglr.getInstance().getExceptionHandler() != null) {
+                Bundle bundle = new Bundle();
+                bundle.putString(context.getString(R.string.FireBase_Param_Reason), exception.getMessage());
+                if(Loglr.getInstance().getFirebase() != null)
+                    Loglr.getInstance().getFirebase().logEvent(context.getString(R.string.FireBase_Event_LoginFailed), bundle);
                 Loglr.getInstance().getExceptionHandler().onLoginFailed(exception);
+            }
             else
                 finish();
         }
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onPostExecute(String strAuthUrl) {
         super.onPostExecute(strAuthUrl);
         //Dismiss progress bar
-        if(progressDialog != null)
-            progressDialog.dismiss();
-        else
+        if(loadingDialog != null)
             loadingDialog.dismiss();
 
         if(!TextUtils.isEmpty(strAuthUrl)) {
@@ -226,9 +213,8 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> implemen
                             && !strOTP.equalsIgnoreCase(String.valueOf(0))) {
                         webView.loadUrl("javascript:document.getElementById(\"tfa_response_field\").value= " + strOTP + " ;");
 
-                        Bundle bundle = new Bundle();
-                        bundle.putBoolean(context.getString(R.string.FireBase_Param_AutoFill), true);
-                        mFirebaseAnalytics.logEvent(context.getString(R.string.FireBase_Event_2FA), bundle);
+                        if(Loglr.getInstance().getFirebase() != null)
+                            Loglr.getInstance().getFirebase().logEvent(context.getString(R.string.FireBase_Event_2FA), null);
                     }
                 }
 

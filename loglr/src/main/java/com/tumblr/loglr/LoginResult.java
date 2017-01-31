@@ -35,7 +35,7 @@ public class LoginResult {
     }
 
     /**
-     * @return Return the TumblrKey
+     * @return
      */
     void setStrOAuthTokenSecret(String strOAuthTokenSecret) {
         this.strOAuthTokenSecret = strOAuthTokenSecret;

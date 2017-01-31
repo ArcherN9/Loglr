@@ -1,12 +1,13 @@
 package com.tumblr.loglr;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.tumblr.loglr.Exceptions.LoglrLoginException;
 import com.tumblr.loglr.Interfaces.DismissListener;
 
@@ -42,11 +43,6 @@ class TaskRetrieveAccessToken extends AsyncTask<Void, RuntimeException, LoginRes
      * variables to hold verifier retrieved from Tumblr
      */
     private String strOAuthVerifier;
-
-    /**
-     * A reference to a progress Dialog
-     */
-    private ProgressDialog progressDialog;
 
     /**
      * Context of the calling activity
@@ -97,7 +93,7 @@ class TaskRetrieveAccessToken extends AsyncTask<Void, RuntimeException, LoginRes
      * Set the OAuthConsumer
      * @param OAuthConsumer TheOAuthConsumer to which tokens will be applied
      */
-    public void setOAuthConsumer(CommonsHttpOAuthConsumer OAuthConsumer) {
+    void setOAuthConsumer(CommonsHttpOAuthConsumer OAuthConsumer) {
         this.commonsHttpOAuthConsumer = OAuthConsumer;
     }
 
@@ -105,7 +101,7 @@ class TaskRetrieveAccessToken extends AsyncTask<Void, RuntimeException, LoginRes
      * Set the OAuthProvider
      * @param OAuthProvider The OAuthProvider which makes the request for tokens
      */
-    public void setOAuthProvider(CommonsHttpOAuthProvider OAuthProvider) {
+    void setOAuthProvider(CommonsHttpOAuthProvider OAuthProvider) {
         this.commonsHttpOAuthProvider = OAuthProvider;
     }
 
@@ -123,9 +119,6 @@ class TaskRetrieveAccessToken extends AsyncTask<Void, RuntimeException, LoginRes
         //If the developer a loading dialog, show that instead of default.
         if(loadingDialog != null)
             loadingDialog.show();
-        else
-            //Show Progress Dialog while the user waits
-            progressDialog = ProgressDialog.show(context, null, "Loading...");
     }
 
     @Override
@@ -175,8 +168,13 @@ class TaskRetrieveAccessToken extends AsyncTask<Void, RuntimeException, LoginRes
         super.onProgressUpdate(values);
         if(values != null && values.length > 0) {
             RuntimeException exception = values[0];
-            if(Loglr.getInstance().getExceptionHandler() != null)
+            if(Loglr.getInstance().getExceptionHandler() != null) {
+                Bundle bundle = new Bundle();
+                bundle.putString(context.getString(R.string.FireBase_Param_Reason), exception.getMessage());
+                if(Loglr.getInstance().getFirebase() != null)
+                    Loglr.getInstance().getFirebase().logEvent(context.getString(R.string.FireBase_Event_LoginFailed), bundle);
                 Loglr.getInstance().getExceptionHandler().onLoginFailed(exception);
+            }
             else
                 finish();
         }
@@ -185,15 +183,16 @@ class TaskRetrieveAccessToken extends AsyncTask<Void, RuntimeException, LoginRes
     @Override
     protected void onPostExecute(LoginResult loginResult) {
         super.onPostExecute(loginResult);
-        if(progressDialog != null)
-            //Dismiss progress bar
-            progressDialog.dismiss();
-        else
+        if(loadingDialog != null)
             loadingDialog.dismiss();
         //Check if tokens were retrieved. If yes, Set result as successful and finish activity
         //otherwise, set as failed.
-        if(loginResult != null)
+        if(loginResult != null) {
+            //Send firebase event for successful login alongwith bundle of method
+            if(Loglr.getInstance().getFirebase() != null)
+                Loglr.getInstance().getFirebase().logEvent(FirebaseAnalytics.Event.LOGIN, null);
             Loglr.getInstance().getLoginListener().onLoginSuccessful(loginResult);
+        }
         finish();
     }
 

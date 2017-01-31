@@ -9,14 +9,14 @@ Note : The library is in active development. On and off, one may encounter bugs 
 ###Importing to your project###
 Gradle : 
         
-        compile 'com.daksh:loglr:1.1.1'
+        compile 'com.daksh:loglr:1.2.1'
 
 Maven : 
 
         <dependency>
           <groupId>com.daksh</groupId>
           <artifactId>loglr</artifactId>
-          <version>1.1.1</version>
+          <version>1.2.1</version>
           <type>pom</type>
         </dependency>
 
@@ -61,6 +61,11 @@ Please note, an object of the custom dialog is manufactured by Loglr by calling 
         //Pass the Loading Dialog class
         .setLoadingDialog(LoadingDialog.class)
 
+Loglr supports auto detecting the OTP message received by users with 2 Factor-Authentication enabled. A dialog informing the user is displayed before the permission is requested. If you wish to disable this feature, you may do so by calling the following method and passing a boolean variable. Note : by default, this feature is enabled.    
+
+        //Pass a boolean variable that informs loglr if OTP auto detection is to be enabled or not
+        .enable2FA(true)
+
 Finally, there are two ways to initiate login. The first option is to start it in an activity of it's own. Personally, I believe this is a better approach as the Tumblr user authentication website opens up better. 
 
         //Initiate login in an activity of it's own
@@ -92,8 +97,19 @@ To use received tokens with Jumblr :
 
 With Jumblr client set, API requests may be made. For more information on basic usage, refer [Tumblr's Jumblr's official guide](https://github.com/tumblr/jumblr).
 
+###Foot notes###
+Permissions listed in manifest :
+* `READ_SMS` & `RECEIVE_SMS` : They are used to auto-populate OTP (2 Factor-Authentication) if the user has them enabled on Tumblr.
+* `WAKE_LOCK` & `ACCESS_NETWORK_STATE` : Firebase analytics uses these permissions to ensure events are logged properly.
+
+If you wish to remove any permission from your app, add the following line in each of the permissions you wish to remove : `tools:node="remove"`
 
 ###Change log###
+
+#####v1.2.1#####
+* Developer has option to toggle auto OTP detection for 2FA
+* Better analytics to track user/developer behavior with library
+* Bug fix for corner case when Tumblr OAuth page fails to open
 
 #####v1.1.1#####
 * Custom Loading Dialogs when tokens are being exchanged and the user is required to wait

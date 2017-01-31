@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.tumblr.loglr.Interfaces.ExceptionHandler;
 import com.tumblr.loglr.Interfaces.LoginListener;
 
@@ -28,6 +29,17 @@ public class Loglr {
      * the code cannot continue function.
      */
     private static ExceptionHandler exceptionHandler;
+
+    /**
+     * Specifies whether or not the developer wishes to enable 2FA auto read for OTP message that arrives
+     * when the user is trying to login. Default value : true
+     */
+    private Boolean is2FAEnabled = true;
+
+    /**
+     * Firebase analytics object used module wide
+     */
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     /**
      * The Tumblr Call back URL
@@ -55,6 +67,12 @@ public class Loglr {
     private static Class<? extends Dialog> loadingDialog;
 
     /**
+     * A isDebug variable is used to specify if the build being run/deployed is a debug build or not.
+     * On deployment this variable is to be changed to false to imply shift from debug to production
+     */
+    private static Boolean IS_DEBUG = false;
+
+    /**
      * The Dialog fragment serves as a second option to carry out the sign in procedure.
      */
     private LoglrFragment loglrFragment;
@@ -76,9 +94,17 @@ public class Loglr {
     }
 
     /**
-     * Receives a reference of the interface to be called when a result is retrieved
-     * from the login process
-     * @param listener
+     * A method to set the firebase analytics object to be available module wide to sent events
+     * and params
+     * @param mFirebaseAnalytics
+     */
+    void setFirebase(FirebaseAnalytics mFirebaseAnalytics) {
+        this.mFirebaseAnalytics = mFirebaseAnalytics;
+    }
+
+    /**
+     * Receives an interface to be called when login succeeds.
+     * @param listener An implementation of the login listener which is called when the login succeeds
      */
     public Loglr setLoginListener(@NonNull LoginListener listener) {
         loginListener = listener;
@@ -87,8 +113,10 @@ public class Loglr {
 
     /**
      * Optional | Recommended though to handle code in a better fashion
-     * The method receives a reference of the interface to be executed when an exception is thrown
-     * @param listener
+     * Receives an implementation of the interface to be executed when an exception is thrown and login fails to complete
+     * @param listener An implementation of the ExceptionHandler interface that is called when login fails
+     *                 the details of which are held in the exception object
+     * @return LoglrInstance
      */
     public Loglr setExceptionHandler(@NonNull ExceptionHandler listener) {
         exceptionHandler = listener;
@@ -98,8 +126,8 @@ public class Loglr {
     /**
      * A call back URL to monitor for login call back
      * Should be same as callback URL registered with Tumblr website.
-     * @param strUrl
-     * @return
+     * @param strUrl The url to which the user is redirected to when the login completes.
+     * @return LoglrInstance
      */
     public Loglr setUrlCallBack(@NonNull String strUrl) {
         this.strUrl = strUrl;
@@ -107,13 +135,14 @@ public class Loglr {
     }
 
     /**
-     * Accepts custom dialogs to replace with default ProgressDialogs whilst the
+     * Accepts custom loading dialogs to replace with default ProgressDialogs. If you do not wish
+     * to override login with custom loading dialogs, do not call this method.
      * @param dialog A loading dialog to be shown to the user when data is loading from the server
      *               during sign in
      * @return LoglrInstance
      */
-    public Loglr setLoadingDialog(Class<? extends Dialog> dialog) {
-        this.loadingDialog = dialog;
+    public Loglr setLoadingDialog(@NonNull Class<? extends Dialog> dialog) {
+        loadingDialog = dialog;
         return loglrInstance;
     }
 
@@ -135,10 +164,12 @@ public class Loglr {
     }
 
     /**
-     * A method to provide Loglr with the Consumer Key which will be used to access Tumblr APIs.
+     * Provides Loglr with the Consumer Key which will be used to access Tumblr APIs.
      * Without it, the app will fail.
      * #MANDATORY
-     * @param strConsumerKey The Tumblr app consumer Key in String format
+     *
+     * For more information on Tumblr Keys, please see : https://www.tumblr.com/docs/en/api/
+     * @param strConsumerKey The Tumblr app consumer Key retrieved from Tumblr's developer website
      * @return loglrInstance
      */
     public Loglr setConsumerKey(String strConsumerKey) {
@@ -147,15 +178,48 @@ public class Loglr {
     }
 
     /**
-     * A method to provide Loglr with the Consumer Secret Key which will be used to access Tumblr APIs.
+     * Provides Loglr with the Consumer Secret Key which will be used to access Tumblr APIs.
      * Without it, the app will fail.
      * #MANDATORY
+     *
+     * For more information on Tumblr Keys, please see : https://www.tumblr.com/docs/en/api/
      * @param strConsumerSecretKey The Tumblr app consumer Secret Key in String format
      * @return loglrInstance
      */
     public Loglr setConsumerSecretKey(String strConsumerSecretKey) {
         CONSUMER_SECRET_KEY = strConsumerSecretKey;
         return loglrInstance;
+    }
+
+    /**
+     * A toggle method to enable / disable the SMS OTP auto read functionality baked into Loglr.
+     * Default value : true;
+     * @param is2FAEnabled A boolean value that tells Loglr if OTP auto read assistance is to be
+     *                     enabled
+     * @return LoglrInstance
+     */
+    public Loglr enable2FA(Boolean is2FAEnabled) {
+        this.is2FAEnabled = is2FAEnabled;
+        return loglrInstance;
+    }
+
+    /**
+     * Returns whether Loglr can read the OTP or not
+     * @return is2FAEnabled
+     */
+    Boolean is2FAEnabled() {
+        return is2FAEnabled;
+    }
+
+    /**
+     * Returns the firebase analytics object set up
+     * @return mFirebaseAnalytics
+     */
+    FirebaseAnalytics getFirebase() {
+        if(!IS_DEBUG)
+            return this.mFirebaseAnalytics;
+        else
+            return null;
     }
 
     /**
@@ -197,8 +261,10 @@ public class Loglr {
     }
 
     /**
-     * The method initiates the login procedure by calling the Tumblr APIs in a different dialog Fragment
-     * which hosts a WebView.
+     * Initiates the login procedure by calling calling the tumblr APIs in an activity that hosts
+     * a web view.
+     *
+     * Use this for a better experience of login in
      * @param context The context of the calling Activity / Application
      */
     public void initiateInActivity(Context context) {

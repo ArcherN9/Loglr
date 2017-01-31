@@ -2,9 +2,11 @@ package com.tumblr.loglr;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 
 import java.lang.reflect.InvocationTargetException;
@@ -52,27 +54,21 @@ public class Utils {
                 Class<? extends Dialog> classDialog = Loglr.getInstance().getLoadingDialog();
                 //get default constructor and create new instance for the Dialog
                 LoadingDialog = classDialog.getConstructor(Context.class).newInstance(context);
+                if(Loglr.getInstance().getFirebase() != null)
+                    Loglr.getInstance().getFirebase().logEvent(context.getString(R.string.FireBase_Event_CustomDialog_Set), null);
                 return LoadingDialog;
-            } catch (InstantiationException e) {
+            } catch (InstantiationException | InvocationTargetException | NullPointerException | NoSuchMethodException | IllegalAccessException | ClassCastException e) {
                 e.printStackTrace();
-                return null;
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-                return null;
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-                return null;
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-                return null;
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-                return null;
-            } catch (ClassCastException e) {
-                e.printStackTrace();
-                return null;
+                LoadingDialog = new ProgressDialog(context);
+                LoadingDialog.setTitle(context.getString(R.string.tumblrlogin_loading));
+                if(Loglr.getInstance().getFirebase() != null)
+                    Loglr.getInstance().getFirebase().logEvent(context.getString(R.string.FireBase_Event_CustomDialog_Fail), null);
+                return LoadingDialog;
             }
-        } else
-            return null;
+        } else {
+            ProgressDialog progressDialog = new ProgressDialog(context);
+            progressDialog.setMessage(context.getString(R.string.tumblrlogin_loading));
+            return progressDialog;
+        }
     }
 }

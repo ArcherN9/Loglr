@@ -6,7 +6,7 @@ import android.os.Bundle;;
 import android.view.ViewGroup;
 import android.view.Window;
 
-public class LoadingDialog extends Dialog {
+public class LoadingDialog extends Dialog  {
 
     public LoadingDialog(Context context) {
         super(context);
