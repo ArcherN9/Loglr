@@ -1,5 +1,6 @@
 package com.tumblr.loglr;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Resources;
@@ -188,6 +189,7 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> implemen
         }
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onPostExecute(String strAuthUrl) {
         super.onPostExecute(strAuthUrl);
