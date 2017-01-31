@@ -1,6 +1,8 @@
 package com.tumblr.loglr;
 
 import android.Manifest;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -11,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.webkit.WebView;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -20,7 +23,7 @@ import com.tumblr.loglr.Exceptions.LoglrLoginCanceled;
 import com.tumblr.loglr.Exceptions.LoglrLoginException;
 import com.tumblr.loglr.Interfaces.DialogCallbackListener;
 
-public class LoglrActivity extends AppCompatActivity implements DialogCallbackListener {
+public class LoglrActivity extends AppCompatActivity implements DialogCallbackListener, DialogInterface.OnKeyListener {
 
     /**
      * A tag for logging
@@ -124,6 +127,10 @@ public class LoglrActivity extends AppCompatActivity implements DialogCallbackLi
      * A method to continue with the login process.
      */
     private void initiateLoginProcess() {
+        //Generate the loading dialog passed by the developer
+        Dialog dialog = Utils.getLoadingDialog(LoglrActivity.this);
+        //Set a key listener on the dialog to keep a track of back buttons pressed in case the flow malfunctions
+        dialog.setOnKeyListener(LoglrActivity.this);
         //Initiate an AsyncTask to begin TumblrLogin
         if(taskTumblrLogin == null)
             taskTumblrLogin = new TaskTumblrLogin();
@@ -132,7 +139,7 @@ public class LoglrActivity extends AppCompatActivity implements DialogCallbackLi
         //Pass Resources reference
         taskTumblrLogin.setResources(getResources());
         //Pass LoadingDialog as passed on by developer
-        taskTumblrLogin.setLoadingDialog(Utils.getLoadingDialog(LoglrActivity.this));
+        taskTumblrLogin.setLoadingDialog(dialog);
         //Pass reference of WebView
         taskTumblrLogin.setWebView(findViewById(R.id.activity_tumblr_webview));
         //Execute AsyncTask
@@ -227,5 +234,15 @@ public class LoglrActivity extends AppCompatActivity implements DialogCallbackLi
             e.printStackTrace();
             //caught exceptions just in case
         }
+    }
+
+    @Override
+    public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+        //If the button tapped was back, exit the activity
+        if(event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+            onBackPressed();
+            return true;
+        } else
+            return false;
     }
 }

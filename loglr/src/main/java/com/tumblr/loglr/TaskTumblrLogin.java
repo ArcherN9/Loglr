@@ -1,7 +1,6 @@
 package com.tumblr.loglr;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.net.Uri;
@@ -10,7 +9,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -49,11 +47,6 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> implemen
      * OAuth Consumer
      */
     private CommonsHttpOAuthConsumer commonsHttpOAuthConsumer;
-
-    /**
-     * A reference to a progress Dialog
-     */
-    private ProgressDialog progressDialog;
 
     /**
      * A loading Dialog to display to user if passed by developer
@@ -138,9 +131,6 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> implemen
         //If the developer a loading dialog, show that instead of default.
         if(loadingDialog != null)
             loadingDialog.show();
-        else
-            //Show Progress Dialog while the user waits
-            progressDialog = ProgressDialog.show(context, null, "Loading...");
     }
 
     @Override
@@ -202,9 +192,7 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> implemen
     protected void onPostExecute(String strAuthUrl) {
         super.onPostExecute(strAuthUrl);
         //Dismiss progress bar
-        if(progressDialog != null)
-            progressDialog.dismiss();
-        else
+        if(loadingDialog != null)
             loadingDialog.dismiss();
 
         if(!TextUtils.isEmpty(strAuthUrl)) {

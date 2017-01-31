@@ -1,7 +1,6 @@
 package com.tumblr.loglr;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -44,11 +43,6 @@ class TaskRetrieveAccessToken extends AsyncTask<Void, RuntimeException, LoginRes
      * variables to hold verifier retrieved from Tumblr
      */
     private String strOAuthVerifier;
-
-    /**
-     * A reference to a progress Dialog
-     */
-    private ProgressDialog progressDialog;
 
     /**
      * Context of the calling activity
@@ -125,9 +119,6 @@ class TaskRetrieveAccessToken extends AsyncTask<Void, RuntimeException, LoginRes
         //If the developer a loading dialog, show that instead of default.
         if(loadingDialog != null)
             loadingDialog.show();
-        else
-            //Show Progress Dialog while the user waits
-            progressDialog = ProgressDialog.show(context, null, "Loading...");
     }
 
     @Override
@@ -192,10 +183,7 @@ class TaskRetrieveAccessToken extends AsyncTask<Void, RuntimeException, LoginRes
     @Override
     protected void onPostExecute(LoginResult loginResult) {
         super.onPostExecute(loginResult);
-        if(progressDialog != null)
-            //Dismiss progress bar
-            progressDialog.dismiss();
-        else
+        if(loadingDialog != null)
             loadingDialog.dismiss();
         //Check if tokens were retrieved. If yes, Set result as successful and finish activity
         //otherwise, set as failed.

@@ -2,6 +2,7 @@ package com.tumblr.loglr;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -13,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +29,7 @@ import com.tumblr.loglr.Exceptions.LoglrLoginException;
 import com.tumblr.loglr.Interfaces.DialogCallbackListener;
 import com.tumblr.loglr.Interfaces.DismissListener;
 
-public class LoglrFragment extends DialogFragment implements DismissListener, DialogCallbackListener {
+public class LoglrFragment extends DialogFragment implements DismissListener, DialogCallbackListener, DialogInterface.OnKeyListener {
 
     /**
      * A tag for logging
@@ -165,6 +167,11 @@ public class LoglrFragment extends DialogFragment implements DismissListener, Di
      * A method to continue with the login process.
      */
     private void initiateLoginProcess() {
+        //Generate the loading dialog passed by the developer
+        Dialog dialog = Utils.getLoadingDialog(getActivity());
+        //Set a key listener on the dialog to keep a track of back buttons pressed in case the flow malfunctions
+        if(dialog != null)
+            dialog.setOnKeyListener(LoglrFragment.this);
         //Initiate an AsyncTask to begin Tumblr Login
         if(taskTumblrLogin == null)
             taskTumblrLogin = new TaskTumblrLogin();
@@ -173,7 +180,7 @@ public class LoglrFragment extends DialogFragment implements DismissListener, Di
         //Pass Resources reference
         taskTumblrLogin.setResources(getResources());
         //Pass LoadingDialog as passed on by developer
-        taskTumblrLogin.setLoadingDialog(Utils.getLoadingDialog(getActivity()));
+        taskTumblrLogin.setLoadingDialog(dialog);
         //Pass dismiss listener
         taskTumblrLogin.setDismissListener(LoglrFragment.this);
         //Pass reference of WebView
@@ -261,5 +268,15 @@ public class LoglrFragment extends DialogFragment implements DismissListener, Di
                 }
                 break;
         }
+    }
+
+    @Override
+    public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+        //If the button tapped was back, exit the fragment
+        if(event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+            dismiss();
+            return true;
+        } else
+            return false;
     }
 }
