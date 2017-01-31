@@ -40,25 +40,23 @@
 
     <!-- Firebase Events -->
     <string name="FireBase_Event_ButtonClick">Login Button Click</string>
-    <string name="FireBase_Event_Read_Permission">OTP Permission</string>
-    <string name="FireBase_Event_2FA">2FA Populated</string>
+    <string name="FireBase_Event_OTP_UserGranted_True">User Granted OTP</string>
+    <string name="FireBase_Event_OTP_UserGranted_False">User Denied OTP</string>
+    <string name="FireBase_Event_OTP_DevGranted_True">Dev Granted OTP</string>
+    <string name="FireBase_Event_OTP_DevGranted_False">Dev Denied OTP</string>
+    <string name="FireBase_Event_2FA">Two FA Populated</string>
     <string name="FireBase_Event_LoginFailed">Login Failed</string>
-    <string name="FireBase_Event_CustomDialogSet">Custom Progress dialog</string>
+    <string name="FireBase_Event_CustomDialog_Set">Progress Set</string>
+    <string name="FireBase_Event_CustomDialog_Fail">Progress Failed</string>
+    <string name="FireBase_Event_ActivityLogin">Activity Login</string>
+    <string name="FireBase_Event_FragmentLogin">Fragment Login</string>
 
     <!-- Firebase Params -->
-    <string name="FireBase_Param_UserGranted">OTP Permission User</string>
-    <string name="FireBase_Param_DevGranted">OTP Permission Dev</string>
-    <string name="FireBase_Param_AutoFill">OTP Auto Populated</string>
     <string name="FireBase_Param_Reason">Fail Reason</string>
-    <string name="FireBase_Event_CustomDialogSet_displayed">Fail</string>
 
     <!-- Firebase Param values -->
-    <!-- FirebaseAnalytics.Param.SIGN_UP_METHOD -->
-    <string name="FireBase_Param_SignUp_Fragment">Fragment</string>
-    <string name="FireBase_Param_SignUp_Activity">Activity</string>
-
     <!-- User Property value | FireBase_Property_Version -->
-    <string name="FireBase_Property_Version_Value">1.2.1</string>
+    <string name="FireBase_Property_Version_Value">v1.2.1</string>
 
     <!-- ================================================================================== -->
 

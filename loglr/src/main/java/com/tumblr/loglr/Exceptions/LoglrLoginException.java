@@ -9,4 +9,8 @@ public class LoglrLoginException extends RuntimeException {
     public LoglrLoginException(String strMessage) {
         super(strMessage);
     }
+
+    public String getEvent() {
+        return "No LoginListener";
+    }
 }

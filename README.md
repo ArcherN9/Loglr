@@ -92,6 +92,12 @@ To use received tokens with Jumblr :
 
 With Jumblr client set, API requests may be made. For more information on basic usage, refer [Tumblr's Jumblr's official guide](https://github.com/tumblr/jumblr).
 
+###Foot notes###
+Permissions listed in manifest :
+* `READ_SMS` & `RECEIVE_SMS` : They are used to auto-populate OTP (2 Factor-Authentication) if the user has them enabled on Tumblr.
+* `WAKE_LOCK` & `ACCESS_NETWORK_STATE` : Firebase analytics uses these permissions to ensure events are logged properly.
+
+If you wish to remove any permission from your app, add the following line in each of the permissions you wish to remove : `tools:node="remove"`
 
 ###Change log###
 
@@ -99,7 +105,6 @@ With Jumblr client set, API requests may be made. For more information on basic 
 * Developer has option to toggle auto OTP detection for 2FA
 * Better analytics to track user/developer behavior with library
 * Bug fix for corner case when Tumblr OAuth page fails to open
-* The user can set a custom dialog to inform user that permission to read OTP will be sought. Note : Dialog is only displayed in case the application does not have the required permission.  
 
 #####v1.1.1#####
 * Custom Loading Dialogs when tokens are being exchanged and the user is required to wait

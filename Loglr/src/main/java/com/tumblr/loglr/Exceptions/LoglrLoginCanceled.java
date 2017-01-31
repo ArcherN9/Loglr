@@ -1,8 +1,5 @@
 package com.tumblr.loglr.Exceptions;
 
-/**
- * Created by guesthouser on 6/30/16.
- */
 public class LoglrLoginCanceled extends RuntimeException {
 
     public LoglrLoginCanceled() {
@@ -11,5 +8,9 @@ public class LoglrLoginCanceled extends RuntimeException {
 
     public LoglrLoginCanceled(String strMessage) {
         super(strMessage);
+    }
+
+    public String getEvent() {
+        return "User Cancelled";
     }
 }

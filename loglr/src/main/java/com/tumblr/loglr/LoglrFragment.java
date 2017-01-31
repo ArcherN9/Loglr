@@ -44,11 +44,6 @@ public class LoglrFragment extends DialogFragment implements DismissListener, Di
      */
     private OTPBroadcastReceiver otpBroadcastReceiver;
 
-    /**
-     * A bundle to store only login related params this bundle is sent alongwith the 'login' event
-     */
-    private Bundle loginBundle = new Bundle();
-
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -59,9 +54,10 @@ public class LoglrFragment extends DialogFragment implements DismissListener, Di
                 super.onBackPressed();
                 //Pass reason for closing loglr
                 if (Loglr.getInstance().getExceptionHandler() != null) {
+                    LoglrLoginCanceled ex = new LoglrLoginCanceled();
                     if(Loglr.getInstance().getFirebase() != null)
-                        Loglr.getInstance().getFirebase().logEvent(getString(R.string.FireBase_Event_LoginFailed), loginBundle);
-                    Loglr.getInstance().getExceptionHandler().onLoginFailed(new LoglrLoginCanceled());
+                        Loglr.getInstance().getFirebase().logEvent(ex.getEvent(), null);
+                    Loglr.getInstance().getExceptionHandler().onLoginFailed(ex);
                 }
             }
         };
@@ -83,8 +79,9 @@ public class LoglrFragment extends DialogFragment implements DismissListener, Di
         //Send event for login button tap
         if(Loglr.getInstance().getFirebase() != null)
             Loglr.getInstance().getFirebase().logEvent(getString(R.string.FireBase_Event_ButtonClick), null);
-        //Save param Fragment to login bundle
-        loginBundle.putString(FirebaseAnalytics.Param.SIGN_UP_METHOD, getString(R.string.FireBase_Param_SignUp_Fragment));
+        //Send event for login via activity
+        if(Loglr.getInstance().getFirebase() != null)
+            Loglr.getInstance().getFirebase().logEvent(getString(R.string.FireBase_Event_FragmentLogin), null);
 
         //Test if consumer key was received
         if (TextUtils.isEmpty(Loglr.getInstance().getConsumerKey()))
@@ -181,8 +178,6 @@ public class LoglrFragment extends DialogFragment implements DismissListener, Di
         taskTumblrLogin.setDismissListener(LoglrFragment.this);
         //Pass reference of WebView
         taskTumblrLogin.setWebView(getView().findViewById(R.id.activity_tumblr_webview));
-        //Pass the login bundle as well | Will be used when the login succeeds in the end
-        taskTumblrLogin.setLoginBundle(loginBundle);
         //Execute AsyncTask
         taskTumblrLogin.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -214,9 +209,10 @@ public class LoglrFragment extends DialogFragment implements DismissListener, Di
                 //If Exception handler was registered by the dev, use it to return a call back.
                 //Otherwise, just throw the exception and make the application crash
                 if (Loglr.getInstance().getExceptionHandler() != null) {
+                    LoglrLoginException ex = new LoglrLoginException();
                     if(Loglr.getInstance().getFirebase() != null)
-                        Loglr.getInstance().getFirebase().logEvent(getString(R.string.FireBase_Event_LoginFailed), loginBundle);
-                    Loglr.getInstance().getExceptionHandler().onLoginFailed(new LoglrLoginException());
+                        Loglr.getInstance().getFirebase().logEvent(ex.getEvent(), null);
+                    Loglr.getInstance().getExceptionHandler().onLoginFailed(ex);
                 } else
                     throw new LoglrLoginException();
             }
@@ -254,15 +250,11 @@ public class LoglrFragment extends DialogFragment implements DismissListener, Di
                         //Register the SMS receiver
                         registerReceiver();
 
-                        Bundle bundle = new Bundle();
-                        bundle.putBoolean(getString(R.string.FireBase_Param_UserGranted), true);
-                        if (Loglr.getInstance().getFirebase() != null)
-                            Loglr.getInstance().getFirebase().logEvent(getString(R.string.FireBase_Event_Read_Permission), bundle);
-                    } else {
-                        Bundle bundle = new Bundle();
-                        bundle.putBoolean(getString(R.string.FireBase_Param_UserGranted), false);
                         if(Loglr.getInstance().getFirebase() != null)
-                            Loglr.getInstance().getFirebase().logEvent(getString(R.string.FireBase_Event_Read_Permission), bundle);
+                            Loglr.getInstance().getFirebase().logEvent(getString(R.string.FireBase_Event_OTP_UserGranted_True), null);
+                    } else {
+                        if(Loglr.getInstance().getFirebase() != null)
+                            Loglr.getInstance().getFirebase().logEvent(getString(R.string.FireBase_Event_OTP_UserGranted_False), null);
                     }
 
                     initiateLoginProcess();

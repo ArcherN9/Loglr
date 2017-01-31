@@ -73,15 +73,11 @@ public class Utils {
                 e.printStackTrace();
                 return null;
             } finally {
-                Bundle bundle = new Bundle();
                 if(Loglr.getInstance().getFirebase() != null)
-                    if(LoadingDialog == null) {
-                        bundle.putBoolean(context.getString(R.string.FireBase_Event_CustomDialogSet_displayed), false);
-                        Loglr.getInstance().getFirebase().logEvent(context.getString(R.string.FireBase_Event_CustomDialogSet), bundle);
-                    } else {
-                        bundle.putBoolean(context.getString(R.string.FireBase_Event_CustomDialogSet_displayed), true);
-                        Loglr.getInstance().getFirebase().logEvent(context.getString(R.string.FireBase_Event_CustomDialogSet), bundle);
-                    }
+                    if(LoadingDialog == null)
+                        Loglr.getInstance().getFirebase().logEvent(context.getString(R.string.FireBase_Event_CustomDialog_Set), null);
+                    else
+                        Loglr.getInstance().getFirebase().logEvent(context.getString(R.string.FireBase_Event_CustomDialog_Fail), null);
             }
         } else
             return null;

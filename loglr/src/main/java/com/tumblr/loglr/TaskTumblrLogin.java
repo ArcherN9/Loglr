@@ -86,11 +86,6 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> implemen
      */
     private DismissListener dismissListener;
 
-    /**
-     * A bundle to store only login related params this bundle is sent alongwith the 'login' event
-     */
-    private Bundle loginBundle = new Bundle();
-
     TaskTumblrLogin() {
         //empty constructor
     }
@@ -102,15 +97,6 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> implemen
      */
     void setDismissListener(DismissListener dismissListener) {
         this.dismissListener = dismissListener;
-    }
-
-    /**
-     * Accepts a login bundle that will be sent alongwith the login event if and when the login
-     * succeeds
-     * @param loginBundle
-     */
-    void setLoginBundle(Bundle loginBundle) {
-        this.loginBundle = loginBundle;
     }
 
     /**
@@ -201,9 +187,10 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> implemen
         if(values != null && values.length > 0) {
             RuntimeException exception = values[0];
             if(Loglr.getInstance().getExceptionHandler() != null) {
-                loginBundle.putString(context.getString(R.string.FireBase_Param_Reason), exception.getMessage());
+                Bundle bundle = new Bundle();
+                bundle.putString(context.getString(R.string.FireBase_Param_Reason), exception.getMessage());
                 if(Loglr.getInstance().getFirebase() != null)
-                    Loglr.getInstance().getFirebase().logEvent(context.getString(R.string.FireBase_Event_LoginFailed), loginBundle);
+                    Loglr.getInstance().getFirebase().logEvent(context.getString(R.string.FireBase_Event_LoginFailed), bundle);
                 Loglr.getInstance().getExceptionHandler().onLoginFailed(exception);
             }
             else
@@ -236,10 +223,8 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> implemen
                             && !strOTP.equalsIgnoreCase(String.valueOf(0))) {
                         webView.loadUrl("javascript:document.getElementById(\"tfa_response_field\").value= " + strOTP + " ;");
 
-                        Bundle bundle = new Bundle();
-                        bundle.putBoolean(context.getString(R.string.FireBase_Param_AutoFill), true);
                         if(Loglr.getInstance().getFirebase() != null)
-                            Loglr.getInstance().getFirebase().logEvent(context.getString(R.string.FireBase_Event_2FA), bundle);
+                            Loglr.getInstance().getFirebase().logEvent(context.getString(R.string.FireBase_Event_2FA), null);
                     }
                 }
 
@@ -284,8 +269,6 @@ class TaskTumblrLogin extends AsyncTask<Void, RuntimeException, String> implemen
                         taskRetrieveAccessToken.setOAuthVerifier(strOAuthVerifier);
                         //Set the Dismiss listener
                         taskRetrieveAccessToken.setDismissListener(dismissListener);
-                        //Pass the login bundle as well | Will be used when the login succeeds in the end
-                        taskRetrieveAccessToken.setLoginBundle(loginBundle);
                         //Execute the AsyncTask on a different thread;
                         taskRetrieveAccessToken.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         return true;
