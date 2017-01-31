@@ -3,11 +3,6 @@
     package="daksh.practice.tumblrjumblrimplementation">
 
     <uses-permission android:name="android.permission.INTERNET" />
-<<<<<<< HEAD
-    <uses-permission android:name="android.permission.READ_SMS" />
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
-=======
->>>>>>> 218f2e31a65eff169d3e9f36864106ac5b5c963c
 
     <application
         android:allowBackup="true"
