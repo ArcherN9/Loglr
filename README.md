@@ -6,7 +6,7 @@ Loglr is library that enables developers to implement 'Login via Tumblr' with as
 
 Note : The library is in active development. On and off, one may encounter bugs or mistakes. Please report them on the issue tracker. I'll fix and send out an immediate release.
 
-###Importing to your project###
+### Importing to your project ###
 Gradle : 
         
         compile 'com.daksh:loglr:1.2.1'
@@ -20,7 +20,7 @@ Maven :
           <type>pom</type>
         </dependency>
 
-###Usage###
+### Usage ###
 
 Loglr uses singleton pattern and accepts a minimum of 5 parameters to complete the login process. Each method that accepts a parameter returns the Loglr Instance to avoid boiler plate code.
 Retrieve the Loglr instance to start passing parameters to the library. 
@@ -92,44 +92,44 @@ To use received tokens with Jumblr :
 
 With Jumblr client set, API requests may be made. For more information on basic usage, refer [Tumblr's Jumblr's official guide](https://github.com/tumblr/jumblr).
 
-###Foot notes###
+### Foot notes ###
 Permissions listed in manifest :
 * `READ_SMS` & `RECEIVE_SMS` : They are used to auto-populate OTP (2 Factor-Authentication) if the user has them enabled on Tumblr.
 * `WAKE_LOCK` & `ACCESS_NETWORK_STATE` : Firebase analytics uses these permissions to ensure events are logged properly.
 
 If you wish to remove any permission from your app, add the following line in each of the permissions you wish to remove : `tools:node="remove"`
 
-###Change log###
+### Change log ###
 
-#####v1.2.1#####
+##### v1.2.1 #####
 * Developer has option to toggle auto OTP detection for 2FA
 * Better analytics to track user/developer behavior with library
 * Bug fix for corner case when Tumblr OAuth page fails to open
 
-#####v1.1.1#####
+##### v1.1.1 #####
 * Custom Loading Dialogs when tokens are being exchanged and the user is required to wait
 * Auto populate OTP if 2 Factor-Authentication is enabled by user
 * Crash analytics so I may push out new builds if any one is experiencing crashes in their apps due Loglr 
 
-#####v1.0.0#####
+##### v1.0.0 #####
 * Changed Version to v1 post no bug being reported
 * Marked as stable release
 
-#####v0.3.1#####
+##### v0.3.1 #####
 * Support for initiating login process in a DialogFragment;
 * Custom URL callback;
 * Code clean up;
 
-#####v0.2.2#####
+##### v0.2.2 #####
 * Changed method names for better understanding;
 
-#####v0.2.1#####
+##### v0.2.1 #####
 * Bug Fixes;
 
-#####v0.2#####
+##### v0.2 #####
 * First Release;
 
-###Open Source Libraries###
+### Open Source Libraries ###
 
 * SignPost
 
@@ -147,7 +147,7 @@ If you wish to remove any permission from your app, add the following line in ea
     limitations under the License.
 ```
 
-###License###
+### License ###
 
 
     Loglr is an open source library that enables developers to implement 'Login via Tumblr' with as minimum frustration as possible.
@@ -167,4 +167,4 @@ If you wish to remove any permission from your app, add the following line in ea
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ### Credits ####
-######Inspired from the works by [jansanz](https://github.com/jansanz) at [TumblrOAuthDemo](https://github.com/jansanz/TumblrOAuthDemo).######
+###### Inspired from the works by [jansanz](https://github.com/jansanz) at [TumblrOAuthDemo](https://github.com/jansanz/TumblrOAuthDemo). ######
