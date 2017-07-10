@@ -63,7 +63,7 @@ class OTPBroadcastReceiver: BroadcastReceiver() {
         /**
          * Tag for Logging
          */
-        private val TAG: String = OTPBroadcastReceiver::class.simpleName!!
+        private val TAG: String = OTPBroadcastReceiver.javaClass.simpleName
 
         /**
          * A request code to catch READ_SMS request response

@@ -2,6 +2,7 @@ package com.tumblr.loglr
 
 import android.Manifest
 import android.app.Dialog
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
@@ -39,23 +40,23 @@ class Utils {
          */
         fun getLoadingDialog(context: Context): Dialog {
             //Test if Loading Dialog was receiver
-//        if(Loglr.instance.getLoadingDialog() != null) {
-            //Extract Loading Dialog class passed by the Activity
-            val classDialog = Loglr.instance.getLoadingDialog()
-            //get default constructor and create new instance for the Dialog
-            return classDialog.getConstructor(Context::class.java).newInstance(context)
+            if(Loglr.instance.getLoadingDialog() != null) {
+                //Extract Loading Dialog class passed by the Activity
+                val classDialog = Loglr.instance.getLoadingDialog()
+                //get default constructor and create new instance for the Dialog
+                return classDialog?.getConstructor(Context::class.java)!!.newInstance(context)
 //        e.printStackTrace();
 //            LoadingDialog = new ProgressDialog(context);
 //            LoadingDialog.setTitle(context.getString(R.string.tumblrlogin_loading));
 //            if(Loglr.getInstance().getFirebase() != null)
 //                Loglr.getInstance().getFirebase().logEvent(context.getString(R.string.FireBase_Event_CustomDialog_Fail), null);
 //            return LoadingDialog;
-//        }
-//    else {
-//            ProgressDialog progressDialog = new ProgressDialog(context);
-//            progressDialog.setMessage(context.getString(R.string.tumblrlogin_loading));
-//            return progressDialog;
-//        }
+            }
+            else {
+                val progressDialog: ProgressDialog = ProgressDialog(context)
+                progressDialog.setMessage(context.getString(R.string.tumblrlogin_loading))
+                return progressDialog
+            }
         }
     }
 }

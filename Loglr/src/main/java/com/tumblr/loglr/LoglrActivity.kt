@@ -202,6 +202,6 @@ class LoglrActivity: AppCompatActivity(), DialogCallbackListener, DialogInterfac
         /**
          * A tag for logging
          */
-        private val TAG = LoglrActivity::class.simpleName!!
+        private val TAG = LoglrActivity.javaClass.simpleName
     }
 }

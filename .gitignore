@@ -39,3 +39,4 @@ proguard/
 
 # Android Studio captures folder
 captures/
+/Loglr/src/main/res/values/API_Key.xml

@@ -186,6 +186,6 @@ class TaskRetrieveAccessToken: AsyncTask<Void, RuntimeException, LoginResult?>()
         /**
          * Tag for logging
          */
-        private val TAG: String = TaskRetrieveAccessToken::class.java.simpleName
+        private val TAG: String = TaskRetrieveAccessToken.javaClass.simpleName
     }
 }

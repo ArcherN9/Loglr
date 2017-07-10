@@ -31,14 +31,14 @@ class MainActivity : AppCompatActivity(), LoginListener, ExceptionHandler {
 
     private val activityClickListener = View.OnClickListener {
         Loglr.instance
-                .setConsumerKey("ENTER CONSUMER KEY HERE")
-                .setConsumerSecretKey("ENTER CONSUMER SECRET HERE")
-                .setUrlCallBack(resources.getString(R.string.tumblr_callback_url))
-                .setLoadingDialog(LoadingDialog::class.java)
-                .setLoginListener(this@MainActivity)
-                .setExceptionHandler(this@MainActivity)
-                .enable2FA(true)
-                .initiateInActivity(this@MainActivity)
+                .setConsumerKey(getString(R.string.ConsumerKey))
+                ?.setConsumerSecretKey(getString(R.string.ConsumerSecretKey))
+                ?.setUrlCallBack(resources.getString(R.string.tumblr_callback_url))
+//                ?.setLoadingDialog(LoadingDialog::class.java)
+                ?.setLoginListener(this@MainActivity)
+                ?.setExceptionHandler(this@MainActivity)
+                ?.enable2FA(true)
+                ?.initiateInActivity(this@MainActivity)
     }
 
     override fun onLoginSuccessful(loginResult: LoginResult) {

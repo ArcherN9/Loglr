@@ -62,15 +62,15 @@ class Loglr private constructor() {
      * A isDebug variable is used to specify if the build being run/deployed is a debug build or not.
      * On deployment this variable is to be changed to false to imply shift from debug to production
      */
-    private val IS_DEBUG = false
+    private val IS_DEBUG = true
 
     /**
      * Receives an interface to be called when login succeeds.
      * @param listener An implementation of the login listener which is called when the login succeeds
      */
-    fun setLoginListener(listener: LoginListener): Loglr {
+    fun setLoginListener(listener: LoginListener): Loglr? {
         loginListener = listener
-        return loglrInstance!!
+        return this@Loglr
     }
 
     /**
@@ -81,9 +81,9 @@ class Loglr private constructor() {
      * *
      * @return LoglrInstance
      */
-    fun setExceptionHandler(listener: ExceptionHandler): Loglr {
+    fun setExceptionHandler(listener: ExceptionHandler): Loglr? {
         exceptionHandler = listener
-        return loglrInstance!!
+        return this@Loglr
     }
 
     /**
@@ -93,9 +93,9 @@ class Loglr private constructor() {
      * *
      * @return LoglrInstance
      */
-    fun setUrlCallBack(strUrl: String): Loglr {
+    fun setUrlCallBack(strUrl: String): Loglr? {
         this.strUrl = strUrl
-        return loglrInstance!!
+        return this@Loglr
     }
 
     /**
@@ -106,9 +106,9 @@ class Loglr private constructor() {
      * *
      * @return LoglrInstance
      */
-    fun setLoadingDialog(dialog: Class<out Dialog>): Loglr {
+    fun setLoadingDialog(dialog: Class<out Dialog>): Loglr? {
         loadingDialog = dialog
-        return loglrInstance!!
+        return this@Loglr
     }
 
     /**
@@ -116,7 +116,7 @@ class Loglr private constructor() {
      * To replace the default Dialog passed
      * @return
      */
-    internal fun getLoadingDialog(): Class<out Dialog> = loadingDialog!!
+    internal fun getLoadingDialog(): Class<out Dialog>? = loadingDialog
 
     /**
      * A method to return the URL call back registered with Tumblr on the developer dashboard
@@ -132,9 +132,9 @@ class Loglr private constructor() {
      * @param strConsumerKey The Tumblr app consumer Key retrieved from Tumblr's developer website
      * @return loglrInstance
      */
-    fun setConsumerKey(strConsumerKey: String): Loglr {
+    fun setConsumerKey(strConsumerKey: String): Loglr? {
         CONSUMER_KEY = strConsumerKey
-        return loglrInstance!!
+        return this@Loglr
     }
 
     /**
@@ -145,9 +145,9 @@ class Loglr private constructor() {
      * @param strConsumerSecretKey The Tumblr app consumer Secret Key in String format
      * @return loglrInstance
      */
-    fun setConsumerSecretKey(strConsumerSecretKey: String): Loglr {
+    fun setConsumerSecretKey(strConsumerSecretKey: String): Loglr? {
         CONSUMER_SECRET_KEY = strConsumerSecretKey
-        return loglrInstance!!
+        return this@Loglr
     }
 
     /**
@@ -158,9 +158,9 @@ class Loglr private constructor() {
      * *
      * @return LoglrInstance
      */
-    fun enable2FA(is2FAEnabled: Boolean): Loglr {
+    fun enable2FA(is2FAEnabled: Boolean): Loglr? {
         this.is2FAEnabled = is2FAEnabled
-        return loglrInstance!!
+        return this@Loglr
     }
 
     /**
@@ -199,14 +199,12 @@ class Loglr private constructor() {
          * @return
          */
         val instance: Loglr get() {
-            if(loglrInstance != null)
-                loglrInstance = Loglr()
-            return loglrInstance!!
+            return loglrInstance
         }
 
         /**
          * The instance to this class. It is necessary to declare this here to keep access to this class singleton
          */
-        private var loglrInstance: Loglr? = null
+        private var loglrInstance: Loglr = Loglr()
     }
 }

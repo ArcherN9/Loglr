@@ -255,6 +255,6 @@ class TaskTumblrLogin: AsyncTask<Any, RuntimeException, String>(), OTPReceiptLis
         /**
          * Tag for logging
          */
-        private val TAG:String = TaskTumblrLogin::class.java.simpleName
+        private val TAG:String = TaskTumblrLogin.javaClass.simpleName
     }
 }
