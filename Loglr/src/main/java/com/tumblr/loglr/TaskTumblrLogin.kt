@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.res.Resources
 import android.net.Uri
 import android.os.AsyncTask
-import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.webkit.WebView
@@ -151,9 +150,7 @@ class TaskTumblrLogin: AsyncTask<Any, RuntimeException, String>(), OTPReceiptLis
     override fun onProgressUpdate(vararg values: RuntimeException) {
         super.onProgressUpdate(values[0])
         if(values.isNotEmpty()) {
-            var exception: RuntimeException = values[0]
-            var bundle: Bundle = Bundle()
-            bundle.putString(context?.getString(R.string.FireBase_Param_Reason), exception.message)
+            val exception: RuntimeException = values[0]
             Loglr.instance.exceptionHandler?.onLoginFailed(exception)
             finish()
         } else
@@ -171,73 +168,65 @@ class TaskTumblrLogin: AsyncTask<Any, RuntimeException, String>(), OTPReceiptLis
             //Login page will not show up properly if this is not done
             webView?.settings?.javaScriptEnabled = true
             //Set a web view client to monitor browser interactions
-            webView?.setWebViewClient(val client: WebViewClient() {
+            webView?.setWebViewClient(object: WebViewClient() {
 
                 override fun onPageFinished(view: WebView, url: String) {
                     super.onPageFinished(view, url)
                     if(!TextUtils.isEmpty(url)
-                            && url.equalsIgnoreCase(context.getResources().getString(R.string.tumblr_auth_otp_redirect))
+                            && url.equals(context?.resources?.getString(R.string.tumblr_auth_otp_redirect), ignoreCase = false)
                             && !TextUtils.isEmpty(strOTP)
-                            && !strOTP.equalsIgnoreCase(String.valueOf(0))) {
-                        webView.loadUrl("javascript:document.getElementById(\"tfa_response_field\").value= " + strOTP + " ;");
-
-                        if(Loglr.getInstance().getFirebase() != null)
-                            Loglr.getInstance().getFirebase().logEvent(context.getString(R.string.FireBase_Event_2FA), null);
-                    }
+                            && !strOTP.equals((0).toString(), ignoreCase = false))
+                        webView?.loadUrl("javascript:document.getElementById(\"tfa_response_field\").value=$strOTP;")
                 }
 
+                @Suppress("OverridingDeprecatedMember")
                 override fun shouldOverrideUrlLoading(view: WebView, strUrl: String): Boolean {
                     //Log Current loading URL
                     Log.i(TAG, strUrl)
                     //Check if the Currently loading URL is that of the call back URL mentioned on top
-                    if (strUrl.toLowerCase().contains(Loglr.getInstance().getUrlCallBack().toLowerCase())) {
+                    if (strUrl.toLowerCase().contains(Loglr.instance.getUrlCallBack().toLowerCase())) {
                         //Parse string URL to conver to URI
-                        Uri uri = Uri.parse(strUrl);
+                        val uri : Uri = Uri.parse(strUrl)
                         //instantiate String variables to store OAuth & Verifier tokens
-                        String strOAuthToken = "";
-                        String strOAuthVerifier = "";
+                        var strOAuthToken: String = ""
+                        var strOAuthVerifier : String = ""
                         //Iterate through Parameters retrieved on the URL
-                        for (String strQuery : uri.getQueryParameterNames())
-                        switch (strQuery) {
-                            case "oauth_token":
+                        for (strQuery in uri.queryParameterNames)
+                            when (strQuery) {
                             //Save OAuth Token
                             //Note : This is not the login token we require to set on JumblrToken
-                            strOAuthToken = uri.getQueryParameter(strQuery);
-                            break;
-
-                            case "oauth_verifier":
+                                "oauth_token" -> strOAuthToken = uri.getQueryParameter(strQuery)
                             //Save OAuthVerifier
-                            strOAuthVerifier = uri.getQueryParameter(strQuery);
-                            break;
-                        }
+                                "oauth_verifier" -> strOAuthVerifier = uri.getQueryParameter(strQuery)
+                            }
                         //Execute a new AsyncTask to retrieve access tokens
                         //Performing this is important since communication using OAuthProvider
                         //can only be done in a background thread.
-                        TaskRetrieveAccessToken taskRetrieveAccessToken = new TaskRetrieveAccessToken();
+                        val taskRetrieveAccessToken: TaskRetrieveAccessToken = TaskRetrieveAccessToken()
                         //Pass OAuthConsumer as an argument
-                        taskRetrieveAccessToken.setOAuthConsumer(commonsHttpOAuthConsumer);
+                        taskRetrieveAccessToken.setOAuthConsumer(commonsHttpOAuthConsumer)
                         //Pass OAuthProvider as an argument
-                        taskRetrieveAccessToken.setOAuthProvider(commonsHttpOAuthProvider);
+                        taskRetrieveAccessToken.setOAuthProvider(commonsHttpOAuthProvider)
                         //Pass context to AsyncTask
-                        taskRetrieveAccessToken.setContext(context);
+                        taskRetrieveAccessToken.setContext(context)
                         //Pass Loading Dialog
-                        taskRetrieveAccessToken.setLoadingDialog(loadingDialog);
+                        taskRetrieveAccessToken.setLoadingDialog(loadingDialog)
                         //Pass OAuthVerifier as an argument
-                        taskRetrieveAccessToken.setOAuthVerifier(strOAuthVerifier);
+                        taskRetrieveAccessToken.setOAuthVerifier(strOAuthVerifier)
                         //Set the Dismiss listener
-                        taskRetrieveAccessToken.setDismissListener(dismissListener);
+                        taskRetrieveAccessToken.setDismissListener(dismissListener)
                         //Execute the AsyncTask on a different thread;
-                        taskRetrieveAccessToken.executeOnExecutor(THREAD_POOL_EXECUTOR);
-                        return true;
+                        taskRetrieveAccessToken.executeOnExecutor(THREAD_POOL_EXECUTOR)
+                        return true
                     }
-                    return super.shouldOverrideUrlLoading(view, strUrl);
+                    return super.shouldOverrideUrlLoading(view, strUrl)
                 }
             })
 
             //Load URL
-            webView.loadUrl(strAuthUrl);
+            webView?.loadUrl(strAuthUrl)
         } else
-            finish();
+            finish()
     }
 
     /**
@@ -259,13 +248,13 @@ class TaskTumblrLogin: AsyncTask<Any, RuntimeException, String>(), OTPReceiptLis
     override fun onReceived(webView: WebView?, strOtp: String?) {
         Log.i(TAG, "OTP Received to populate WebView : " + strOTP)
         this.strOTP = strOTP
-        webView?.loadUrl("javascript:document.getElementById(\"tfa_response_field\").value=" + strOTP + ";")
+        webView?.loadUrl("javascript:document.getElementById(\"tfa_response_field\").value=$strOTP;")
     }
 
     companion object {
         /**
          * Tag for logging
          */
-        private val TAG:String = TaskTumblrLogin.javaClass.simpleName
+        private val TAG:String = TaskTumblrLogin::class.java.simpleName
     }
 }

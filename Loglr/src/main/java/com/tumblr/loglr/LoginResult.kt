@@ -1,16 +1,16 @@
 package com.tumblr.loglr
 
-class LoginResult private constructor() {
+class LoginResult internal constructor() {
 
     /**
      * The Tumblr Key used to make API calls to Tumblr using Jumble client
      */
-    private var strOAuthToken: String = ""
+    internal var strOAuthToken: String = ""
 
     /**
      * The Tumblr Secret Key used to make API calls to Tumblr using Jumble client
      */
-    private var strOAuthTokenSecret: String = ""
+    internal var strOAuthTokenSecret: String = ""
 
     /**
      * @return Return the TumblrKey

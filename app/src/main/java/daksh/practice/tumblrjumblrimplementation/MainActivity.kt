@@ -41,8 +41,8 @@ class MainActivity : AppCompatActivity(), LoginListener, ExceptionHandler {
                 .initiateInActivity(this@MainActivity)
     }
 
-    override fun onLoginSuccessful(loginResult: LoginResult?) {
-        if (loginResult != null && !TextUtils.isEmpty(loginResult.getOAuthToken()) && !TextUtils.isEmpty(loginResult.getOAuthTokenSecret())) {
+    override fun onLoginSuccessful(loginResult: LoginResult) {
+        if (!TextUtils.isEmpty(loginResult.getOAuthToken()) && !TextUtils.isEmpty(loginResult.getOAuthTokenSecret())) {
             Log.i(TAG, "Tumblr Token : " + loginResult.getOAuthToken())
             Log.i(TAG, "Tumblr Secret Token : " + loginResult.getOAuthTokenSecret())
             mainActivity_activity.text = "Congratulations, Tumblr login succeeded"
