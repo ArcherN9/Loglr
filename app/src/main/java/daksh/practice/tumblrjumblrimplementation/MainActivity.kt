@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import com.tumblr.loglr.Interfaces.ExceptionHandler
 import com.tumblr.loglr.Interfaces.LoginListener
 import com.tumblr.loglr.LoginResult
@@ -26,7 +25,15 @@ class MainActivity : AppCompatActivity(), LoginListener, ExceptionHandler {
     }
 
     private val customtabClickListener = View.OnClickListener {
-        //Stub | Custom tab implementation goes here
+        Loglr.instance
+                .setConsumerKey(getString(R.string.ConsumerKey))
+                ?.setConsumerSecretKey(getString(R.string.ConsumerSecretKey))
+                ?.setUrlCallBack(resources.getString(R.string.tumblr_callback_url))
+                ?.setLoginListener(this@MainActivity)
+                ?.setExceptionHandler(this@MainActivity)
+                ?.enable2FA(true)
+                ?.setActionbarColor(R.color.colorPrimary)
+                ?.initiateInCustomTab(this@MainActivity)
     }
 
     private val activityClickListener = View.OnClickListener {
@@ -47,11 +54,13 @@ class MainActivity : AppCompatActivity(), LoginListener, ExceptionHandler {
             Log.i(TAG, "Tumblr Secret Token : " + loginResult.getOAuthTokenSecret())
             mainActivity_activity.text = "Congratulations, Tumblr login succeeded"
             mainActivity_activity.isEnabled = false
+
+            mainActivity_customtab.visibility = View.GONE
         }
     }
 
     override fun onLoginFailed(exception: RuntimeException) {
-        Toast.makeText(baseContext, exception.message, Toast.LENGTH_LONG).show()
+//        Toast.makeText(baseContext, exception.message, Toast.LENGTH_LONG).show()
     }
 
     companion object {

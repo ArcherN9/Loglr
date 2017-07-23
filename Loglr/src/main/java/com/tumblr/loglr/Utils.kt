@@ -51,8 +51,7 @@ class Utils {
 //            if(Loglr.getInstance().getFirebase() != null)
 //                Loglr.getInstance().getFirebase().logEvent(context.getString(R.string.FireBase_Event_CustomDialog_Fail), null);
 //            return LoadingDialog;
-            }
-            else {
+            } else {
                 val progressDialog: ProgressDialog = ProgressDialog(context)
                 progressDialog.setMessage(context.getString(R.string.tumblrlogin_loading))
                 return progressDialog

@@ -10,6 +10,11 @@ import com.tumblr.loglr.Interfaces.LoginListener
 class Loglr private constructor() {
 
     /**
+     * Context of the calling activity
+     */
+    private var context: Context? = null
+
+    /**
      * Specifies whether or not the developer wishes to enable 2FA auto read for OTP message that arrives
      * when the user is trying to login. Default value : true
      */
@@ -59,10 +64,23 @@ class Loglr private constructor() {
     private var loadingDialog: Class<out Dialog>? = null
 
     /**
+     * A String title that is displayed on top of the CustomTabIntent.
+     */
+    internal var intActionbarColor: Int = R.color.colorPrimary
+
+    /**
      * A isDebug variable is used to specify if the build being run/deployed is a debug build or not.
      * On deployment this variable is to be changed to false to imply shift from debug to production
      */
     private val IS_DEBUG = true
+
+    /**
+     * Optional: Sets the CustomTab title
+     */
+    fun setActionbarColor(actionBarColor: Int): Loglr? {
+        this@Loglr.intActionbarColor = actionBarColor
+        return this@Loglr
+    }
 
     /**
      * Receives an interface to be called when login succeeds.
@@ -190,6 +208,20 @@ class Loglr private constructor() {
     fun initiateInActivity(context: Context) {
         val intent = Intent(context, LoglrActivity::class.java)
         context.startActivity(intent)
+    }
+
+    /**
+     * Initiates the login procedure by calling the Tumblr APIs in a custom tab.
+     * @param context The context of the calling activity
+     */
+    fun initiateInCustomTab(context: Context) {
+        //Reference the context received
+        this@Loglr.context = context
+        //Initialize a controller for the CustomTab implementation
+        var customTabObject = CustomTabObject(context)
+
+        //Begin process flow for logging the user in via a custom tab implementation
+        customTabObject.begin()
     }
 
     companion object {

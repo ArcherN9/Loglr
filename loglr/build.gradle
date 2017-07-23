@@ -38,9 +38,15 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
+
+    //App compat
     compile 'com.android.support:appcompat-v7:25.1.1'
+
+    //Kotlin
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
+    //Chrome custom tabs
+    compile 'com.android.support:customtabs:25.1.1'
 }
 apply plugin: 'com.google.gms.google-services'
 apply from: 'https://raw.githubusercontent.com/blundell/release-android-library/master/android-release-aar.gradle'
