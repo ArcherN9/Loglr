@@ -221,7 +221,7 @@ class Loglr private constructor() {
 
         var customTabObject = CustomTabObject(context)
         //Begin process flow for logging the user in via a custom tab implementation
-        customTabObject?.begin()
+        customTabObject.begin()
     }
 
     companion object {

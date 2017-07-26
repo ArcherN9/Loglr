@@ -13,7 +13,12 @@ internal class CustomTabObject internal constructor(context: Context) : Authoriz
 
     //Referencing a context received from the primary constructor
     private val context = context
-
+    // Package name for the Chrome channel the client wants to connect to. This
+    // depends on the channel name.
+    // Stable = com.android.chrome
+    // Beta = com.chrome.beta
+    // Dev = com.chrome.dev
+    private val CUSTOM_TAB_PACKAGE_NAME:String = "com.android.chrome"  // Change when in stable
     //A custom tab client used in conjunction with CustomTabs
     private var customTabClient: CustomTabsClient? = null
     //Create a new session using the customTabClient and associate it with the customtab intent
@@ -21,10 +26,19 @@ internal class CustomTabObject internal constructor(context: Context) : Authoriz
 
     init {
         //Bind the CustomTab service with the CustomTab client
-        val isBound:Boolean = CustomTabsClient.bindCustomTabsService(context, context.packageName, object: CustomTabsServiceConnection() {
+        val isBound:Boolean = CustomTabsClient.bindCustomTabsService(context, CUSTOM_TAB_PACKAGE_NAME, object: CustomTabsServiceConnection() {
 
             override fun onCustomTabsServiceConnected(name: ComponentName?, client: CustomTabsClient?) {
                 customTabClient = client
+                //Create a new customtab session and monitor changes to the URLs
+                customTabSession = customTabClient?.newSession(object: CustomTabsCallback() {
+
+                    override fun onNavigationEvent(navigationEvent: Int, extras: Bundle?) {
+                        super.onNavigationEvent(navigationEvent, extras)
+                        //Log Current loading URL
+                        Log.i(TAG, "User navigation event : " + navigationEvent)
+                    }
+                })
             }
 
             override fun onServiceDisconnected(name: ComponentName?) {
@@ -61,16 +75,6 @@ internal class CustomTabObject internal constructor(context: Context) : Authoriz
      * @param strUrl The URL to be displayed to the User to log in
      */
     override fun onAuthUrlReceived(strUrl: String) {
-        //Create a new customtab session and monitor changes to the URLs
-        customTabSession = customTabClient?.newSession(object: CustomTabsCallback() {
-
-            override fun onNavigationEvent(navigationEvent: Int, extras: Bundle?) {
-                super.onNavigationEvent(navigationEvent, extras)
-                //Log Current loading URL
-                Log.i(TAG, "" + navigationEvent)
-            }
-        })
-
         //Instantiate a builder
         val customTabIntentBuilder = CustomTabsIntent.Builder(customTabSession)
                 .enableUrlBarHiding()
