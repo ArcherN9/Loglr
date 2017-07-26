@@ -218,10 +218,10 @@ class Loglr private constructor() {
         //Reference the context received
         this@Loglr.context = context
         //Initialize a controller for the CustomTab implementation
-        var customTabObject = CustomTabObject(context)
 
+        var customTabObject = CustomTabObject(context)
         //Begin process flow for logging the user in via a custom tab implementation
-        customTabObject.begin()
+        customTabObject?.begin()
     }
 
     companion object {
