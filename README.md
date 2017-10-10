@@ -4,7 +4,7 @@
 
 Loglr is library that enables developers to implement 'Login via Tumblr' with as minimum frustration as possible.
 
-Note : The library is in active development. On and off, one may encounter bugs or mistakes. Please report them on the issue tracker. I'll fix and send out an immediate release.
+Note : The library is in active development. On and off, one may encounter bugs or mistakes. Please report them on the issue tracker.
 
 ### Importing to your project ###
 Gradle : 
