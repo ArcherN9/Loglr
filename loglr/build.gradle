@@ -9,8 +9,8 @@ ext{
 }
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.1"
 
     packagingOptions {
         exclude 'META-INF/NOTICE.txt'
@@ -21,7 +21,7 @@ android {
 
     defaultConfig {
         minSdkVersion 17
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 3
         versionName "2.1.1"
     }
@@ -40,13 +40,13 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     //App compat
-    compile 'com.android.support:appcompat-v7:25.1.1'
+    compile 'com.android.support:appcompat-v7:26.0.0'
 
     //Kotlin
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 
     //Chrome custom tabs
-    compile 'com.android.support:customtabs:25.1.1'
+    compile 'com.android.support:customtabs:26.0.0'
 }
 apply plugin: 'com.google.gms.google-services'
 apply from: 'https://raw.githubusercontent.com/blundell/release-android-library/master/android-release-aar.gradle'

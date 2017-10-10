@@ -54,7 +54,7 @@ internal class CustomTabObject internal constructor(context: Context) : Authoriz
      * Initializes CustomTabs for the application.
      */
     internal fun begin() {
-        //Initialize the TaskTumblrLogin AsyncTask to begin negotiating with the server to log the user in
+        //Initialize the TaskTumblrhttps://git.hclets.com/mobility-coe/Android-FirebaseEvents.gitLogin AsyncTask to begin negotiating with the server to log the user in
         val taskTumblrLogin = TaskTumblrLogin()
         //Pass on the Resources folder
         taskTumblrLogin.setResources(context.resources)

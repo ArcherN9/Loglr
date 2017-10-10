@@ -183,8 +183,8 @@ class TaskTumblrLogin: AsyncTask<Any, RuntimeException, String>(), OTPReceiptLis
             //Inform the listener the authorization URL has been received and hand it down
             authorizationCallback?.onAuthUrlReceived(strAuthUrl!!)
 
-            //TaskTumblrLogin task is done.
-            return
+//            //TaskTumblrLogin task is done.
+//            return
 
             //Enable JS support on web browser - important since TumblrLogin utilises JS components
             //Login page will not show up properly if this is not done
