@@ -15,6 +15,8 @@ import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
 import android.util.Log
 import android.view.KeyEvent
+import android.widget.ImageView
+import android.widget.TextView
 import com.tumblr.loglr.Exceptions.LoglrAPIException
 import com.tumblr.loglr.Exceptions.LoglrCallbackException
 import com.tumblr.loglr.Exceptions.LoglrLoginCanceled
@@ -34,9 +36,21 @@ class LoglrActivity: AppCompatActivity(), DialogCallbackListener, DialogInterfac
      */
     var otpBroadcastReceiver: OTPBroadcastReceiver? = null
 
+    internal var txAddressbar: TextView? = null
+    internal var btnClose: ImageView? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_tumblr_login);
+        setContentView(R.layout.activity_tumblr_login)
+        overridePendingTransition(R.anim.anim_bottom_up, R.anim.abc_fade_out)
+        //Address bar as txAddressbar
+        txAddressbar = activityTumblrAddressBar
+        //Close button as btnClose
+        btnClose = activityTumblrClose
+        btnClose?.setOnClickListener { _ ->
+            onBackPressed()
+        }
+
 
         //Test if consumer key was received
         if(TextUtils.isEmpty(Loglr.Companion.instance.CONSUMER_KEY))
@@ -171,6 +185,7 @@ class LoglrActivity: AppCompatActivity(), DialogCallbackListener, DialogInterfac
     override fun onBackPressed() {
         super.onBackPressed()
         finish()
+        overridePendingTransition(R.anim.abc_fade_in, R.anim.anim_up_bottom)
         //Pass reason for closing loglr
         val ex = LoglrLoginCanceled()
         Loglr.Companion.instance.exceptionHandler?.onLoginFailed(ex) ?: throw LoglrLoginException()

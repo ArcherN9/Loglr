@@ -1,5 +1,6 @@
 package com.tumblr.loglr
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -208,20 +209,7 @@ class Loglr private constructor() {
     fun initiateInActivity(context: Context) {
         val intent = Intent(context, LoglrActivity::class.java)
         context.startActivity(intent)
-    }
-
-    /**
-     * Initiates the login procedure by calling the Tumblr APIs in a custom tab.
-     * @param context The context of the calling activity
-     */
-    fun initiateInCustomTab(context: Context) {
-        //Reference the context received
-        this@Loglr.context = context
-        //Initialize a controller for the CustomTab implementation
-
-        var customTabObject = CustomTabObject(context)
-        //Begin process flow for logging the user in via a custom tab implementation
-        customTabObject.begin()
+        (context as Activity).overridePendingTransition(R.anim.anim_bottom_up, R.anim.abc_fade_out)
     }
 
     companion object {

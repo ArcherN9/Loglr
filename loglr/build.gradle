@@ -10,7 +10,7 @@ ext{
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    buildToolsVersion "26.0.2"
 
     packagingOptions {
         exclude 'META-INF/NOTICE.txt'
@@ -40,13 +40,10 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     //App compat
-    compile 'com.android.support:appcompat-v7:26.0.0'
+    compile 'com.android.support:appcompat-v7:26.1.0'
 
     //Kotlin
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-
-    //Chrome custom tabs
-    compile 'com.android.support:customtabs:26.0.0'
 }
 apply plugin: 'com.google.gms.google-services'
 apply from: 'https://raw.githubusercontent.com/blundell/release-android-library/master/android-release-aar.gradle'

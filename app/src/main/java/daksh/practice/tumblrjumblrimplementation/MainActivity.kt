@@ -21,19 +21,6 @@ class MainActivity : AppCompatActivity(), LoginListener, ExceptionHandler {
     override fun onResume() {
         super.onResume()
         mainActivity_activity.setOnClickListener(activityClickListener)
-        mainActivity_customtab.setOnClickListener(customtabClickListener)
-    }
-
-    private val customtabClickListener = View.OnClickListener {
-        Loglr.instance
-                .setConsumerKey(getString(R.string.ConsumerKey))
-                ?.setConsumerSecretKey(getString(R.string.ConsumerSecretKey))
-                ?.setUrlCallBack(resources.getString(R.string.tumblr_callback_url))
-                ?.setLoginListener(this@MainActivity)
-                ?.setExceptionHandler(this@MainActivity)
-                ?.enable2FA(true)
-                ?.setActionbarColor(R.color.colorPrimary)
-                ?.initiateInCustomTab(this@MainActivity)
     }
 
     private val activityClickListener = View.OnClickListener {
@@ -54,8 +41,6 @@ class MainActivity : AppCompatActivity(), LoginListener, ExceptionHandler {
             Log.i(TAG, "Tumblr Secret Token : " + loginResult.getOAuthTokenSecret())
             mainActivity_activity.text = "Congratulations, Tumblr login succeeded"
             mainActivity_activity.isEnabled = false
-
-            mainActivity_customtab.visibility = View.GONE
         }
     }
 

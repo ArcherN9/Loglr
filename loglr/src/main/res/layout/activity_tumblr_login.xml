@@ -4,9 +4,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageView
+        android:id="@+id/activityTumblrClose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/effect_close"
+        android:paddingStart="15dp"
+        android:layout_alignTop="@+id/activityTumblrAddressBar"
+        android:layout_alignBottom="@+id/activityTumblrAddressBar"/>
+
+    <TextView
+        android:id="@+id/activityTumblrAddressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:textSize="20sp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingStart="10dp"
+        android:layout_toEndOf="@id/activityTumblrClose"
+        android:text="https://www.tumblr.com/oauth/authorize?oauth_token=46wlELtLfgDskTlCPFJIHKqPOD5PmOJ6R5XwWHcKV7QbxOPy35"/>
+
     <WebView
         android:id="@+id/activity_tumblr_webview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_below="@id/activityTumblrAddressBar"/>
 
 </RelativeLayout>

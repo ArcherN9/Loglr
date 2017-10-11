@@ -12,10 +12,4 @@
         android:layout_height="wrap_content"
         android:text="Initiate in a new activity" />
 
-    <Button
-        android:id="@+id/mainActivity_customtab"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:text="Initiate in a Custom tab"/>
-
 </LinearLayout>

@@ -11,7 +11,6 @@ import android.util.Log
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.tumblr.loglr.Exceptions.LoglrLoginException
-import com.tumblr.loglr.Interfaces.AuthorizationCallback
 import com.tumblr.loglr.Interfaces.DismissListener
 import com.tumblr.loglr.Interfaces.OTPReceiptListener
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer
@@ -22,11 +21,6 @@ import oauth.signpost.exception.OAuthMessageSignerException
 import oauth.signpost.exception.OAuthNotAuthorizedException
 
 class TaskTumblrLogin: AsyncTask<Any, RuntimeException, String>(), OTPReceiptListener {
-
-    /**
-     * The authorization callback to be handed down when auth URL is received
-     */
-    private var authorizationCallback: AuthorizationCallback? = null
 
     /**
      * The OAuth provider
@@ -103,15 +97,6 @@ class TaskTumblrLogin: AsyncTask<Any, RuntimeException, String>(), OTPReceiptLis
     }
 
     /**
-     * Accepts the callback interface to be executed when the authorization callback is received
-     * by using the request token
-     * @param authCallBack The authorization callback to be executed
-     */
-    fun setAuthorizationCallback(authCallBack: AuthorizationCallback) {
-        this.authorizationCallback = authCallBack
-    }
-
-    /**
      * A method to pass a reference of the WebView to this AsyncTask class
      * @param view
      */
@@ -176,21 +161,20 @@ class TaskTumblrLogin: AsyncTask<Any, RuntimeException, String>(), OTPReceiptLis
     override fun onPostExecute(strAuthUrl: String?) {
         super.onPostExecute(strAuthUrl)
         //Dismiss progress bar
-        loadingDialog?.dismiss()
+        try {
+            loadingDialog?.dismiss()
+        } catch (e: IllegalArgumentException) {
+            e.printStackTrace()
+            //Illegal
+        }
 
         if(!TextUtils.isEmpty(strAuthUrl)) {
-
-            //Inform the listener the authorization URL has been received and hand it down
-            authorizationCallback?.onAuthUrlReceived(strAuthUrl!!)
-
-//            //TaskTumblrLogin task is done.
-//            return
 
             //Enable JS support on web browser - important since TumblrLogin utilises JS components
             //Login page will not show up properly if this is not done
             webView?.settings?.javaScriptEnabled = true
             //Set a web view client to monitor browser interactions
-            webView?.setWebViewClient(object: WebViewClient() {
+            webView?.webViewClient = object: WebViewClient() {
 
                 override fun onPageFinished(view: WebView, url: String) {
                     super.onPageFinished(view, url)
@@ -205,6 +189,10 @@ class TaskTumblrLogin: AsyncTask<Any, RuntimeException, String>(), OTPReceiptLis
                 override fun shouldOverrideUrlLoading(view: WebView, strUrl: String): Boolean {
                     //Log Current loading URL
                     Log.i(TAG, strUrl)
+                    //Update URL on address bar
+                    val loglrActivity = context as LoglrActivity
+                    loglrActivity.txAddressbar?.text = strUrl
+
                     //Check if the Currently loading URL is that of the call back URL mentioned on top
                     if (strUrl.toLowerCase().contains(Loglr.instance.getUrlCallBack().toLowerCase())) {
                         //Parse string URL to conver to URI
@@ -243,10 +231,12 @@ class TaskTumblrLogin: AsyncTask<Any, RuntimeException, String>(), OTPReceiptLis
                     }
                     return super.shouldOverrideUrlLoading(view, strUrl)
                 }
-            })
+            }
 
             //Load URL
-//            webView?.loadUrl(strAuthUrl)
+            webView?.loadUrl(strAuthUrl)
+            val loglrActivity = context as LoglrActivity
+            loglrActivity.txAddressbar?.text = strAuthUrl
         } else
             finish()
     }
