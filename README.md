@@ -1,5 +1,10 @@
 [ ![Download](https://api.bintray.com/packages/dakshsrivastava/maven/Loglr/images/download.svg) ](https://bintray.com/dakshsrivastava/maven/Loglr/_latestVersion) [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Loglr-green.svg?style=true)](https://android-arsenal.com/details/1/3265)
 # Loglr #
+
+![](https://res.cloudinary.com/hashnode/image/upload/w_200,h_200/v1458728299/fuo7n9epkkxyafihrlhz.jpg)
+
+So happy to inform this library has been ported to Kotlin!
+
 ### The easiest way to get your user logged in via Tumblr ###
 
 Loglr is library that enables developers to implement 'Login via Tumblr' with as minimum frustration as possible.
@@ -9,14 +14,14 @@ Note : The library is in active development. On and off, one may encounter bugs 
 ### Importing to your project ###
 Gradle : 
         
-        compile 'com.daksh:loglr:1.2.1'
+        compile 'com.daksh:loglr:2.1.1'
 
 Maven : 
 
         <dependency>
           <groupId>com.daksh</groupId>
           <artifactId>loglr</artifactId>
-          <version>1.2.1</version>
+          <version>2.1.1</version>
           <type>pom</type>
         </dependency>
 
@@ -101,6 +106,13 @@ If you wish to remove any permission from your app, add the following line in ea
 
 ### Change log ###
 
+##### v2.1.1 #####
+* Library ported to Kotlin
+* Removed silly Firebase analytics
+* Removed Fragment implementation of the login
+* Better activity implementation to mimic custom tabs (Tried custom tabs - but due to its limitations, its not possible to use if for OAuth)
+* Fixed a bug reported on the bug tracker
+
 ##### v1.2.1 #####
 * Developer has option to toggle auto OTP detection for 2FA
 * Better analytics to track user/developer behavior with library
@@ -167,4 +179,4 @@ If you wish to remove any permission from your app, add the following line in ea
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ### Credits ####
-###### Inspired from the works by [jansanz](https://github.com/jansanz) at [TumblrOAuthDemo](https://github.com/jansanz/TumblrOAuthDemo). ######
+###### Inspired from the work by [jansanz](https://github.com/jansanz) at [TumblrOAuthDemo](https://github.com/jansanz/TumblrOAuthDemo). ######
