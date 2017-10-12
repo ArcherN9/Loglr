@@ -66,23 +66,10 @@ Loglr supports auto detecting the OTP message received by users with 2 Factor-Au
         //Pass a boolean variable that informs loglr if OTP auto detection is to be enabled or not
         .enable2FA(true)
 
-Finally, there are two ways to initiate login. The first option is to start it in an activity of it's own. Personally, I believe this is a better approach as the Tumblr user authentication website opens up better. 
+Finally, start the login procedure.
 
         //Initiate login in an activity of it's own
         .initiateInActivity(context);
-
-The second option is to use a Dialog Fragment which hoists on top of your running app. It accepts a support fragment manager as a parameter.
-        
-        .initiateInDialog(getSupportFragmentManager());
-
-In the event you decide to go ahead with login using a DialogFragment, it is imperative that `onRequestPermissionsResult` method be overridden. Without this, Loglr will incur undesired behaviour. This method will be executed on interaction with the Marshmallow permission dialog. Since the permissions were requested from a DialogFragment, the parent Activity receives the callback. To forward call to the fragment, override the method like so :
-        
-        @Override
-        public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-            //This line passes callback to the DialogFragment
-            Loglr.getInstance().onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
 
 When login succeeds, a call back is executed to the LoginListener that was passed with `.setLoginListener(loginListener)` method. An object of `LoginResult` is passed which contains Token and Secret Token  which may be used in conjunction with [Jumlr Library](https://github.com/tumblr/jumblr) to retrieve user information or make requests on user's behalf.
 
