@@ -14,14 +14,14 @@ Note : The library is in active development. On and off, one may encounter bugs 
 ### Importing to your project ###
 Gradle : 
         
-        compile 'com.daksh:loglr:2.1.1'
+        compile 'com.daksh:loglr:2.1.2'
 
 Maven : 
 
         <dependency>
           <groupId>com.daksh</groupId>
           <artifactId>loglr</artifactId>
-          <version>2.1.1</version>
+          <version>2.1.2</version>
           <type>pom</type>
         </dependency>
 
@@ -92,6 +92,10 @@ Permissions listed in manifest :
 If you wish to remove any permission from your app, add the following line in each of the permissions you wish to remove : `tools:node="remove"`
 
 ### Change log ###
+
+##### v2.1.2 #####
+* Fixed bugs with Custom dialogs
+* Deleted deprecated files & methods
 
 ##### v2.1.1 #####
 * Library ported to Kotlin
