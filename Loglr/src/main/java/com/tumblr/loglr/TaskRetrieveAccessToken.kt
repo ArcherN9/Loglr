@@ -6,7 +6,6 @@ import android.os.AsyncTask
 import android.text.TextUtils
 import android.util.Log
 import com.tumblr.loglr.Exceptions.LoglrLoginException
-import com.tumblr.loglr.Interfaces.DismissListener
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer
 import oauth.signpost.commonshttp.CommonsHttpOAuthProvider
 import oauth.signpost.exception.OAuthCommunicationException
@@ -37,24 +36,9 @@ class TaskRetrieveAccessToken: AsyncTask<Void, RuntimeException, LoginResult?>()
     private var context: Context? = null
 
     /**
-     * A dismiss listener is to be called in case the AsyncTask's calling context is that
-     * of a dialogFragment
-     */
-    private var dismissListener: DismissListener? = null
-
-    /**
      * A loading Dialog to display to user if passed by developer
      */
     private var loadingDialog: Dialog? = null
-
-    /**
-     * A method to pass the dismiss listener to the AsyncTask. Is used exclusively by the
-     * dialog Fragment
-     * @param dismissListener A reference to the Dismiss listener interface
-     */
-    internal fun setDismissListener(dismissListener: DismissListener?) {
-        this.dismissListener = dismissListener
-    }
 
     /**
      * Set the context to show progressBars and stuff
@@ -170,16 +154,8 @@ class TaskRetrieveAccessToken: AsyncTask<Void, RuntimeException, LoginResult?>()
      * A method to finish the calling activity
      */
     private fun finish() {
-        try {
-            val loglrActivity: LoglrActivity = context as LoglrActivity
-            loglrActivity.finish()
-        } catch (e: ClassCastException) {
-            //Class cast exception is thrown when the container activity is not
-            //LoglrActivity. In such a scenario, it is obvious that Loglr
-            //was called using the dialogFragment. In this case, we dismiss the fragment
-            //Not printing the stacktrace so it does not go to dev's console
-            dismissListener?.onDismiss()
-        }
+        val loglrActivity: LoglrActivity = context as LoglrActivity
+        loglrActivity.finish()
     }
 
     companion object {

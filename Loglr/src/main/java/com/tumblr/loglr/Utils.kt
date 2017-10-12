@@ -38,13 +38,13 @@ class Utils {
          * @return returns the Loading Dialog to display to the user when authentication tokens are being
          *         exchanged and the user is expected to wait.
          */
-        fun getLoadingDialog(context: Context): Dialog {
-            //Test if Loading Dialog was receiver
+        fun getLoadingDialog(context: Context): Dialog? {
+            //Test if Loading Dialog was received
             if(Loglr.instance.getLoadingDialog() != null) {
                 //Extract Loading Dialog class passed by the Activity
                 val classDialog = Loglr.instance.getLoadingDialog()
                 //get default constructor and create new instance for the Dialog
-                return classDialog?.getConstructor(Context::class.java)!!.newInstance(context)
+                return classDialog?.getConstructor(Context::class.java)?.newInstance(context) as Dialog
 //        e.printStackTrace();
 //            LoadingDialog = new ProgressDialog(context);
 //            LoadingDialog.setTitle(context.getString(R.string.tumblrlogin_loading));

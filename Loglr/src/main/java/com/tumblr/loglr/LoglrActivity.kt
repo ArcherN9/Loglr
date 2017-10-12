@@ -107,7 +107,7 @@ class LoglrActivity: AppCompatActivity(), DialogCallbackListener, DialogInterfac
         //Generate the loading dialog passed by the developer
         val dialog = Utils.getLoadingDialog(this@LoglrActivity)
         //Set a key listener on the dialog to keep a track of back buttons pressed in case the flow malfunctions
-        dialog.setOnKeyListener(this@LoglrActivity)
+        dialog?.setOnKeyListener(this@LoglrActivity)
         //Initiate an AsyncTask to begin TumblrLogin
         if(taskTumblrLogin == null)
             taskTumblrLogin = TaskTumblrLogin()

@@ -1,5 +1,6 @@
 package daksh.practice.tumblrjumblrimplementation
 
+import android.app.Dialog
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
@@ -28,7 +29,7 @@ class MainActivity : AppCompatActivity(), LoginListener, ExceptionHandler {
                 .setConsumerKey(getString(R.string.ConsumerKey))
                 ?.setConsumerSecretKey(getString(R.string.ConsumerSecretKey))
                 ?.setUrlCallBack(resources.getString(R.string.tumblr_callback_url))
-//                ?.setLoadingDialog(LoadingDialog::class.java)
+                ?.setLoadingDialog(LoadingDialog::class.java)
                 ?.setLoginListener(this@MainActivity)
                 ?.setExceptionHandler(this@MainActivity)
                 ?.enable2FA(true)

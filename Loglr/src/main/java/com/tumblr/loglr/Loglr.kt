@@ -125,7 +125,7 @@ class Loglr private constructor() {
      * *
      * @return LoglrInstance
      */
-    fun setLoadingDialog(dialog: Class<out Dialog>): Loglr? {
+    fun setLoadingDialog(dialog: Class<out Dialog>?): Loglr? {
         loadingDialog = dialog
         return this@Loglr
     }

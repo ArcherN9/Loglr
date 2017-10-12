@@ -11,7 +11,6 @@ import android.util.Log
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.tumblr.loglr.Exceptions.LoglrLoginException
-import com.tumblr.loglr.Interfaces.DismissListener
 import com.tumblr.loglr.Interfaces.OTPReceiptListener
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer
 import oauth.signpost.commonshttp.CommonsHttpOAuthProvider
@@ -58,25 +57,10 @@ class TaskTumblrLogin: AsyncTask<Any, RuntimeException, String>(), OTPReceiptLis
     private var strOTP: String? = null
 
     /**
-     * A dismiss listener is to be called in case the AsyncTask's calling context is that
-     * of a dialogFragment
-     */
-    private var dismissListener: DismissListener? = null
-
-    /**
-     * A method to pass the dismiss listener to the AsyncTask. Is used exclusively by the
-     * dialog Fragment
-     * @param dismissListener A reference to the Dismiss listener interface
-     */
-    fun setDismissListener(dismissListener: DismissListener): Unit {
-        this.dismissListener = dismissListener
-    }
-
-    /**
      * Accept Loading dialog passed on by the developer. Null in case no Dialog was passed
      * @param loadingDialog Loading Dialog to display to user
      */
-    fun setLoadingDialog(loadingDialog: Dialog): Unit {
+    fun setLoadingDialog(loadingDialog: Dialog?): Unit {
         this.loadingDialog = loadingDialog
     }
 
@@ -223,8 +207,6 @@ class TaskTumblrLogin: AsyncTask<Any, RuntimeException, String>(), OTPReceiptLis
                         taskRetrieveAccessToken.setLoadingDialog(loadingDialog)
                         //Pass OAuthVerifier as an argument
                         taskRetrieveAccessToken.setOAuthVerifier(strOAuthVerifier)
-                        //Set the Dismiss listener
-                        taskRetrieveAccessToken.setDismissListener(dismissListener)
                         //Execute the AsyncTask on a different thread;
                         taskRetrieveAccessToken.executeOnExecutor(THREAD_POOL_EXECUTOR)
                         return true
@@ -245,16 +227,8 @@ class TaskTumblrLogin: AsyncTask<Any, RuntimeException, String>(), OTPReceiptLis
      * A method to finish the calling activity
      */
     private fun finish() {
-        try {
-            val loglrActivity: LoglrActivity = context as LoglrActivity
-            loglrActivity.finish()
-        } catch (e: ClassCastException) {
-            //Class cast exception is thrown when the container activity is not
-            //LoglrActivity. In such a scenario, it is obvious that Loglr
-            //was called using the dialogFragment. In this case, we dismiss the fragment
-            //Not printing the stacktrace so it does not go to dev's console
-            dismissListener?.onDismiss()
-        }
+        val loglrActivity: LoglrActivity = context as LoglrActivity
+        loglrActivity.finish()
     }
 
     override fun onReceived(webView: WebView?, strOtp: String?) {

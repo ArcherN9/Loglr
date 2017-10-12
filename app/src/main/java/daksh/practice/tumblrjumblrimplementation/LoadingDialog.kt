@@ -8,7 +8,7 @@ import android.view.Window
 
 class LoadingDialog(context: Context) : Dialog(context) {
 
-    override fun onCreate(savedInstanceState: Bundle) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.dialog_loading)
