@@ -183,7 +183,7 @@ object Loglr {
      * Use this for a better experience of login in
      * @param context The context of the calling Activity / Application
      */
-    fun initiateInActivity(context: Context) {
+    fun initiate(context: Context) {
         val intent = Intent(context, LoglrActivity::class.java)
         context.startActivity(intent)
         (context as Activity).overridePendingTransition(R.anim.anim_bottom_up, R.anim.abc_fade_out)

@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity(), LoginListener, ExceptionHandler {
                 ?.enable2FA(true)
                 ?.setActionbarColor(R.color.activity_color_actionbar)
                 ?.setTextColor(R.color.activity_color_text)
-                ?.initiateInActivity(this@MainActivity)
+                ?.initiate(this@MainActivity)
     }
 
     override fun onLoginSuccessful(loginResult: LoginResult) {
