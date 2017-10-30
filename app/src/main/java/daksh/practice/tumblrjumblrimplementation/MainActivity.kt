@@ -1,11 +1,13 @@
 package daksh.practice.tumblrjumblrimplementation
 
-import android.app.Dialog
+import android.os.Build
 import android.os.Bundle
+import android.support.annotation.RequiresApi
 import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import com.tumblr.loglr.Interfaces.ExceptionHandler
 import com.tumblr.loglr.Interfaces.LoginListener
 import com.tumblr.loglr.LoginResult
@@ -19,20 +21,23 @@ class MainActivity : AppCompatActivity(), LoginListener, ExceptionHandler {
         setContentView(R.layout.main_activity)
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onResume() {
         super.onResume()
         mainActivity_activity.setOnClickListener(activityClickListener)
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     private val activityClickListener = View.OnClickListener {
-        Loglr.instance
-                .setConsumerKey(getString(R.string.ConsumerKey))
+        Loglr.setConsumerKey(getString(R.string.ConsumerKey))
                 ?.setConsumerSecretKey(getString(R.string.ConsumerSecretKey))
                 ?.setUrlCallBack(resources.getString(R.string.tumblr_callback_url))
                 ?.setLoadingDialog(LoadingDialog::class.java)
                 ?.setLoginListener(this@MainActivity)
                 ?.setExceptionHandler(this@MainActivity)
                 ?.enable2FA(true)
+                ?.setActionbarColor(R.color.activity_color_actionbar)
+                ?.setTextColor(R.color.activity_color_text)
                 ?.initiateInActivity(this@MainActivity)
     }
 
@@ -46,7 +51,7 @@ class MainActivity : AppCompatActivity(), LoginListener, ExceptionHandler {
     }
 
     override fun onLoginFailed(exception: RuntimeException) {
-//        Toast.makeText(baseContext, exception.message, Toast.LENGTH_LONG).show()
+        Toast.makeText(baseContext, exception.message, Toast.LENGTH_LONG).show()
     }
 
     companion object {

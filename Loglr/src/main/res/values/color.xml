@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="text_color">#7b7b7b</color>
+
+    <color name="colorPrimary">#a3a3a3</color>
+    <color name="address_color">#484848</color>
 </resources>

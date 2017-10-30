@@ -40,9 +40,9 @@ class Utils {
          */
         fun getLoadingDialog(context: Context): Dialog? {
             //Test if Loading Dialog was received
-            if(Loglr.instance.getLoadingDialog() != null) {
+            if(Loglr.getLoadingDialog() != null) {
                 //Extract Loading Dialog class passed by the Activity
-                val classDialog = Loglr.instance.getLoadingDialog()
+                val classDialog = Loglr.getLoadingDialog()
                 //get default constructor and create new instance for the Dialog
                 return classDialog?.getConstructor(Context::class.java)?.newInstance(context) as Dialog
 //        e.printStackTrace();

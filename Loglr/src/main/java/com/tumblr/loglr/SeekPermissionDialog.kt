@@ -26,7 +26,7 @@ class SeekPermissionDialog(context: Context): Dialog(context), View.OnClickListe
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        getWindow().requestFeature(Window.FEATURE_NO_TITLE)
+        window.requestFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.dialog_seek_permission)
 
         val btnOkay = dialog_seek_permission_okay

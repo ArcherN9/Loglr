@@ -8,12 +8,7 @@ import com.tumblr.loglr.Interfaces.ExceptionHandler
 import com.tumblr.loglr.Interfaces.LoginListener
 
 //Empty private constructor to disallow creation of object
-class Loglr private constructor() {
-
-    /**
-     * Context of the calling activity
-     */
-    private var context: Context? = null
+object Loglr {
 
     /**
      * Specifies whether or not the developer wishes to enable 2FA auto read for OTP message that arrives
@@ -25,11 +20,6 @@ class Loglr private constructor() {
      * The Tumblr Call back URL
      */
     internal var strUrl: String? = null
-
-    /**
-     * The instance to this class. It is necessary to declare this here to keep access to this class singleton
-     */
-    private var loglrInstance: Loglr? = null
 
     /**
      * An object of the interface defined on this class. The interface is called
@@ -67,19 +57,23 @@ class Loglr private constructor() {
     /**
      * A String title that is displayed on top of the CustomTabIntent.
      */
-    internal var intActionbarColor: Int = R.color.colorPrimary
+    internal var intActionbarColor: Int = R.color.address_color
 
-    /**
-     * A isDebug variable is used to specify if the build being run/deployed is a debug build or not.
-     * On deployment this variable is to be changed to false to imply shift from debug to production
-     */
-    private val IS_DEBUG = true
+    internal var intAddressbarTextColor: Int = R.color.colorPrimary
 
     /**
      * Optional: Sets the CustomTab title
      */
     fun setActionbarColor(actionBarColor: Int): Loglr? {
         this@Loglr.intActionbarColor = actionBarColor
+        return this@Loglr
+    }
+
+    /**
+     * optional: Sets the text color on the action bar
+     */
+    fun setTextColor(addressbarTextColor: Int): Loglr? {
+        this@Loglr.intAddressbarTextColor = addressbarTextColor
         return this@Loglr
     }
 
@@ -183,23 +177,6 @@ class Loglr private constructor() {
     }
 
     /**
-     * A method to get the Consumer Key which will be used to access Tumblr APIs.
-     * Without it, the app will fail.
-     * #MANDATORY
-     * @return CONSUMER_KEY
-     * @java.lang.Deprecated Deprecated method. Will be removed in future builds
-     */
-    internal fun getConsumerKey(): String? = CONSUMER_KEY
-
-    /**
-     * A method to get the Consumer Secret Key which will be used to access Tumblr APIs.
-     * Without it, the app will fail.
-     * #MANDATORY
-     * @return CONSUMER_SECRET_KEY
-     */
-    internal fun getConsumerSecretKey(): String? = CONSUMER_SECRET_KEY
-
-    /**
      * Initiates the login procedure by calling calling the tumblr APIs in an activity that hosts
      * a web view.
 
@@ -210,21 +187,5 @@ class Loglr private constructor() {
         val intent = Intent(context, LoglrActivity::class.java)
         context.startActivity(intent)
         (context as Activity).overridePendingTransition(R.anim.anim_bottom_up, R.anim.abc_fade_out)
-    }
-
-    companion object {
-
-        /**
-         * A method to return a reference to this class. Since the variable
-         * @return
-         */
-        val instance: Loglr get() {
-            return loglrInstance
-        }
-
-        /**
-         * The instance to this class. It is necessary to declare this here to keep access to this class singleton
-         */
-        private var loglrInstance: Loglr = Loglr()
     }
 }

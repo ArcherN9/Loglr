@@ -33,31 +33,4 @@
     <string name="dialog_2FA_enabled">If you have OTP based sign in, please grant SMS read permission so we may auto-fill.</string>
     <!-- ================================================================================== -->
 
-
-    <!-- ================================================================================== -->
-    <!-- Firebase User Properties -->
-    <string name="FireBase_Property_Version">Library Version</string>
-
-    <!-- Firebase Events -->
-    <string name="FireBase_Event_ButtonClick">Login Button Click</string>
-    <string name="FireBase_Event_OTP_UserGranted_True">User Granted OTP</string>
-    <string name="FireBase_Event_OTP_UserGranted_False">User Denied OTP</string>
-    <string name="FireBase_Event_OTP_DevGranted_True">Dev Granted OTP</string>
-    <string name="FireBase_Event_OTP_DevGranted_False">Dev Denied OTP</string>
-    <string name="FireBase_Event_2FA">Two FA Populated</string>
-    <string name="FireBase_Event_LoginFailed">Login Failed</string>
-    <string name="FireBase_Event_CustomDialog_Set">Progress Set</string>
-    <string name="FireBase_Event_CustomDialog_Fail">Progress Failed</string>
-    <string name="FireBase_Event_ActivityLogin">Activity Login</string>
-    <string name="FireBase_Event_FragmentLogin">Fragment Login</string>
-
-    <!-- Firebase Params -->
-    <string name="FireBase_Param_Reason">Fail Reason</string>
-
-    <!-- Firebase Param values -->
-    <!-- User Property value | FireBase_Property_Version -->
-    <string name="FireBase_Property_Version_Value">v1.2.1</string>
-
-    <!-- ================================================================================== -->
-
 </resources>

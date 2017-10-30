@@ -42,20 +42,19 @@ class OTPBroadcastReceiver: BroadcastReceiver() {
     @SuppressLint("NewApi")
     override fun onReceive(context: Context?, intent: Intent?) {
         val bundle = intent?.extras
-        val messages: Array<SmsMessage?>
         var strMessage = ""
         val pdus = bundle?.get("pdus") as Array<*>
-        messages = arrayOfNulls<SmsMessage>(pdus.size)
-        for(i in 0..messages.size) {
+        val messages: ArrayList<Any> = arrayListOf<Any>(pdus)
+        for(i in 0 until messages.size) {
             if (Utils.isMarshmallowAbove())
-                messages[i] = SmsMessage.createFromPdu(pdus.get(i) as ByteArray, FORMAT_3GPP)
+                messages[i] = SmsMessage.createFromPdu(pdus[i] as ByteArray, FORMAT_3GPP)
             else
-                messages[i] = SmsMessage.createFromPdu(pdus.get(i) as ByteArray)
-            strMessage += messages.get(i)?.messageBody
+                messages[i] = SmsMessage.createFromPdu(pdus[i] as ByteArray)
+            strMessage += (messages[i] as SmsMessage).messageBody
         }
-        Log.i(TAG, strMessage);
+        Log.i(TAG, strMessage)
         strMessage = strMessage.replace(Regex("\\D+"),"")
-        Log.i(TAG, strMessage);
+        Log.i(TAG, strMessage)
         otpReceiptListener?.onReceived(webview, strMessage)
     }
 
@@ -63,7 +62,7 @@ class OTPBroadcastReceiver: BroadcastReceiver() {
         /**
          * Tag for Logging
          */
-        private val TAG: String = OTPBroadcastReceiver.javaClass.simpleName
+        private val TAG: String = OTPBroadcastReceiver::class.java.simpleName
 
         /**
          * A request code to catch READ_SMS request response

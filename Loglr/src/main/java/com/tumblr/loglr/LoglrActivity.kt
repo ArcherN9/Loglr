@@ -16,6 +16,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.KeyEvent
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import com.tumblr.loglr.Exceptions.LoglrAPIException
 import com.tumblr.loglr.Exceptions.LoglrCallbackException
@@ -34,10 +35,11 @@ class LoglrActivity: AppCompatActivity(), DialogCallbackListener, DialogInterfac
     /**
      * The OTP broadcast receiver that monitors for incoming SMS.
      */
-    var otpBroadcastReceiver: OTPBroadcastReceiver? = null
+    private var otpBroadcastReceiver: OTPBroadcastReceiver? = null
 
     internal var txAddressbar: TextView? = null
-    internal var btnClose: ImageView? = null
+    private var btnClose: ImageView? = null
+    private var rlContainer: RelativeLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,26 +47,41 @@ class LoglrActivity: AppCompatActivity(), DialogCallbackListener, DialogInterfac
         overridePendingTransition(R.anim.anim_bottom_up, R.anim.abc_fade_out)
         //Address bar as txAddressbar
         txAddressbar = activityTumblrAddressBar
+
         //Close button as btnClose
         btnClose = activityTumblrClose
+        //Container as rlContainer
+        rlContainer = activityTumblrContainer
+
+        //Set the action bar background color
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            rlContainer?.background = resources.getDrawable(Loglr.intActionbarColor, theme)
+        else
+            rlContainer?.background = resources.getDrawable(Loglr.intActionbarColor)
+
+        //Set the address bar text color
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            txAddressbar?.setTextColor(resources.getColor(Loglr.intAddressbarTextColor, theme))
+        else
+            txAddressbar?.setTextColor(resources.getColor(Loglr.intAddressbarTextColor))
+
         btnClose?.setOnClickListener { _ ->
             onBackPressed()
         }
 
-
         //Test if consumer key was received
-        if(TextUtils.isEmpty(Loglr.Companion.instance.CONSUMER_KEY))
+        if(TextUtils.isEmpty(Loglr.CONSUMER_KEY))
             throw LoglrAPIException()
 
         //Test if Secret Key was received
-        if(TextUtils.isEmpty(Loglr.Companion.instance.CONSUMER_SECRET_KEY))
+        if(TextUtils.isEmpty(Loglr.CONSUMER_SECRET_KEY))
             throw LoglrAPIException()
 
         //Test if URL Call back was received
-        if(TextUtils.isEmpty(Loglr.Companion.instance.strUrl))
+        if(TextUtils.isEmpty(Loglr.strUrl))
             throw LoglrCallbackException()
 
-        if(Loglr.Companion.instance.is2FAEnabled) {
+        if(Loglr.is2FAEnabled) {
             //Test if permissions will need to be sought for OTP
             if (Utils.Companion.isMarshmallowAbove() && !Utils.Companion.isSMSReadPermissionGranted(this@LoglrActivity)) {
                 val seekPermissionDialog = SeekPermissionDialog(this@LoglrActivity)
@@ -148,21 +165,21 @@ class LoglrActivity: AppCompatActivity(), DialogCallbackListener, DialogInterfac
 
     override fun onButtonOkay() {
         //Test if 2FA has been enabled by the user at all
-        if(Loglr.Companion.instance.is2FAEnabled)
+        if(Loglr.is2FAEnabled)
         //Check if SMS read permissions have been granted to the application
             if(Utils.Companion.isSMSReadPermissionGranted(this@LoglrActivity)) {
                 //Register the SMS receiver
                 registerReceiver()
                 //test if LoginListener was registered
-                if(Loglr.Companion.instance.loginListener != null) {
-                    if(Loglr.Companion.instance.exceptionHandler == null)
+                if(Loglr.loginListener != null) {
+                    if(Loglr.exceptionHandler == null)
                         Log.w(TAG, "Continuing execution without ExceptionHandler. No Exception call backs will be sent. It is recommended to set one.");
                     initiateLoginProcess()
                 } else {
                     //If Exception handler was registered by the dev, use it to return a call back.
                     //Otherwise, just throw the exception and make the application crash
                     val ex = LoglrLoginException()
-                    Loglr.Companion.instance.exceptionHandler?.onLoginFailed(ex) ?: throw LoglrLoginException()
+                    Loglr.exceptionHandler?.onLoginFailed(ex) ?: throw LoglrLoginException()
                 }
                 //If not, Check if Its an android device that runs Marshmallow.
                 //if it is, request user to grant permission
@@ -188,11 +205,11 @@ class LoglrActivity: AppCompatActivity(), DialogCallbackListener, DialogInterfac
         overridePendingTransition(R.anim.abc_fade_in, R.anim.anim_up_bottom)
         //Pass reason for closing loglr
         val ex = LoglrLoginCanceled()
-        Loglr.Companion.instance.exceptionHandler?.onLoginFailed(ex) ?: throw LoglrLoginException()
+        Loglr.exceptionHandler?.onLoginFailed(ex) ?: throw LoglrLoginException()
     }
 
     override fun finish() {
-        super.finish();
+        super.finish()
         try {
             if(otpBroadcastReceiver != null)
                 unregisterReceiver(otpBroadcastReceiver)
@@ -217,6 +234,6 @@ class LoglrActivity: AppCompatActivity(), DialogCallbackListener, DialogInterfac
         /**
          * A tag for logging
          */
-        private val TAG = LoglrActivity.javaClass.simpleName
+        private val TAG = LoglrActivity::class.java.simpleName
     }
 }

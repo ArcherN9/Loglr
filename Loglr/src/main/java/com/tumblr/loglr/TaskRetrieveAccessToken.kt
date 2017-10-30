@@ -131,8 +131,8 @@ class TaskRetrieveAccessToken: AsyncTask<Void, RuntimeException, LoginResult?>()
         super.onProgressUpdate(*values)
         if(values.isNotEmpty()) {
             val exception : RuntimeException = values[0]!!
-            if(Loglr.instance.exceptionHandler != null)
-                Loglr.instance.exceptionHandler?.onLoginFailed(exception)
+            if(Loglr.exceptionHandler != null)
+                Loglr.exceptionHandler?.onLoginFailed(exception)
             else
                 finish()
         }
@@ -145,7 +145,7 @@ class TaskRetrieveAccessToken: AsyncTask<Void, RuntimeException, LoginResult?>()
         //otherwise, set as failed.
         if(result != null) {
             //Send firebase event for successful login alongwith bundle of method
-            Loglr.instance.loginListener?.onLoginSuccessful(result)
+            Loglr.loginListener?.onLoginSuccessful(result)
         }
         finish()
     }
@@ -162,6 +162,6 @@ class TaskRetrieveAccessToken: AsyncTask<Void, RuntimeException, LoginResult?>()
         /**
          * Tag for logging
          */
-        private val TAG: String = TaskRetrieveAccessToken.javaClass.simpleName
+        private val TAG: String = TaskRetrieveAccessToken::class.java.simpleName
     }
 }

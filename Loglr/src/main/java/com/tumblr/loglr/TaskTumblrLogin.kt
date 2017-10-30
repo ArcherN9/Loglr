@@ -98,8 +98,8 @@ class TaskTumblrLogin: AsyncTask<Any, RuntimeException, String>(), OTPReceiptLis
         try {
             //Generate a new oAuthConsumer object
             commonsHttpOAuthConsumer = CommonsHttpOAuthConsumer(
-                    Loglr.instance.getConsumerKey(),
-                    Loglr.instance.getConsumerSecretKey()
+                    Loglr.CONSUMER_KEY,
+                    Loglr.CONSUMER_SECRET_KEY
             )
             //Generate a new oAuthProvider object
             commonsHttpOAuthProvider = CommonsHttpOAuthProvider(
@@ -110,7 +110,7 @@ class TaskTumblrLogin: AsyncTask<Any, RuntimeException, String>(), OTPReceiptLis
             //Retrieve the URL to which the user must be sent in order to authorize the consumer
             return commonsHttpOAuthProvider!!.retrieveRequestToken(
                     commonsHttpOAuthConsumer,
-                    Loglr.instance.getUrlCallBack()
+                    Loglr.getUrlCallBack()
             )
         } catch (e: OAuthMessageSignerException) {
             e.printStackTrace()
@@ -135,7 +135,7 @@ class TaskTumblrLogin: AsyncTask<Any, RuntimeException, String>(), OTPReceiptLis
         super.onProgressUpdate(values[0])
         if(values.isNotEmpty()) {
             val exception: RuntimeException = values[0]
-            Loglr.instance.exceptionHandler?.onLoginFailed(exception)
+            Loglr.exceptionHandler?.onLoginFailed(exception)
             finish()
         } else
             finish()
@@ -178,7 +178,7 @@ class TaskTumblrLogin: AsyncTask<Any, RuntimeException, String>(), OTPReceiptLis
                     loglrActivity.txAddressbar?.text = strUrl
 
                     //Check if the Currently loading URL is that of the call back URL mentioned on top
-                    if (strUrl.toLowerCase().contains(Loglr.instance.getUrlCallBack().toLowerCase())) {
+                    if (strUrl.toLowerCase().contains(Loglr.getUrlCallBack().toLowerCase())) {
                         //Parse string URL to conver to URI
                         val uri : Uri = Uri.parse(strUrl)
                         //instantiate String variables to store OAuth & Verifier tokens
@@ -233,7 +233,7 @@ class TaskTumblrLogin: AsyncTask<Any, RuntimeException, String>(), OTPReceiptLis
 
     override fun onReceived(webView: WebView?, strOtp: String?) {
         Log.i(TAG, "OTP Received to populate WebView : " + strOTP)
-        this.strOTP = strOTP
+        this.strOTP = strOtp
         webView?.loadUrl("javascript:document.getElementById(\"tfa_response_field\").value=$strOTP;")
     }
 
@@ -241,6 +241,6 @@ class TaskTumblrLogin: AsyncTask<Any, RuntimeException, String>(), OTPReceiptLis
         /**
          * Tag for logging
          */
-        private val TAG:String = TaskTumblrLogin.javaClass.simpleName
+        private val TAG:String = TaskTumblrLogin::class.java.simpleName
     }
 }
