@@ -1,5 +1,5 @@
 [ ![Download](https://api.bintray.com/packages/dakshsrivastava/maven/Loglr/images/download.svg) ](https://bintray.com/dakshsrivastava/maven/Loglr/_latestVersion) [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Loglr-green.svg?style=true)](https://android-arsenal.com/details/1/3265)
-# Loglr #
+# Loglr 
 
 ![](https://res.cloudinary.com/hashnode/image/upload/w_200,h_200/v1458728299/fuo7n9epkkxyafihrlhz.jpg)
 
@@ -10,6 +10,10 @@ So happy to inform this library has been ported to Kotlin!
 Loglr is library that enables developers to implement 'Login via Tumblr' with as minimum frustration as possible.
 
 Note : The library is in active development. On and off, one may encounter bugs or mistakes. Please report them on the issue tracker.
+
+### Download the demo application from the PlayStore!
+
+<a href='https://play.google.com/store/apps/details?id=daksh.practice.tumblrjumblrimplementation&hl=en&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' height="60" width="150"/></a>
 
 ### Importing to your project ###
 Gradle : 
