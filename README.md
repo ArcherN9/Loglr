@@ -18,7 +18,7 @@ Note : The library is in active development. On and off, one may encounter bugs 
 ### Importing to your project ###
 Gradle : 
         
-        implementation 'com.daksh:loglr:2.1.3'
+        implementation 'com.daksh:loglr:2.1.4'
 
 ### Usage ###
 
